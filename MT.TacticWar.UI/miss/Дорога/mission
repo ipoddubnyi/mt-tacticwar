@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<mission>
+    <info>
+        <name>Дорога</name>
+        <desc>
+            ОПЕРАТИВНАЯ ОБСТАНОВКА:
+            Противник занял населённый пункт в районе г. Луга.
+            Население в большинстве своём - рабочие военного завода.
+            По данным разведки на северо-востоке располагается штаб противника и склады боеприпасов.
+
+            БОЕВАЯ ЗАДАЧА:
+            Необходимо захватить склады на северо-востоке и штаб.
+            Затем освободить населённый пункт и захватить завод.
+
+            РЕЗЮМЕ:
+            1.Захватить склады боеприпасов и штаб противника.
+            2.Освободить город.
+            3.Захватить завод.
+        </desc>
+        <version>1.0</version>
+        <mode>0</mode>
+    </info>
+    
+    <players>
+        <player id="0" name="Игрок 1" rank="0" money="50000" ai="false">
+            <divisions>
+                <division id="0" name="Взвод пехоты" type="0">
+                    <position x="3" y="19" />
+                    <units>
+                        <unit type="soldier" count="3" />
+                    </units>
+                </division>
+
+                <division id="1" name="Ударная танковая группа" type="1">
+                    <position x="8" y="20" />
+                    <units>
+                        <unit type="tank" count="3" />
+                    </units>
+                </division>
+
+                <division id="2" name="Штурмовая танковая группа" type="1">
+                    <position x="8" y="22" />
+                    <units>
+                        <unit type="tank" count="5" />
+                    </units>
+                </division>
+            </divisions>
+
+            <buildings>
+                <building id="0" name="Склад 1" type="2">
+                    <position x="13" y="19" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                </building>
+
+                <building id="1" name="Склад 2" type="2">
+                    <position x="3" y="19" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                    <security>0</security>
+                </building>
+            </buildings>
+
+            <gates>
+                <gate id="0" x="8" y="24" />
+            </gates>
+        </player>
+
+        <player id="1" name="Игрок 2" rank="0" money="50000" ai="true">
+            <divisions>
+                <division id="0" name="Взвод пехоты 1" type="0">
+                    <position x="3" y="5" />
+                    <units>
+                        <unit type="soldier" count="3" />
+                    </units>
+                </division>
+
+                <division id="1" name="Разведгруппа" type="0">
+                    <position x="15" y="2" />
+                    <units>
+                        <unit type="saboteur" count="3" />
+                    </units>
+                </division>
+
+                <division id="2" name="Взвод мотопехоты 2" type="0">
+                    <position x="23" y="5" />
+                    <units>
+                        <unit type="motorized" count="3" />
+                    </units>
+                </division>
+
+                <division id="3" name="Танковая группа 1" type="1">
+                    <position x="8" y="5" />
+                    <units>
+                        <unit type="tank" count="3" />
+                        <unit type="motorized" count="5" />
+                    </units>
+                </division>
+
+                <division id="4" name="Танковая группа 2" type="1">
+                    <position x="3" y="1" />
+                    <units>
+                        <unit type="tank" count="2" />
+                        <unit type="tankheavy" count="1" />
+                    </units>
+                </division>
+            </divisions>
+
+            <buildings>
+                <building id="0" name="Завод" type="0">
+                    <position x="3" y="5" />
+                    <health>100</health>
+                    <radius>2</radius>
+                    <view>2</view>
+                    <security>0</security>
+                </building>
+
+                <building id="1" name="Склад" type="2">
+                    <position x="19" y="1" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                </building>
+
+                <building id="2" name="Штаб" type="1">
+                    <position x="20" y="1" />
+                    <health>100</health>
+                    <radius>2</radius>
+                    <view>2</view>
+                </building>
+            </buildings>
+
+            <gates>
+                <gate id="1" x="0" y="1" />
+            </gates>
+        </player>
+    </players>
+</mission>

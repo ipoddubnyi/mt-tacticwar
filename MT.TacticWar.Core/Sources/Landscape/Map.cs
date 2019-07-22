@@ -45,15 +45,15 @@ namespace MT.TacticWar.Core.Landscape
             {
                 foreach (var div in player.Divisions)
                 {
-                    x = div.Coordinates.X;
-                    y = div.Coordinates.Y;
+                    x = div.Position.X;
+                    y = div.Position.Y;
                     Field[x, y].Object = div;
                 }
 
                 foreach (var building in player.Buildings)
                 {
-                    x = building.Coordinates.X;
-                    y = building.Coordinates.Y;
+                    x = building.Position.X;
+                    y = building.Position.Y;
                     Field[x, y].Object = building;
                 }
             }

@@ -27,6 +27,27 @@ namespace MT.TacticWar.Core.Objects
             throw new Exception("Неизвестный тип дивизии.");
         }
 
+        public static string AsString(this BuildingType type)
+        {
+            switch (type)
+            {
+                case BuildingType.Factory:
+                    return "Завод";
+                case BuildingType.Barracks:
+                    return "Казарма";
+                case BuildingType.Storehouse:
+                    return "Склад";
+                case BuildingType.Radar:
+                    return "Радар";
+                case BuildingType.Airfield:
+                    return "Аэропорт";
+                case BuildingType.Port:
+                    return "Порт";
+            }
+
+            throw new Exception("Неизвестный тип строения.");
+        }
+
         public static string AsString(this UnitLevel level)
         {
             switch (level)
@@ -44,6 +65,17 @@ namespace MT.TacticWar.Core.Objects
             }
 
             throw new Exception("Неизвестный уровень.");
+        }
+
+        public static Division GetById(this IEnumerable<Division> divisions, int id)
+        {
+            foreach (var div in divisions)
+            {
+                if (div.Id == id)
+                    return div;
+            }
+
+            return null;
         }
     }
 }

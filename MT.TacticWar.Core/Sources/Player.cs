@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using MT.TacticWar.Core.Players;
 using MT.TacticWar.Core.Objects;
+using MT.TacticWar.Core.Types;
 
 namespace MT.TacticWar.Core
 {
@@ -19,12 +20,12 @@ namespace MT.TacticWar.Core
         public bool IsPlaying;                   //играет ли данный игрок (возможно, уже проиграл)
         public PlayerRank Rank;                    //уровень игрока. В зависимости от него игрок может формировать новые подразделения
 
-        public Money Money;                   //ресурсы, за которые игрок может ремонтировать войска и покупать новое вооружение
+        public int Money;                   //ресурсы, за которые игрок может ремонтировать войска и покупать новое вооружение
 
         public List<Division> Divisions;   //список подразделение
         public List<Building> Buildings;  //список структур
 
-        public Coordinates Gates;     //ворота для выхода подкреплений
+        public List<Gate> Gates;     //ворота для выхода подкреплений
 
         public Player(int id)
         {
@@ -46,7 +47,7 @@ namespace MT.TacticWar.Core
             Divisions = new List<Division>();      //список подразделение
             Buildings = new List<Building>();     //список структур
 
-            Gates = new Coordinates(-1, -1);
+            Gates = new List<Gate>();
         }
 
         /// <summary>Конструктор
@@ -97,7 +98,7 @@ namespace MT.TacticWar.Core
         {
             foreach (var division in Divisions)
             {
-                if (division.Coordinates.Equals(x, y))
+                if (division.Position.Equals(x, y))
                     return division;
             }
 
@@ -108,7 +109,7 @@ namespace MT.TacticWar.Core
         {
             foreach (var building in Buildings)
             {
-                if (building.Coordinates.Equals(x, y))
+                if (building.Position.Equals(x, y))
                     return building;
             }
 

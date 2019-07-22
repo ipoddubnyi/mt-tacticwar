@@ -105,7 +105,7 @@ namespace MT.TacticWar.UI
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Миссия повреждена", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -149,7 +149,7 @@ namespace MT.TacticWar.UI
                     //дальше не читаем
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Ошибка загрузки карты
                 return false;

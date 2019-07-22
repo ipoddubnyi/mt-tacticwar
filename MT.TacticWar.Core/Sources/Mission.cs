@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using MT.TacticWar.Core.Types.Mission;
+﻿using MT.TacticWar.Core.Landscape;
+using MT.TacticWar.Core.Types;
 
 namespace MT.TacticWar.Core
 {
     public class Mission
     {
-        public string mName;        //имя миссии
+        public string Name { get; private set; }
+        public string Briefing { get; private set; }
+        public MissionMode Mode { get; private set; }
 
-        public string mPathMap;     //путь к файлу карты
-        //public string mPathUnit;  //путь к файлу юнитов
-        public int mCountIgroki;    //число игроков
+        public Map Map { get; set; }
 
-        public string mBriefing;    //миссия
-        public MissionMode mGameMode; //режим игры
-        public MissionManage mManage;        //структура управления миссией
+        public Player[] Players { get; set; }
 
-        public string mError;       //ошибка
+        private MissionManage manage;
 
-        //********************************************************************************
-
-        public Mission()
+        public Mission(string name, string briefing, MissionMode mode, Player[] players, Map map)
         {
-            mError = "";
+            Name = name;
+            Briefing = briefing;
+            Mode = mode;
+            Players = players;
+            Map = map;
+
+            Map.OccupateCells(Players);
         }
     }
 }

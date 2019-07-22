@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
@@ -34,223 +32,233 @@ namespace MT.TacticWar.UI
 
         public void DrawCell(Cell cell)
         {
-            Brush myBrsh;
+            var color = GetCellColor(cell.Type);
+            using (Brush myBrsh = new SolidBrush(color))
+            {
+                int x = cell.Coordinates.X;
+                int y = cell.Coordinates.Y;
+                grf.FillRectangle(myBrsh, x * CellSize, y * CellSize, CellSize, CellSize);
+            }
+        }
 
-            switch (cell.Type)
+        private Color GetCellColor(CellType type)
+        {
+            switch (type)
             {
                 case CellType.Grass:
-                    myBrsh = new SolidBrush(Color.Green);
-                    break;
+                    return Color.Green;
                 case CellType.Snow:
-                    myBrsh = new SolidBrush(Color.WhiteSmoke);
-                    break;
+                    return Color.WhiteSmoke;
                 case CellType.Sand:
-                    myBrsh = new SolidBrush(Color.Yellow);
-                    break;
+                    return Color.Yellow;
                 case CellType.Water:
-                    myBrsh = new SolidBrush(Color.Blue);
-                    break;
+                    return Color.Blue;
                 case CellType.Stones:
-                    myBrsh = new SolidBrush(Color.Gray);
-                    break;
+                    return Color.Gray;
                 case CellType.Forest:
-                    myBrsh = new SolidBrush(Color.DarkGreen);
-                    break;
+                    return Color.DarkGreen;
                 case CellType.Road:
-                    myBrsh = new SolidBrush(Color.LightGray);
-                    break;
+                    return Color.LightGray;
                 case CellType.Buildings:
-                    myBrsh = new SolidBrush(Color.DarkGray);
-                    break;
+                    return Color.DarkGray;
                 case CellType.Ice:
-                    myBrsh = new SolidBrush(Color.LightBlue);
-                    break;
-                default:
-                    myBrsh = new SolidBrush(Color.White);
-                    break;
+                    return Color.LightBlue;
             }
 
-            //i - строки матрицы (ось OY), j - столбцы (ось OX)
-            grf.FillRectangle(myBrsh, cell.Coordinates.X * CellSize, cell.Coordinates.Y * CellSize, CellSize, CellSize);
-            myBrsh.Dispose();
-
-            //grf.Dispose();
+            return Color.White;
         }
 
         // Рисования креста (когда путь не найден)
-        public void DrawCross(int i, int j)
+        public void DrawCross(int x, int y)
         {
-            string image = "img\\features\\Krest.png";
-            Image newImage = Image.FromFile(image);
-            grf.DrawImage(newImage, i * CellSize, j * CellSize, CellSize, CellSize);
-            newImage.Dispose();
+            string src = "img\\features\\Krest.png";
+            using (var image = Image.FromFile(src))
+            {
+                grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
+            }
         }
 
-        /// <summary>Рисования флага
-        /// </summary>
-        /// <param name="grf">на чём будем рисовать</param>
-        /// <param name="i">координата по высоте</param>
-        /// <param name="j">координата по ширине</param>
-        /// <param name="atack">присоединение (Add)/атака (Atak)/захват (Capture)/ защита
-        /// (Defend)/обычный флаг (F)</param>
-        /// <param name="redBlue">цвет (Red/Blue)</param>
-        /// <returns></returns>
-        public void DrawFlag(int i, int j, string atack, string redBlue)
+        public void DrawFlag(int x, int y, MoveType moveType, bool oneDay)
         {
-            string image = "img\\flags\\";
+            string src = GetFlagImagePath(moveType, oneDay);
+            using (var image = Image.FromFile(src))
+            {
+                grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
+            }
+        }
 
-            //если флаг красный, иначе - синий
-            image += "Flag" + atack + redBlue + ".png";
+        private string GetFlagImagePath(MoveType moveType, bool oneDay)
+        {
+            var src = new StringBuilder("img\\flags\\Flag");
 
-            Image newImage = Image.FromFile(image);
-            grf.DrawImage(newImage, i * CellSize, j * CellSize, CellSize, CellSize);
+            switch (moveType)
+            {
+                case MoveType.Join:
+                    src.Append("Add");
+                    break;
+                case MoveType.Attack:
+                    src.Append("Atak");
+                    break;
+                case MoveType.Defend:
+                    src.Append("Defend");
+                    break;
+                case MoveType.Capture:
+                    src.Append("Capture");
+                    break;
+                case MoveType.Go:
+                default:
+                    src.Append("F");
+                    break;
+            }
 
-            newImage.Dispose();
+            //если весь путь можно пройти за 1 день
+            src.Append(oneDay ? "Red" : "Blue");
+            src.Append(".png");
+            return src.ToString();
         }
 
         /// <summary>Рисование пути, в том числе однодневную часть (синим цветом)
         /// </summary>
-        /// <param name="grf">на чём будем рисовать</param>
         /// <param name="allPut">весь путь (список координат)</param>
         /// <param name="oneDayPut">однодневный путь (часть всего пути)</param>
         /// <returns></returns>
         public void DrawWay(List<Cell> allPut, List<Cell> oneDayPut)
         {
-            Pen myPen = new Pen(Color.Red);
-
-            int x1, y1, x2, y2;
-
-            //рисуем путь на один день
-            for (int k = 0; k < (oneDayPut.Count - 1); k++)
+            using (var pen = new Pen(Color.Red))
             {
-                x1 = oneDayPut.ElementAt(k).Coordinates.X * CellSize + CellSize / 2 + 1;
-                y1 = oneDayPut.ElementAt(k).Coordinates.Y * CellSize + CellSize / 2 + 1;
-                x2 = oneDayPut.ElementAt(k + 1).Coordinates.X * CellSize + CellSize / 2 + 1;
-                y2 = oneDayPut.ElementAt(k + 1).Coordinates.Y * CellSize + CellSize / 2 + 1;
-                grf.DrawLine(myPen, x1, y1, x2, y2);
+                int x1, y1, x2, y2;
+
+                //рисуем путь на один день
+                for (int k = 0; k < (oneDayPut.Count - 1); k++)
+                {
+                    x1 = oneDayPut[k].Coordinates.X * CellSize + CellSize / 2 + 1;
+                    y1 = oneDayPut[k].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                    x2 = oneDayPut[k + 1].Coordinates.X * CellSize + CellSize / 2 + 1;
+                    y2 = oneDayPut[k + 1].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                    grf.DrawLine(pen, x1, y1, x2, y2);
+                }
             }
 
             //если однодневный путь не меньше полного, рисуем красный флаг
             if (oneDayPut.Count < allPut.Count)
             {
-                myPen.Dispose();
-                myPen = new Pen(Color.Blue);
-
-                //рисуем оставшийся путь
-                for (int k = (oneDayPut.Count - 1); k < (allPut.Count - 1); k++)
+                using (var pen = new Pen(Color.Blue))
                 {
-                    x1 = allPut.ElementAt(k).Coordinates.X * CellSize + CellSize / 2 + 1;
-                    y1 = allPut.ElementAt(k).Coordinates.Y * CellSize + CellSize / 2 + 1;
-                    x2 = allPut.ElementAt(k + 1).Coordinates.X * CellSize + CellSize / 2 + 1;
-                    y2 = allPut.ElementAt(k + 1).Coordinates.Y * CellSize + CellSize / 2 + 1;
-                    grf.DrawLine(myPen, x1, y1, x2, y2);
+                    int x1, y1, x2, y2;
+
+                    //рисуем оставшийся путь
+                    for (int k = (oneDayPut.Count - 1); k < (allPut.Count - 1); k++)
+                    {
+                        x1 = allPut[k].Coordinates.X * CellSize + CellSize / 2 + 1;
+                        y1 = allPut[k].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                        x2 = allPut[k + 1].Coordinates.X * CellSize + CellSize / 2 + 1;
+                        y2 = allPut[k + 1].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                        grf.DrawLine(pen, x1, y1, x2, y2);
+                    }
                 }
 
                 //рисуем синий флаг
-                //drawFlag(grf, allPut.Last().Coordinates.x, allPut.Last().Coordinates.y, false);
+                //drawFlag(grf, allPut.Last().Position.x, allPut.Last().Position.y, false);
             }
             /*else
             {
-                drawFlag(grf, allPut.Last().Coordinates.x, allPut.Last().Coordinates.y, true);
-                myPen.Dispose();
-                return;
+                drawFlag(grf, allPut.Last().Position.x, allPut.Last().Position.y, true);
             }*/
-
-            myPen.Dispose();
         }
 
-        public void DrawBuilding(Building building, int left, int top, int fieldSize, bool selected)
+        public void DrawDivision(Division division, bool selected)
         {
-            string image = "img\\buildings\\";
+            int x = division.Position.X;
+            int y = division.Position.Y;
 
-            //выбрать изображение по типу подразделения
-            switch (building.Type)
+            var src = GetDivisionImagePath(division, selected);
+            using (var newImage = Image.FromFile(src))
             {
-                case BuildingType.Barracks:
-                    image += "Kazarma";
+                grf.DrawImage(newImage, x * CellSize, y * CellSize, CellSize, CellSize);
+            }
+        }
+
+        private string GetDivisionImagePath(Division division, bool selected)
+        {
+            var src = new StringBuilder("img\\elements\\");
+
+            switch (division.Type)
+            {
+                case DivisionType.Infantry:
+                    src.Append("Human");
                     break;
-                case BuildingType.Storehouse:
-                    image += "Sklad";
+                case DivisionType.Ship:
+                    src.Append("Ship");
                     break;
-                case BuildingType.Radar:
-                    image += "Radar";
+                case DivisionType.Aviation:
+                    src.Append("Plane");
                     break;
-                case BuildingType.Airfield:
-                    image += "Aeroport";
+                case DivisionType.Artillery:
+                    src.Append("Artiller");
                     break;
-                case BuildingType.Port:
-                    image += "Port";
-                    break;
-                case BuildingType.Factory:
+                case DivisionType.Vehicle:
                 default:
-                    image += "Zavod";
+                    src.Append("Tank");
                     break;
             }
 
-            string endOfImg = ".png";
+            src.Append((division.PlayerId + 1).ToString());
+            src.Append(selected ? "_selected.png" : ".png");
+            return src.ToString();
+        }
 
-            //если выделен
-            if (selected)
-                endOfImg = "_selected.png";
+        public void DrawBuilding(Building building, bool selected)
+        {
+            int x = building.Position.X;
+            int y = building.Position.Y;
 
-            image += (building.PlayerId + 1).ToString() + endOfImg;
-
-            Image newImage = Image.FromFile(image);
-            grf.DrawImage(newImage, left, top, fieldSize, fieldSize); //j * fieldSize, i * fieldSize);
-
-            //---
+            var src = GetBuildingImagePath(building, selected);
+            using (var image = Image.FromFile(src))
+            {
+                grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
+            }
 
             //если есть охранение - пометить
             if (building.IsSecured)
             {
-                image = "img\\features\\Defend.png";
-
-                newImage = Image.FromFile(image);
-                grf.DrawImage(newImage, left, top, fieldSize, fieldSize); //j * fieldSize, i * fieldSize);
+                src = "img\\features\\Defend.png";
+                using (var image = Image.FromFile(src))
+                {
+                    grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
+                }
             }
-
-            newImage.Dispose();
-            //grf.Dispose();
         }
 
-        public void DrawDivision(Division division, int left, int top, int fieldSize, bool selected)
+        private string GetBuildingImagePath(Building building, bool selected)
         {
-            string image = "img\\elements\\";
+            var src = new StringBuilder("img\\buildings\\");
 
-            //выбрать изображение по типу подразделения
-            switch (division.Type)
+            switch (building.Type)
             {
-                case DivisionType.Infantry:
-                    image += "Human";
+                case BuildingType.Barracks:
+                    src.Append("Kazarma");
                     break;
-                case DivisionType.Ship:
-                    image += "Ship";
+                case BuildingType.Storehouse:
+                    src.Append("Sklad");
                     break;
-                case DivisionType.Aviation:
-                    image += "Plane";
+                case BuildingType.Radar:
+                    src.Append("Radar");
                     break;
-                case DivisionType.Artillery:
-                    image += "Artiller";
+                case BuildingType.Airfield:
+                    src.Append("Aeroport");
                     break;
-                case DivisionType.Vehicle:
+                case BuildingType.Port:
+                    src.Append("Port");
+                    break;
+                case BuildingType.Factory:
                 default:
-                    image += "Tank";
+                    src.Append("Zavod");
                     break;
             }
 
-            string endOfImg = ".png";
-
-            //если выделен
-            if (selected)
-                endOfImg = "_selected.png";
-
-            image += (division.PlayerId + 1).ToString() + endOfImg;
-
-            Image newImage = Image.FromFile(image);
-            grf.DrawImage(newImage, left, top, fieldSize, fieldSize); //j * fieldSize, i * fieldSize);
-
-            newImage.Dispose();
-            //grf.Dispose();
+            src.Append((building.PlayerId + 1).ToString());
+            src.Append(selected ? "_selected.png" : ".png");
+            return src.ToString();
         }
     }
 }

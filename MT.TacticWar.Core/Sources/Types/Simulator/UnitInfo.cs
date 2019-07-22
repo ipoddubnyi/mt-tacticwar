@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MT.TacticWar.Core.Types.Simulator
+namespace MT.TacticWar.Core.Types
 {
     // Структура с информацией о юните
     public struct UnitInfo
@@ -19,7 +19,7 @@ namespace MT.TacticWar.Core.Types.Simulator
         public string type;         //тип (строка)
         public string name;         //имя
 
-        public Coordinates coords;  //координаты на зоне БД
+        public Position coords;  //координаты на зоне БД
 
         public int health;          //здоровье
 

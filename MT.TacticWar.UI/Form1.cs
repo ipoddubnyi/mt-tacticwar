@@ -52,8 +52,8 @@ namespace MT.TacticWar.UI
                 int oldHei = gameMap.Height; //старые координаты для центровки окна
                 int oldWid = gameMap.Width;
 
-                gameMap.Height = SIMUL.Map.Height * GameGraphics.CellSize + 2;
-                gameMap.Width = SIMUL.Map.Width * GameGraphics.CellSize + 2;
+                gameMap.Height = SIMUL.Game.Map.Height * GameGraphics.CellSize + 2;
+                gameMap.Width = SIMUL.Game.Map.Width * GameGraphics.CellSize + 2;
 
                 this.Height = gameMap.Height + 80;
                 this.Width = gameMap.Width + propertyGrid1.Width + 50;
@@ -73,7 +73,7 @@ namespace MT.TacticWar.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -83,7 +83,7 @@ namespace MT.TacticWar.UI
             if (e.Button != MouseButtons.Left)
             {
                 SIMUL.deselectAll();
-                unitInfoClear();
+                ClearObjectInfo();
             }
             else
             {
@@ -95,46 +95,44 @@ namespace MT.TacticWar.UI
                 switch (signal)
                 {
                     case Signals.s03_READY_UNIT_INFO:
-                        unitInfo();
+                        ShowObjectInfo();
                         break;
                     case Signals.s04_ATTACK:
-                        attakaElemxElem();
+                        BattleDivisionVsDivision();
                         break;
                 }
             }
         }
 
-        //Заполнить информацию о юнитах
-        private void unitInfo()
+        // Заполнить информацию о юнитах
+        private void ShowObjectInfo()
         {
-            if (SIMUL.SelectedUnitInfo.elemId != -1)
-                propertyGrid1.SelectedObject = SIMUL.Players[SIMUL.SelectedUnitInfo.playerId].Divisions[SIMUL.SelectedUnitInfo.elemId];
-            else
-                propertyGrid1.SelectedObject = SIMUL.Players[SIMUL.SelectedUnitInfo.playerId].Buildings[SIMUL.SelectedUnitInfo.buildId];
+            ClearObjectInfo();
 
-            listInfoUnits.Items.Clear();
-
-            //если есть юниты
-            if (SIMUL.SelectedUnitInfo.units != null)
+            if (null != SIMUL.SelectedDivision)
             {
-                for (int k = 0; k < SIMUL.SelectedUnitInfo.units.Count; k++)
+                propertyGrid1.SelectedObject = new DivisionInfo(SIMUL.SelectedDivision);
+
+                foreach (var unitInfo in SIMUL.SelectedDivision.Units)
                 {
-                    listInfoUnits.Items.Add(SIMUL.SelectedUnitInfo.units[k].unit.Name +
-                                    " (" + SIMUL.SelectedUnitInfo.units[k].count + ")");
+                    listInfoUnits.Items.Add($"{unitInfo.unit.Name} ({unitInfo.count})");
                 }
+            }
+            else if (null != SIMUL.SelectedBuilding)
+            {
+                propertyGrid1.SelectedObject = new BuildingInfo(SIMUL.SelectedBuilding);
             }
         }
 
-        //Стереть информацию о юнитах
-        private void unitInfoClear()
+        // Стереть информацию о юнитах
+        private void ClearObjectInfo()
         {
             propertyGrid1.SelectedObject = null;
-
             listInfoUnits.Items.Clear();
         }
 
         //Атака
-        private void attakaElemxElem()
+        private void BattleDivisionVsDivision()
         {
             //!!!!!! поддержка - временно отсутствует
             List<Division> e1 = new List<Division>();
@@ -144,8 +142,8 @@ namespace MT.TacticWar.UI
 
             FrmAttack frmAt = new FrmAttack();
 
-            frmAt.elemAtak_name = SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Name;
-            frmAt.elemDef_name = SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Name;
+            frmAt.elemAtak_name = SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Name;
+            frmAt.elemDef_name = SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended].Name;
             frmAt.elemAtak_units = new List<string>();
             frmAt.elemDef_units = new List<string>();
             frmAt.poddAtak_units = new List<string>();
@@ -153,17 +151,15 @@ namespace MT.TacticWar.UI
 
             string item;
 
-            for (int k = 0; k < SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Units.Count; k++)
+            foreach (var unitInfo in SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Units)
             {
-                item = SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Units[k].unit.Name + " (" +
-                        + SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Units[k].count + ")";
+                item = $"{unitInfo.unit.Name} ({unitInfo.count})";
                 frmAt.elemAtak_units.Add(item);
             }
 
-            for (int k = 0; k < SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Units.Count; k++)
+            foreach (var unitInfo in SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended].Units)
             {
-                item = SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Units[k].unit.Name + " (" +
-                        + SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Units[k].count + ")";
+                item = $"{unitInfo.unit.Name} ({unitInfo.count})";
                 frmAt.elemDef_units.Add(item);
             }
 
@@ -175,70 +171,70 @@ namespace MT.TacticWar.UI
 
             if (dr == DialogResult.OK)
             {
-                int win = SIMUL.attackSimulator(SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked],
-                                            SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended],
+                int win = SIMUL.attackSimulator(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked],
+                                            SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended],
                                             e1, e2);
 
                 //MessageBox.Show(a.ToString());
 
                 //после пересчёта параметров нужно снова установить шаги = 0
-                SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Steps = 0;
-                SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Steps = 0;
+                SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Steps = 0;
+                SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended].Steps = 0;
 
                 //если победил атакующий
                 if (win == 1)
                 {
                     //удаляем защищавшегося
-                    SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions.RemoveAt(SIMUL.AttackInfo.elemDefended);
+                    SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions.RemoveAt(SIMUL.AttackInfo.DivisionDefended);
 
                     frmAt.elemAtak_units.Clear();
                     frmAt.elemDef_units.Clear();
 
-                    for (int k = 0; k < SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Units.Count; k++)
+                    for (int k = 0; k < SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Units.Count; k++)
                     {
-                        item = SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Units[k].unit.Name + " (" +
-                                +SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Units[k].count + ")";
+                        item = SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Units[k].unit.Name + " (" +
+                                +SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Units[k].count + ")";
                         frmAt.elemAtak_units.Add(item);
                     }
 
                     //собрать информацию об этом юните
-                    SIMUL.setUnitInfo(SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked]);
-                    unitInfo();
+                    SIMUL.setUnitInfo(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked]);
+                    ShowObjectInfo();
                 }
                 else if (win == 2) //если победил защищавшийся
                 {
                     //удаляем атакующего
-                    SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions.RemoveAt(SIMUL.AttackInfo.elemAttacked);
+                    SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions.RemoveAt(SIMUL.AttackInfo.DivisionAttacked);
 
                     frmAt.elemAtak_units.Clear();
                     frmAt.elemDef_units.Clear();
 
-                    for (int k = 0; k < SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Units.Count; k++)
+                    for (int k = 0; k < SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended].Units.Count; k++)
                     {
-                        item = SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Units[k].unit.Name + " (" +
-                                +SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended].Units[k].count + ")";
+                        item = SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended].Units[k].unit.Name + " (" +
+                                +SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended].Units[k].count + ")";
                         frmAt.elemDef_units.Add(item);
                     }
 
                     //выделить победившее подразделение
-                    SIMUL.SelectDivision(SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended]);
+                    SIMUL.SelectDivision(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended]);
 
                     //собрать информацию об этом юните
-                    SIMUL.setUnitInfo(SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended]);
-                    unitInfo();
+                    SIMUL.setUnitInfo(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended]);
+                    ShowObjectInfo();
 
                     //устанавливаем выделение на защищавшегося
-                    SIMUL.SelectedDivision = SIMUL.Players[SIMUL.AttackInfo.igrokDefended].Divisions[SIMUL.AttackInfo.elemDefended];
+                    SIMUL.SelectedDivision = SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended];
                 }
                 else //ничья
                 {
                     //убираем флаг у атакующего
-                    SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Target.X = -1;
-                    SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked].Target.Y = -1;
+                    SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Target.X = -1;
+                    SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Target.Y = -1;
 
                     //собрать информацию об этом юните
-                    SIMUL.setUnitInfo(SIMUL.Players[SIMUL.AttackInfo.igrokAttacked].Divisions[SIMUL.AttackInfo.elemAttacked]);
-                    unitInfo();
+                    SIMUL.setUnitInfo(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked]);
+                    ShowObjectInfo();
                 }
 
                 frmAt.win = win;

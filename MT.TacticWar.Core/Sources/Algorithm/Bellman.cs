@@ -6,67 +6,42 @@ using System.Threading.Tasks;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 
-namespace MT.TacticWar.Core
+namespace MT.TacticWar.Core.Algorithm
 {
-    // Структура параметров при поиске кратчайшего пути
-    public struct BellmanParam
-    {
-        public Coordinates From;    // откуда идём
-        public Coordinates To;      // куда идём
-        public List<Cell> BestWay;  // путь - массив координат
-        public int Cost;            // цена всего пути
-    }
-
-    public class CellWrp
-    {
-        private Cell cell;
-        public CellType Type => cell.Type;
-        public bool Passable => cell.Passable;
-        public bool Occupied => cell.Occupied;
-        public int PassCost => cell.PassCost;
-
-        public Directions Directions { get; set; }
-        public int Cost { get; set; }
-
-        public CellWrp(Cell cell)
-        {
-            this.cell = cell;
-            Directions = new Directions();
-            Cost = int.MaxValue;
-        }
-    }
-
     public class Bellman
     {
+        private static List<Cell>  NotFound = new List<Cell>();
+
         private Map map;
-        private CellWrp[,] cells;
+        private BellmanCell[,] cells;
         private Division div;
-        public BellmanParam WayParams; //параметры кратчайшего пути
+
+        private Coordinates from;
+        private Coordinates to;
+        private int cost;
 
         public Bellman(Map map)
         {
             this.map = map;
-            cells = new CellWrp[map.Width, map.Height];
-            WayParams.BestWay = new List<Cell>();
+            cells = new BellmanCell[map.Width, map.Height];
         }
 
         /// <summary>[ГЛАВНАЯ] Поиск кратчайшего пути методом Беллмана
         /// </summary>
         /// <param name="div">подразделение, для которого ищем путь</param>
         /// <param name="flag">координаты флага (до куда ищем путь)</param>
-        /// <returns>Возвращает, найден путь или нет</returns>
-        public bool BellmanPoiskPuti(Division div, Coordinates flag)
+        public List<Cell> BellmanPoiskPuti(Division div, Coordinates flag)
         {
             // инициализация
             BellmanInitPoiskPuti(div, flag);
 
             // если ячейка не проходима
             if (!cells[flag.X, flag.Y].Passable)
-                return false;
+                return NotFound;
 
             // если юнит не может пройти по ячейке
             if (!div.CanStep(cells[flag.X, flag.Y].Type))
-                return false;
+                return NotFound;
 
             //стартуем с флага
             BellmanLetsStep(flag.X, flag.Y);
@@ -84,20 +59,15 @@ namespace MT.TacticWar.Core
         {
             this.div = div;
 
-            //запомнить координаты начала и конца поиска
-            WayParams.From = div.Coordinates.Clone();
-            WayParams.To = flag.Clone();
-
-            //инициализируем остальные параметры
-            WayParams.Cost = int.MaxValue;
-            WayParams.BestWay = new List<Cell>();
-            WayParams.BestWay.Clear();
+            from = div.Position.Clone();
+            to = flag.Clone();
+            cost = int.MaxValue;
 
             for (int i = 0; i < map.Height; i++)
             {
                 for (int j = 0; j < map.Width; j++)
                 {
-                    var cell = new CellWrp(map.Field[i, j]);
+                    var cell = new BellmanCell(map.Field[i, j]);
 
                     //обнуляем цену у флага
                     if (BellmanIsFlagHere(i, j))
@@ -137,7 +107,7 @@ namespace MT.TacticWar.Core
             if (!cell.Passable || cell.Occupied)
             {
                 //если координаты не совпадают с координатами юнита
-                if (WayParams.From.X != i || WayParams.From.Y != j)
+                if (!from.Equals(i, j))
                     return false;
             }
 
@@ -149,17 +119,17 @@ namespace MT.TacticWar.Core
         }
 
         // Есть ли смысл идти в эту ячейку?
-        private bool BellmanIsSmyslToStep(CellWrp cell)
+        private bool BellmanIsSmyslToStep(BellmanCell cell)
         {
             //если в эту ячейку попасть дороже, чем вообще в целом до флага,
             //  то эту ячейку можно и не рассматривать
-            return cell.Cost <= cells[div.Coordinates.X, div.Coordinates.Y].Cost;
+            return cell.Cost <= cells[div.Position.X, div.Position.Y].Cost;
         }
 
         // Проверка, есть ли флаг в этой клетке
         private bool BellmanIsFlagHere(int x, int y)
         {
-            return WayParams.To.Equals(x, y);
+            return to.Equals(x, y);
         }
 
         // Рекурсивная функция, выполняющая шаги
@@ -315,25 +285,26 @@ namespace MT.TacticWar.Core
         /// <summary>Выбор пути, если он есть (сохранение координат в список)
         /// </summary>
         /// <returns>Возвращает, есть ли путь</returns>
-        private bool BellmanVyborPuti()
+        private List<Cell> BellmanVyborPuti()
         {
+            var bestWay = new List<Cell>();
             int maxCost = map.Height * map.Width;
 
             //текущие координаты
-            var curCoords = WayParams.From.Clone();
+            var curCoords = from.Clone();
 
             //если цена в ячейке юнита = (int.MaxValue), значит, путь не найден
             if (cells[curCoords.X, curCoords.Y].Cost >= maxCost)
-                return false;
+                return NotFound;
 
             //запоминаем цену всего пути
-            WayParams.Cost = cells[curCoords.X, curCoords.Y].Cost;
+            cost = cells[curCoords.X, curCoords.Y].Cost;
 
             //счётчик для того, чтобы не было зацикливания
             int counter = 0;
 
             //сохраняем первую координату - положение юнита
-            WayParams.BestWay.Add(map.Field[curCoords.X, curCoords.Y]);
+            bestWay.Add(map.Field[curCoords.X, curCoords.Y]);
 
             //пока не наткнёмся на флаг
             while (!BellmanIsFlagHere(curCoords.X, curCoords.Y))
@@ -354,18 +325,18 @@ namespace MT.TacticWar.Core
                         curCoords.X += 1;
                         break;
                     default: //иначе - путь не найден
-                        return false;
+                        return NotFound;
                         //break;
                 }
 
                 //сохраняем следующую координату
-                WayParams.BestWay.Add(map.Field[curCoords.X, curCoords.Y]);
+                bestWay.Add(map.Field[curCoords.X, curCoords.Y]);
 
                 //если счётчик итераций больше возможного числа ходов, то пути нет
-                if (++counter > maxCost) return false;
+                if (++counter > maxCost) return NotFound;
             }
 
-            return true;
+            return bestWay;
         }
     }
 }

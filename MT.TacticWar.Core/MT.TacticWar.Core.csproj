@@ -42,13 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sources\Bellman.cs" />
+    <Compile Include="Sources\Algorithm\Bellman.cs" />
+    <Compile Include="Sources\Algorithm\BellmanParam.cs" />
+    <Compile Include="Sources\Algorithm\BellmanCell.cs" />
     <Compile Include="Sources\Coordinates.cs" />
     <Compile Include="Sources\Money.cs" />
     <Compile Include="Sources\Objects\Extensions.cs" />
+    <Compile Include="Sources\MoveType.cs" />
+    <Compile Include="Sources\Types\Gate.cs" />
     <Compile Include="Sources\Types\Mission\MissionManage.cs" />
     <Compile Include="Sources\Types\Simulator\AttackInfo.cs" />
-    <Compile Include="Sources\Types\Simulator\GameParams.cs" />
     <Compile Include="Sources\Types\Mission\MissionStatus.cs" />
     <Compile Include="Sources\Types\Structures.cs" />
     <Compile Include="Sources\Landscape\Cell.cs" />

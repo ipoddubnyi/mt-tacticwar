@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel;
 using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Objects
@@ -9,7 +8,7 @@ namespace MT.TacticWar.Core.Objects
     {
         public DivisionType Type; //тип подразделения
 
-        public Coordinates Coordinates; //координаты на зоне БД
+        public Coordinates Position { get; set; }
 
         public Coordinates Target;   //координаты места назначения
         public Coordinates DayTarget; //координаты цели юнита в этот день
@@ -38,80 +37,13 @@ namespace MT.TacticWar.Core.Objects
 
         public List<StructUnits> Units;    //список юнитов
 
-        //********************************************************************************
-        
-        #region Настройки класса
-
-        [DisplayName("Игрок")]
-        [Description("Номер владельца подразделения")]
-        public string Игрок
-        {
-            get { return ("Игрок " + PlayerId.ToString()); }
-        }
-
-        [DisplayName("Тип")]
-        [Description("Тип подразделения")] 
-        public string Тип => Type.AsString();
-
-        [DisplayName("Название")]
-        [Description("Название подразделения")] 
-        public string Название => Name;
-
-        [DisplayName("Координаты")]
-        [Description("Координаты подразделения на карте")]
-        public string Координаты => Coordinates.ToString();
-
-        [DisplayName("Мощь против пехоты")]
-        [Description("Боевая мощь противопехотного оружия")] 
-        public string Мощь_против_пехоты => PowerAntiInf.ToString();
-
-        [DisplayName("Мощь против бронетехники")]
-        [Description("Боевая мощь противотанкового оружия")] 
-        public string Мощь_против_бронетехники => PowerAntiBron.ToString();
-
-        [DisplayName("Мощь против авиации")]
-        [Description("Боевая мощь противовоздушного оружия")] 
-        public string Мощь_против_авиации => PowerAntiAir.ToString();
-
-        [DisplayName("Защита от пехоты")]
-        [Description("Защита от противопехотного оружия")] 
-        public string Защита_от_пехоты => ArmourFromInf.ToString();
-
-        [DisplayName("Защита от техники")]
-        [Description("Защита от противотанкового оружия")] 
-        public string Защита_от_техники => ArmourFromBron.ToString();
-
-        [DisplayName("Радиус атаки")]
-        [Description("На каком радиусе подразделение может выполнять функции")] 
-        public string Радиус => RadiusAttack.ToString();
-
-        [DisplayName("Радиус обзора")]
-        [Description("Дальность видимости подразделения")] 
-        public string Обзор => RadiusView.ToString();
-
-        [DisplayName("Ранг")]
-        [Description("Ранг поздразделения")]
-        public string Ранг => Level.AsString();
-
-        [DisplayName("Количество патронов")]
-        [Description("Количество патронов. Без патронов подразделение не может вести боевые действия")] 
-        public string Патроны => Suplies.ToString();
-
-        [DisplayName("Количество шагов")]
-        [Description("Число шагов подразделения")] 
-        public string Шаги => Steps.ToString();
-
-        #endregion
-
-        //********************************************************************************
-
         public Division(int igrok, int id, int type, string name, int i, int j, List<StructUnits> units)
         {
             //тип подразделения
             Type = (DivisionType)type;
 
             //координаты на зоне БД
-            Coordinates = new Coordinates(i, j);
+            Position = new Coordinates(i, j);
 
             //координаты места назначения
             Target = new Coordinates(-1, -1);
@@ -129,8 +61,6 @@ namespace MT.TacticWar.Core.Objects
             //пересчитать показатели
             recountParams();
         }
-
-        //********************************************************************************
 
         //Продвинуть подразделение к цели на этот день
         //!!!!!!!!!! Возврат: true - достигли цели
@@ -152,8 +82,8 @@ namespace MT.TacticWar.Core.Objects
                 //    k = put.Count; //иначе - завершаем цикл
             }
 
-            Coordinates.X = DayTarget.X;
-            Coordinates.Y = DayTarget.Y;
+            Position.X = DayTarget.X;
+            Position.Y = DayTarget.Y;
 
             DayTarget.X = -1;
             DayTarget.Y = -1;
