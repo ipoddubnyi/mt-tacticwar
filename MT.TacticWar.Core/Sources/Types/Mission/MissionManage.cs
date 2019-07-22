@@ -15,11 +15,11 @@ namespace MT.TacticWar.Core.Types.Mission
             byte tmp = 0;
 
             //если у игрока 1 не осталось подразделений
-            if (igrk1.mElements.Count < 1)
+            if (igrk1.Divisions.Count < 1)
                 tmp = 2;
 
             //если у игрока 2 не осталось подразделений
-            if (igrk1.mElements.Count < 1)
+            if (igrk1.Divisions.Count < 1)
                 tmp += 1;
 
             //проверка побед
@@ -51,7 +51,7 @@ namespace MT.TacticWar.Core.Types.Mission
         private MissionStatus isEnd_gm1(Player igrk1, Player igrk2)
         {
             //если у игрока 1 не осталось подразделений
-            if (igrk1.mElements.Count < 1)
+            if (igrk1.Divisions.Count < 1)
             {
                 idOfWinIgrok = 2;
                 return MissionStatus.MissionFailed;
@@ -60,10 +60,10 @@ namespace MT.TacticWar.Core.Types.Mission
             bool objectAlive = false;
 
             //если у игрока 2 не осталось подразделений
-            for (int i = 0; i < igrk1.mElements.Count; i++)
+            for (int i = 0; i < igrk1.Divisions.Count; i++)
             {
                 //если объект ещё есть в списке живых
-                if (igrk1.mElements.ElementAt(i).mId == idOfKillingObject)
+                if (igrk1.Divisions.ElementAt(i).Id == idOfKillingObject)
                     objectAlive = true;
             }
 

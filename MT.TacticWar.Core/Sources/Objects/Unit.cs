@@ -1,41 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace MT.TacticWar.Core.Objects
 {
-    //Боевая единица
     public class Unit
     {
-        public DivisionType mType;     //тип подразделения
+        public DivisionType Type;     //тип подразделения
 
-        public int mId;                 //номер юнита в подразделении
-        public string mName;            //имя
+        public int Id;                 //номер юнита в подразделении
+        public string Name;            //имя
 
-        public Health mHealth;         //здоровье
+        public Health Health;         //здоровье
 
-        public int mPowerAntiInf;       //общая мощь против пехоты и артиллерии
-        public int mPowerAntiBron;      //общая мощь против бронетехники и кораблей
-        public int mPowerAntiAir;       //общая мощь против воздуха
+        public int PowerAntiInf;       //общая мощь против пехоты и артиллерии
+        public int PowerAntiBron;      //общая мощь против бронетехники и кораблей
+        public int PowerAntiAir;       //общая мощь против воздуха
 
-        public int mArmourFromInf;      //общая защита от пехоты
-        public int mArmourFromBron;     //общая защита от любой техники
+        public int ArmourFromInf;      //общая защита от пехоты
+        public int ArmourFromBron;     //общая защита от любой техники
 
-        public int mSuplies;            //число патронов и снарядов
+        public int Suplies;            //число патронов и снарядов
 
-        public int mRadius;             //радиус действия (для артиллерии)
-        public int mObzor;              //радиус обзора
+        public int RadiusAttack;             //радиус действия (для артиллерии)
+        public int RadiusView;              //радиус обзора
 
-        public UnitLevel mLevel;          //уровень повышения
+        public UnitLevel Level;          //уровень повышения
 
-        public int mSteps;              //число шагов
-        public bool mStepLand;          //ходит ли по земле
-        public bool mStepAqua;          //ходит ли по воде
+        public int Steps;              //число шагов
+        public bool StepLand;          //ходит ли по земле
+        public bool StepAqua;          //ходит ли по воде
 
-        public Money mCost;             //цена юнита
-
-        //********************************************************************************
+        public Money Cost;             //цена юнита
 
         /*//Конструктор
         public Unit(int id, int type, string name, int health,
@@ -52,18 +45,14 @@ namespace MT.TacticWar.Core.Objects
 
         }*/
 
-        //********************************************************************************
-
-        //Лечить юнита
-        public void unitRepair()
+        public void Repair()
         {
-            mHealth = Health.Ready;
+            Health = Health.Ready;
         }
 
-        //Убить юнита
-        public void unitKill()
+        public void Kill()
         {
-            mHealth = Health.Dead;
+            Health = Health.Dead;
         }
     }
 }

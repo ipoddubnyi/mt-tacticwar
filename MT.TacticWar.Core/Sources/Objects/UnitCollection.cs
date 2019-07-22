@@ -21,51 +21,51 @@ namespace MT.TacticWar.Core.Objects
      * - низкая эффективность против техники и авиации
      * - малое число патронов
      */
-    class CuiPartizans : Unit
+    public class CuiPartizans : Unit
     {
         //Конструктор
         public CuiPartizans(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Infantry;
+            Type = DivisionType.Infantry;
             //имя
-            mName = "Партизаны";
+            Name = "Партизаны";
             //цена юнита
-            mCost.value = 400;
+            Cost.value = 400;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 20;
+            PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 2;
+            PowerAntiBron = 2;
             //общая мощь против воздуха
-            mPowerAntiAir = 2;
+            PowerAntiAir = 2;
 
             //общая защита от пехоты
-            mArmourFromInf = 20;
+            ArmourFromInf = 20;
             //общая защита от любой техники
-            mArmourFromBron = 30;
+            ArmourFromBron = 30;
             //число патронов и снарядов
-            mSuplies = 1500;
+            Suplies = 1500;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Recruit;
+            Level = UnitLevel.Recruit;
 
             //число шагов
-            mSteps = 10;
+            Steps = 10;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = false;
+            StepAqua = false;
         }
     }
 
@@ -85,51 +85,51 @@ namespace MT.TacticWar.Core.Objects
      * - высокая цена
      * - низкая эффективность против авиации
      */
-    class CuiSoldiers : Unit
+    public class CuiSoldiers : Unit
     {
         //Конструктор
         public CuiSoldiers(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Infantry;
+            Type = DivisionType.Infantry;
             //имя
-            mName = "Солдаты";
+            Name = "Солдаты";
             //цена юнита
-            mCost.value = 700;
+            Cost.value = 700;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 25;
+            PowerAntiInf = 25;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 10;
+            PowerAntiBron = 10;
             //общая мощь против воздуха
-            mPowerAntiAir = 5;
+            PowerAntiAir = 5;
 
             //общая защита от пехоты
-            mArmourFromInf = 30;
+            ArmourFromInf = 30;
             //общая защита от любой техники
-            mArmourFromBron = 30;
+            ArmourFromBron = 30;
             //число патронов и снарядов
-            mSuplies = 5000;
+            Suplies = 5000;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Recruit;
+            Level = UnitLevel.Recruit;
 
             //число шагов
-            mSteps = 8;
+            Steps = 8;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = false;
+            StepAqua = false;
         }
     }
 
@@ -150,51 +150,51 @@ namespace MT.TacticWar.Core.Objects
      * - высока стоимость
      * - низкая эффективность против авиации
      */
-    class CuiDiversionGroup : Unit
+    public class CuiDiversionGroup : Unit
     {
         //Конструктор
         public CuiDiversionGroup(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Infantry;
+            Type = DivisionType.Infantry;
             //имя
-            mName = "Диверсанты";
+            Name = "Диверсанты";
             //цена юнита
-            mCost.value = 3000;
+            Cost.value = 3000;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 35;
+            PowerAntiInf = 35;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 20;
+            PowerAntiBron = 20;
             //общая мощь против воздуха
-            mPowerAntiAir = 2;
+            PowerAntiAir = 2;
 
             //общая защита от пехоты
-            mArmourFromInf = 80;
+            ArmourFromInf = 80;
             //общая защита от любой техники
-            mArmourFromBron = 30;
+            ArmourFromBron = 30;
             //число патронов и снарядов
-            mSuplies = 3000;
+            Suplies = 3000;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 2;
+            RadiusView = 2;
             //уровень повышения
-            mLevel = UnitLevel.Warrior;
+            Level = UnitLevel.Warrior;
 
             //число шагов
-            mSteps = 10;
+            Steps = 10;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = true;
+            StepAqua = true;
         }
     }
 
@@ -213,51 +213,51 @@ namespace MT.TacticWar.Core.Objects
      * - невысокая дальность хода
      * - малое число патронов
      */
-    class CuiPoddubnyy : Unit
+    public class CuiPoddubnyy : Unit
     {
         //Конструктор
         public CuiPoddubnyy(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Infantry;
+            Type = DivisionType.Infantry;
             //имя
-            mName = "Лейтенант";
+            Name = "Лейтенант";
             //цена юнита
-            mCost.value = 50000;
+            Cost.value = 50000;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 80;
+            PowerAntiInf = 80;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 80;
+            PowerAntiBron = 80;
             //общая мощь против воздуха
-            mPowerAntiAir = 80;
+            PowerAntiAir = 80;
 
             //общая защита от пехоты
-            mArmourFromInf = 80;
+            ArmourFromInf = 80;
             //общая защита от любой техники
-            mArmourFromBron = 80;
+            ArmourFromBron = 80;
             //число патронов и снарядов
-            mSuplies = 1500;
+            Suplies = 1500;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Hero;
+            Level = UnitLevel.Hero;
 
             //число шагов
-            mSteps = 5;
+            Steps = 5;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = true;
+            StepAqua = true;
         }
     }
 
@@ -278,51 +278,51 @@ namespace MT.TacticWar.Core.Objects
      * Минусы:
      * - низкая эффективность против техники
      */
-    class CuvMotopehota : Unit
+    public class CuvMotopehota : Unit
     {
         //Конструктор
         public CuvMotopehota(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Vehicle;
+            Type = DivisionType.Vehicle;
             //имя
-            mName = "Мотопехота";
+            Name = "Мотопехота";
             //цена юнита
-            mCost.value = 800;
+            Cost.value = 800;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 20;
+            PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 15;
+            PowerAntiBron = 15;
             //общая мощь против воздуха
-            mPowerAntiAir = 5;
+            PowerAntiAir = 5;
 
             //общая защита от пехоты
-            mArmourFromInf = 30;
+            ArmourFromInf = 30;
             //общая защита от любой техники
-            mArmourFromBron = 30;
+            ArmourFromBron = 30;
             //число патронов и снарядов
-            mSuplies = 5000;
+            Suplies = 5000;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Recruit;
+            Level = UnitLevel.Recruit;
 
             //число шагов
-            mSteps = 8;
+            Steps = 8;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = false;
+            StepAqua = false;
         }
     }
 
@@ -338,51 +338,51 @@ namespace MT.TacticWar.Core.Objects
      * - низкая эффективность против авиации и пехоты
      * - малое число патронов
      */
-    class CuvTankMiddle : Unit
+    public class CuvTankMiddle : Unit
     {
         //Конструктор
         public CuvTankMiddle(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Vehicle;
+            Type = DivisionType.Vehicle;
             //имя
-            mName = "Средний танк";
+            Name = "Средний танк";
             //цена юнита
-            mCost.value = 1500;
+            Cost.value = 1500;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 20;
+            PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 50;
+            PowerAntiBron = 50;
             //общая мощь против воздуха
-            mPowerAntiAir = 5;
+            PowerAntiAir = 5;
 
             //общая защита от пехоты
-            mArmourFromInf = 80;
+            ArmourFromInf = 80;
             //общая защита от любой техники
-            mArmourFromBron = 50;
+            ArmourFromBron = 50;
             //число патронов и снарядов
-            mSuplies = 1500;
+            Suplies = 1500;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Recruit;
+            Level = UnitLevel.Recruit;
 
             //число шагов
-            mSteps = 5;
+            Steps = 5;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = false;
+            StepAqua = false;
         }
     }
 
@@ -401,51 +401,51 @@ namespace MT.TacticWar.Core.Objects
      * - низкая эффективность против авиации и пехоты
      * - малое число патронов
      */
-    class CuvTankHeavy : Unit
+    public class CuvTankHeavy : Unit
     {
         //Конструктор
         public CuvTankHeavy(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Vehicle;
+            Type = DivisionType.Vehicle;
             //имя
-            mName = "Тяжёлый танк";
+            Name = "Тяжёлый танк";
             //цена юнита
-            mCost.value = 3000;
+            Cost.value = 3000;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 15;
+            PowerAntiInf = 15;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 80;
+            PowerAntiBron = 80;
             //общая мощь против воздуха
-            mPowerAntiAir = 10;
+            PowerAntiAir = 10;
 
             //общая защита от пехоты
-            mArmourFromInf = 80;
+            ArmourFromInf = 80;
             //общая защита от любой техники
-            mArmourFromBron = 80;
+            ArmourFromBron = 80;
             //число патронов и снарядов
-            mSuplies = 1000;
+            Suplies = 1000;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Recruit;
+            Level = UnitLevel.Recruit;
 
             //число шагов
-            mSteps = 4;
+            Steps = 4;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = false;
+            StepAqua = false;
         }
     }
 
@@ -464,51 +464,51 @@ namespace MT.TacticWar.Core.Objects
      * - низкая защита
      * - малое число патронов
      */
-    class CuvZRK : Unit
+    public class CuvZRK : Unit
     {
         //Конструктор
         public CuvZRK(int id)
         {
             //номер юнита в подразделении
-            mId = id;
+            Id = id;
 
             //тип подразделения
-            mType = DivisionType.Vehicle;
+            Type = DivisionType.Vehicle;
             //имя
-            mName = "ЗРК";
+            Name = "ЗРК";
             //цена юнита
-            mCost.value = 2500;
+            Cost.value = 2500;
 
             //здоровье
-            mHealth = Health.Ready;
+            Health = Health.Ready;
 
             //общая мощь против пехоты и артиллерии
-            mPowerAntiInf = 5;
+            PowerAntiInf = 5;
             //общая мощь против бронетехники и кораблей
-            mPowerAntiBron = 10;
+            PowerAntiBron = 10;
             //общая мощь против воздуха
-            mPowerAntiAir = 80;
+            PowerAntiAir = 80;
 
             //общая защита от пехоты
-            mArmourFromInf = 30;
+            ArmourFromInf = 30;
             //общая защита от любой техники
-            mArmourFromBron = 15;
+            ArmourFromBron = 15;
             //число патронов и снарядов
-            mSuplies = 1000;
+            Suplies = 1000;
 
             //радиус действия (для артиллерии)
-            mRadius = 0;
+            RadiusAttack = 0;
             //радиус обзора
-            mObzor = 1;
+            RadiusView = 1;
             //уровень повышения
-            mLevel = UnitLevel.Recruit;
+            Level = UnitLevel.Recruit;
 
             //число шагов
-            mSteps = 5;
+            Steps = 5;
             //ходит ли по земле
-            mStepLand = true;
+            StepLand = true;
             //ходит ли по воде
-            mStepAqua = false;
+            StepAqua = false;
         }
     }
 

@@ -44,6 +44,8 @@ namespace MT.TacticWar.UI
                         listMissions.Items.Add(sourceDirectories[j].Name);
                 }
 
+                if (listMissions.Items.Count > 0)
+                    listMissions.SelectedIndex = 0;
             }
         }
 

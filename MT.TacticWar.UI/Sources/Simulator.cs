@@ -3,43 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using MT.TacticWar.Core;
 using MT.TacticWar.Core.Types.Simulator;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 
-namespace MT.TacticWar.Core
+namespace MT.TacticWar.UI
 {
     // Симулятор игры - то, что контактирует с граф. интерфейсом и делает все просчёты
     public class Simulator
     {
         //карта
-        public Field mGameMap;
+        public Map Map;
 
         //миссия
-        public Mission mMission;
+        public Mission Mission;
 
         //игроки
-        public Player[] mMasIgroki;    //массив из двух элементов (0 - игрок 1, 1 - игрок 2)
+        public Player[] Players;    //массив из двух элементов (0 - игрок 1, 1 - игрок 2)
 
         //параметры игры
         // - системные параметры
-        //    * ширина ячейки поля ?в переменной mGameMap?
+        //    * ширина ячейки поля ?в переменной Map?
         //
         // - число сделанных ходов
         // - кто ходит сейчас
-        int mIgrok; //-1 - никто, 0 - игрок 0, 1 - игрок 1
+        int PlayerCurrent; //-1 - никто, 0 - игрок 0, 1 - игрок 1
         // - набранные очки ?
         // - информация о выделенном юните для графики
-        public UnitInfo mUnitInfo;
+        public UnitInfo SelectedUnitInfo;
         // - информация об атаке
-        public AttackInfo mAttackInfo;
-        // - информация об ошибках
-        public string mError;
+        public AttackInfo AttackInfo;
         // - графика (где рисуется поле боя)
-        private Graphics mGrf;
+        private GameGraphics graphics;
 
         //!!!! временная переменная (пока не знаю, как сделать иначе)
-        Coordinates mKrestCoords; //координаты установленного креста
+        public Coordinates KrestCoords; //координаты установленного креста
+
+        public Division SelectedDivision { get; set; }
+        public Building SelectedBuilding { get; set; }
+
+        private Bellman bellman;
 
         //********************************************************************************
 
@@ -54,92 +58,59 @@ namespace MT.TacticWar.Core
         public Simulator(string misPath, string igrk0Name, string igrk1Name,
                                     bool igrk0AI, bool igrk1AI)
         {
-            mGrf = null;
+            KrestCoords = new Coordinates(-1, -1);
+            Mission = MissionLoader.LoadMission(misPath + "mission.mis");
 
-            mKrestCoords.x = -1;
-            mKrestCoords.y = -1;
+            string mapPath = Mission.mPathMap;
+            Map = MissionLoader.LoadMap(misPath + mapPath);
 
-            //-----------------------------
+            Players = new Player[Mission.mCountIgroki];
+            Players[0] = MissionLoader.LoadPlayerState(misPath + "igrok0.igr");
+            Players[1] = MissionLoader.LoadPlayerState(misPath + "igrok1.igr");
 
-            mError = "";
+            PlayerCurrent = 0;
+            Map.OccupateCells(Players);
 
-            mMission = new Mission(misPath + "mission.mis");
+            bellman = new Bellman(Map);
 
-            //если при загрузке миссии были ошибки
-            if (mMission.mError != "")
+            SelectedDivision = null;
+            SelectedBuilding = null;
+        }
+
+        public void InitGraphics(Graphics grf)
+        {
+            graphics = new GameGraphics(grf);
+        }
+
+        public void SelectDivision(Division division)
+        {
+            // TODO: проверка, что подразделение принадлежит игроку
+            SelectedDivision = division;
+        }
+
+        public void SelectBuilding(Building building)
+        {
+            SelectedBuilding = building;
+
+            // если в здании есть охранение - выделить его
+            if (building.IsSecured)
             {
-                mError = mMission.mError;
-                return;
+                SelectedDivision = building.SecurityDivision;
             }
+        }
 
-            string mapPath = mMission.mPathMap;
-            mGameMap = new Field(misPath + mapPath);
-
-            //если при загрузке карты были ошибки
-            if (mGameMap.mError != "")
+        public void DeselectBuilding()
+        {
+            if (null != SelectedBuilding)
             {
-                mError = mGameMap.mError;
-                return;
-            }
-            
-            //---------- игроки ----------
-
-            mMasIgroki = new Player[mMission.mCountIgroki];
-
-            /*for (int k = 0; k < mMission.mCountIgroki; k++)
-            {
-                mMasIgroki[k] = new CIgrok(k, "Игрок " + k.ToString(), false,
-                                        misPath + "igrok" + k.ToString() + ".igr");
-
-                //если при загрузке юнитов игрока были ошибки
-                if (mMasIgroki[k].mError != "")
+                //если в здании есть охранение - снять выделение с него
+                if (SelectedBuilding.IsSecured)
                 {
-                    mError = mMasIgroki[k].mError;
-                    return;
+                    SelectedDivision = null;
                 }
-            }*/
 
-            mMasIgroki[0] = new Player(0, igrk0Name, igrk0AI, misPath + "igrok0.igr");
-            
-            //если при загрузке юнитов игрока были ошибки
-            if (mMasIgroki[0].mError != "")
-            {
-                mError = mMasIgroki[0].mError;
-                return;
+                SelectedBuilding = null;
             }
-
-            mMasIgroki[1] = new Player(1, igrk1Name, igrk1AI, misPath + "igrok1.igr");
-
-            //если при загрузке юнитов игрока были ошибки
-            if (mMasIgroki[1].mError != "")
-            {
-                mError = mMasIgroki[1].mError;
-                return;
-            }
-
-            //-------------------
-
-            /*
-            mMasIgroki = new CIgrok[2];
-            mMasIgroki[0] = new CIgrok(0);
-            mMasIgroki[1] = new CIgrok(1);
-
-            mMasIgroki[0].loadElementsState("123", 0, 3, 3);
-            //mMasIgroki[0].mElements[0].mType = DivisionType.Infantry;
-
-            mMasIgroki[0].loadElementsState("123", 1, 3, 1);
-            mMasIgroki[0].loadBuildingsState("123", 0, 3, 1);
-            mMasIgroki[0].mBuildings[0].addOhraneniye(mMasIgroki[0].mElements[1]);
-
-            mMasIgroki[1].loadElementsState("123", 0, 1, 3);
-            mMasIgroki[1].loadBuildingsState("123", 0, 1, 1);
-            //mMasIgroki[1].mBuildings[0].addOhraneniye(mMasIgroki[1].mElements[0]);
-            */
-
-            //-------------------
-
-            mIgrok = 0;
-            mGameMap.fieldZanyatost(mMasIgroki);
         }
 
         //********************************************************************************
@@ -150,68 +121,66 @@ namespace MT.TacticWar.Core
         /// </summary>
         /// <param name="grf">графика, на которой рисовать</param>
         /// <returns></returns>
-        public void drawAll(Graphics grf)
+        public void drawAll()
         {
-            mGrf = grf; //обновляем поле
-
-            mGameMap.drawMap(mGrf);
+            graphics.DrawMap(Map);
             int left, top;
 
             //нарисовать подразделения игрока 0
-            for (int k = 0; k < mMasIgroki[0].mElements.Count; k++)
+            foreach (var division in Players[0].Divisions)
             {
-                left = mMasIgroki[0].mElements[k].mCoords.y * mGameMap.mFieldWidth;
-                top = mMasIgroki[0].mElements[k].mCoords.x * mGameMap.mFieldWidth;
-                mMasIgroki[0].mElements[k].drawElement(mGrf, left, top, mGameMap.mFieldWidth);
+                left = division.Coordinates.X * GameGraphics.CellSize;
+                top = division.Coordinates.Y * GameGraphics.CellSize;
+                graphics.DrawDivision(division, left, top, GameGraphics.CellSize, division == SelectedDivision);
             }
 
             //нарисовать подразделения игрока 1
-            for (int k = 0; k < mMasIgroki[1].mElements.Count; k++)
+            foreach (var division in Players[1].Divisions)
             {
-                left = mMasIgroki[1].mElements[k].mCoords.y * mGameMap.mFieldWidth;
-                top = mMasIgroki[1].mElements[k].mCoords.x * mGameMap.mFieldWidth;
-                mMasIgroki[1].mElements[k].drawElement(mGrf, left, top, mGameMap.mFieldWidth);
+                left = division.Coordinates.X * GameGraphics.CellSize;
+                top = division.Coordinates.Y * GameGraphics.CellSize;
+                graphics.DrawDivision(division, left, top, GameGraphics.CellSize, division == SelectedDivision);
             }
 
             //нарисовать здания игрока 0
-            for (int k = 0; k < mMasIgroki[0].mBuildings.Count; k++)
+            foreach (var building in Players[0].Buildings)
             {
-                left = mMasIgroki[0].mBuildings[k].mCoords.y * mGameMap.mFieldWidth;
-                top = mMasIgroki[0].mBuildings[k].mCoords.x * mGameMap.mFieldWidth;
+                left = building.Coordinates.X * GameGraphics.CellSize;
+                top = building.Coordinates.Y * GameGraphics.CellSize;
 
                 //если есть охранение у здания, стереть уже нарисованного юнита
-                if (mMasIgroki[0].mBuildings[k].mIsOhran)
-                    mGameMap.drawField(mGrf, mMasIgroki[0].mBuildings[k].mCoords.x, mMasIgroki[0].mBuildings[k].mCoords.y);
+                if (building.IsSecured)
+                    graphics.DrawCell(Map.Field[building.Coordinates.X, building.Coordinates.Y]);
 
-                mMasIgroki[0].mBuildings[k].drawBuilding(mGrf, left, top, mGameMap.mFieldWidth);
+                graphics.DrawBuilding(building, left, top, GameGraphics.CellSize, building == SelectedBuilding);
             }
 
             //нарисовать здания игрока 1
-            for (int k = 0; k < mMasIgroki[1].mBuildings.Count; k++)
+            foreach (var building in Players[1].Buildings)
             {
-                left = mMasIgroki[1].mBuildings[k].mCoords.y * mGameMap.mFieldWidth;
-                top = mMasIgroki[1].mBuildings[k].mCoords.x * mGameMap.mFieldWidth;
+                left = building.Coordinates.X * GameGraphics.CellSize;
+                top = building.Coordinates.Y * GameGraphics.CellSize;
 
                 //если есть охранение у здания, стереть уже нарисованного юнита
-                if (mMasIgroki[1].mBuildings[k].mIsOhran)
-                    mGameMap.drawField(mGrf, mMasIgroki[1].mBuildings[k].mCoords.x, mMasIgroki[1].mBuildings[k].mCoords.y);
+                if (building.IsSecured)
+                    graphics.DrawCell(Map.Field[building.Coordinates.X, building.Coordinates.Y]);
 
-                mMasIgroki[1].mBuildings[k].drawBuilding(mGrf, left, top, mGameMap.mFieldWidth);
+                graphics.DrawBuilding(building, left, top, GameGraphics.CellSize, building == SelectedBuilding);
             }
 
             //нарисовать крест, если он есть
-            if (mKrestCoords.x != -1)
-                mGameMap.drawKrest(mGrf, mKrestCoords.x, mKrestCoords.y);
+            if (KrestCoords.X != -1)
+                graphics.DrawCross(KrestCoords.X, KrestCoords.Y);
 
             /*//нарисовать путь
-            if (mMasIgroki[0].mSelectedElementId != -1)
+            if (Players[0].SelectedDivisionId != -1)
             {
-                drawPutManager(grf, mIgrok, mMasIgroki[0].mSelectedElementId, false);
+                drawPutManager(grf, PlayerCurrent, Players[0].SelectedDivisionId, false);
                 //drawFlagManager(grf, 
             }
-            else if (mMasIgroki[1].mSelectedElementId != -1)
+            else if (Players[1].SelectedDivisionId != -1)
             {
-                drawPutManager(grf, mIgrok, mMasIgroki[1].mSelectedElementId, false);
+                drawPutManager(grf, PlayerCurrent, Players[1].SelectedDivisionId, false);
                 //drawFlagManager(grf, 
             }*/
         }
@@ -224,74 +193,72 @@ namespace MT.TacticWar.Core
             int i, j;
 
             //!!!!!!!!!!!!! снять крест, если он есть
-            if(mKrestCoords.x != -1)
-                mGameMap.drawField(mGrf, mKrestCoords.x, mKrestCoords.y);
+            if (KrestCoords.X != -1)
+                graphics.DrawCell(Map.Field[KrestCoords.X, KrestCoords.Y]);
 
-            mKrestCoords.x = -1;
-            mKrestCoords.y = -1;
+            KrestCoords.X = -1;
+            KrestCoords.Y = -1;
 
             //если есть проложенный путь, стираем его
-            if (mGameMap.mPutParams.kratPut.Count > 0)
+            if (bellman.WayParams.BestWay.Count > 0)
             {
-                for (int k = 0; k < mGameMap.mPutParams.kratPut.Count; k++)
+                for (int k = 0; k < bellman.WayParams.BestWay.Count; k++)
                 {
                     //перерисовать поле
-                    i = mGameMap.mPutParams.kratPut[k].mCoords.x;
-                    j = mGameMap.mPutParams.kratPut[k].mCoords.y;
-                    mGameMap.drawField(mGrf, i, j);
+                    i = bellman.WayParams.BestWay[k].Coordinates.X;
+                    j = bellman.WayParams.BestWay[k].Coordinates.Y;
+                    graphics.DrawCell(Map.Field[i, j]);
                 }
 
-                mGameMap.mPutParams.kratPut.Clear();
+                bellman.WayParams.BestWay.Clear();
             }
 
             //бежим по игрокам, перерисовываем юнитов и здания
-            for (int k = 0; k < mMasIgroki.GetLength(0); k++)
+            foreach (var player in Players)
             {
-                //бежим по юнитам игрока k
-                for (int kk = 0; kk < mMasIgroki[k].mElements.Count; kk++)
+                foreach (var division in player.Divisions)
                 {
                     //если юнит выделен, снимаем выделение
-                    if (mMasIgroki[k].mElements[kk].mSelected)
+                    if (division == SelectedDivision)
                     {
-                        mMasIgroki[k].deselectElement(kk);
-                        mMasIgroki[k].mElements[kk].removeFlag();                        
+                        SelectedDivision = null;
+                        division.removeFlag();
                     }
-                    
+
                     //перерисовать юнит
-                    i = mMasIgroki[k].mElements[kk].mCoords.x;
-                    j = mMasIgroki[k].mElements[kk].mCoords.y;
-                    mGameMap.drawField(mGrf, i, j); //рисуем ячейку поля
-                    mMasIgroki[k].mElements[kk].drawElement(mGrf, j * mGameMap.mFieldWidth, i * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+                    i = division.Coordinates.X;
+                    j = division.Coordinates.Y;
+                    graphics.DrawCell(Map.Field[i, j]); //рисуем ячейку поля
+                    graphics.DrawDivision(division, i * GameGraphics.CellSize, j * GameGraphics.CellSize, GameGraphics.CellSize, false);
                 }
 
-                //бежим по зданиям игрока k
-                for (int kk = 0; kk < mMasIgroki[k].mBuildings.Count; kk++)
+                foreach (var building in player.Buildings)
                 {
                     //если здание выделено, снимаем выделение
-                    if (mMasIgroki[k].mBuildings[kk].mSelected)
+                    if (building == SelectedBuilding)
                     {
-                        mMasIgroki[k].deselectBuilding(kk);
+                        DeselectBuilding();
                     }
 
                     //перерисовать юнит
-                    i = mMasIgroki[k].mBuildings[kk].mCoords.x;
-                    j = mMasIgroki[k].mBuildings[kk].mCoords.y;
-                    int index = mMasIgroki[k].isElementAtCoords(i, j);
+                    i = building.Coordinates.X;
+                    j = building.Coordinates.Y;
+                    var division = player.GetDivisionAtCoordinates(i, j);
 
                     /*//если есть подразделение с этими координатами (у здания нет охранения)
-                    if (index == -1)
+                    if (null == division)
                     {
-                        mMasIgroki[k].mBuildings[kk].mIsOhran = false;
-                        mMasIgroki[k].mBuildings[kk].mOhraneniye = null;
+                        Players[k].Buildings[kk].IsSecured = false;
+                        Players[k].Buildings[kk].SecurityDivision = null;
                     }
                     else //если есть
                     {
-                        mMasIgroki[k].mBuildings[kk].mIsOhran = true;
-                        mMasIgroki[k].mBuildings[kk].mOhraneniye = mMasIgroki[k].mElements[index];
+                        Players[k].Buildings[kk].IsSecured = true;
+                        Players[k].Buildings[kk].SecurityDivision = division;
                     }*/
 
-                    mGameMap.drawField(mGrf, i, j); //рисуем ячейку поля
-                    mMasIgroki[k].mBuildings[kk].drawBuilding(mGrf, j * mGameMap.mFieldWidth, i * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+                    graphics.DrawCell(Map.Field[i, j]); //рисуем ячейку поля
+                    graphics.DrawBuilding(building, i * GameGraphics.CellSize, j * GameGraphics.CellSize, GameGraphics.CellSize, false);
                 }
             }
 
@@ -312,7 +279,7 @@ namespace MT.TacticWar.Core
             //нарисовать крест
             if (!flagKrest)
             {
-                mGameMap.drawKrest(mGrf, i, j);
+                graphics.DrawCross(i, j);
                 return;
             }
 
@@ -341,31 +308,33 @@ namespace MT.TacticWar.Core
                 strAtak = "F";
             }
 
-            mGameMap.drawFlag(mGrf, i, j, strAtak, strRedBlue);
+            graphics.DrawFlag(i, j, strAtak, strRedBlue);
         }
 
         /// <summary>Рисовать путь для подразделения
         /// </summary>
         /// <param name="igrok">ид игрока, хозяина подразделения</param>
-        /// <param name="elemInd">ид подразделения</param>
+        /// <param name="division">подразделение</param>
         /// <param name="countPut">надо ли считать путь заново</param>
         /// <returns>Возвращает (false), если путь не найден</returns>
-        private bool drawPutManager(int igrok, int elemInd, bool countPut)
+        private bool drawPutManager(int igrok, Division division, bool countPut)
         {
             //просчитать путь, если надо
-            if(countPut)
-                mGameMap.BellmanPoiskPuti(mMasIgroki[igrok].mElements[elemInd],
-                                mMasIgroki[igrok].mElements[elemInd].mFlag);
+            if (countPut)
+            {
+                bellman = new Bellman(Map);
+                bellman.BellmanPoiskPuti(division, division.Target);
+            }
 
             //если путь найден
-            if (mGameMap.mPutParams.kratPut.Count > 0)
+            if (bellman.WayParams.BestWay.Count > 0)
             {
                 //просчитать путь для юнита на один день (для рисования на карте)
-                List<Cell> oneDayPut = mGameMap.mPutParams.kratPut.ToList<Cell>();
-                mMasIgroki[igrok].mElements[elemInd].countOneDayOfElement(ref oneDayPut);
+                var oneDayPut = bellman.WayParams.BestWay.ToList<Cell>();
+                division.countOneDayOfElement(ref oneDayPut);
 
                 //нарисовать путь
-                mGameMap.drawPut(mGrf, mGameMap.mPutParams.kratPut, oneDayPut);
+                graphics.DrawWay(bellman.WayParams.BestWay, oneDayPut);
 
                 return true;
             }
@@ -385,31 +354,31 @@ namespace MT.TacticWar.Core
         /// <returns></returns>
         public void setUnitInfo(Division elem)
         {
-            /*mUnitInfo.type = elem.mType.ToString();
-            mUnitInfo.name = elem.mName;
-            mUnitInfo.coords = elem.mCoords;
-            mUnitInfo.igrokId = elem.mIgrokId;
+            /*SelectedUnitInfo.type = Div.Type.ToString();
+            SelectedUnitInfo.name = Div.Name;
+            SelectedUnitInfo.coords = Div.Coordinates;
+            SelectedUnitInfo.igrokId = Div.PlayerId;
 
-            mUnitInfo.health = -1; //нет такого поля
-            mUnitInfo.powerAntiAir = elem.mPowerAntiAir;
-            mUnitInfo.powerAntiBron = elem.mPowerAntiBron;
-            mUnitInfo.powerAntiInf = elem.mPowerAntiInf;
+            SelectedUnitInfo.health = -1; //нет такого поля
+            SelectedUnitInfo.powerAntiAir = Div.PowerAntiAir;
+            SelectedUnitInfo.powerAntiBron = Div.PowerAntiBron;
+            SelectedUnitInfo.powerAntiInf = Div.PowerAntiInf;
 
-            mUnitInfo.armourFromBron = elem.mArmourFromBron;
-            mUnitInfo.armourFromInf = elem.mArmourFromInf;
+            SelectedUnitInfo.armourFromBron = Div.ArmourFromBron;
+            SelectedUnitInfo.armourFromInf = Div.ArmourFromInf;
 
-            mUnitInfo.level = elem.mLevel;
-            mUnitInfo.obzor = elem.mObzor;
-            mUnitInfo.radius = elem.mRadius;
+            SelectedUnitInfo.level = Div.Level;
+            SelectedUnitInfo.obzor = Div.RadiusView;
+            SelectedUnitInfo.radius = Div.RadiusAttack;
 
-            mUnitInfo.suplies = elem.mSuplies;
-            mUnitInfo.steps = elem.mSteps;*/
+            SelectedUnitInfo.suplies = Div.Suplies;
+            SelectedUnitInfo.steps = Div.Steps;*/
 
-            mUnitInfo.playerId = elem.mIgrokId;
-            mUnitInfo.elemId = elem.mId;
-            mUnitInfo.buildId = -1;
+            /*SelectedUnitInfo.playerId = elem.PlayerId;
+            SelectedUnitInfo.elemId = elem.Id;
+            SelectedUnitInfo.buildId = -1;
 
-            mUnitInfo.units = elem.mUnits;
+            SelectedUnitInfo.units = elem.Units;*/
         }
 
         /// <summary>Заполнение информации о здании
@@ -418,35 +387,35 @@ namespace MT.TacticWar.Core
         /// <returns></returns>
         public void setUnitInfo(Building building)
         {
-            /*mUnitInfo.type = building.mType.ToString();
-            mUnitInfo.name = building.mName;
-            mUnitInfo.coords = building.mCoords;
-            mUnitInfo.igrokId = building.mIgrokId;
+            /*SelectedUnitInfo.type = building.Type.ToString();
+            SelectedUnitInfo.name = building.Name;
+            SelectedUnitInfo.coords = building.Coordinates;
+            SelectedUnitInfo.igrokId = building.PlayerId;
 
-            mUnitInfo.health = building.mHealth;
-            mUnitInfo.powerAntiAir = -1; //нет такого поля
-            mUnitInfo.powerAntiBron = -1; //нет такого поля
-            mUnitInfo.powerAntiInf = -1; //нет такого поля
+            SelectedUnitInfo.health = building.Health;
+            SelectedUnitInfo.powerAntiAir = -1; //нет такого поля
+            SelectedUnitInfo.powerAntiBron = -1; //нет такого поля
+            SelectedUnitInfo.powerAntiInf = -1; //нет такого поля
 
-            mUnitInfo.armourFromBron = -1; //нет такого поля
-            mUnitInfo.armourFromInf = -1; //нет такого поля
+            SelectedUnitInfo.armourFromBron = -1; //нет такого поля
+            SelectedUnitInfo.armourFromInf = -1; //нет такого поля
 
-            mUnitInfo.level = UnitLevel.None; //нет такого поля
-            mUnitInfo.obzor = building.mObzor;
-            mUnitInfo.radius = building.mRadius;
+            SelectedUnitInfo.level = UnitLevel.None; //нет такого поля
+            SelectedUnitInfo.obzor = building.RadiusView;
+            SelectedUnitInfo.radius = building.RadiusAttack;
 
-            mUnitInfo.suplies = -1; //нет такого поля
-            mUnitInfo.steps = -1; //нет такого поля*/
+            SelectedUnitInfo.suplies = -1; //нет такого поля
+            SelectedUnitInfo.steps = -1; //нет такого поля*/
 
-            mUnitInfo.playerId = building.mIgrokId;
-            mUnitInfo.elemId = -1;
-            mUnitInfo.buildId = building.mId;
+            /*SelectedUnitInfo.playerId = building.PlayerId;
+            SelectedUnitInfo.elemId = -1;
+            SelectedUnitInfo.buildId = building.Id;
 
             //если есть охранение
-            if (building.mIsOhran)
-                mUnitInfo.units = building.mOhraneniye.mUnits;
+            if (building.IsSecured)
+                SelectedUnitInfo.units = building.SecurityDivision.Units;
             else
-                mUnitInfo.units = null;
+                SelectedUnitInfo.units = null;*/
         }
 
         //----------------------
@@ -454,50 +423,50 @@ namespace MT.TacticWar.Core
         /// <summary>Выделить подразделение и собрать информацию о нём
         /// </summary>
         /// <param name="igrokId">ид игрока, хозяина подразделения</param>
-        /// <param name="elemId">ид подразделения</param>
+        /// <param name="division">подразделение</param>
         /// <param name="i">координата по высоте</param>
         /// <param name="j">координата по ширине</param>
         /// <returns></returns>
-        private void clickEM_getElemInfo(int igrokId, int elemId, int i, int j)
+        private void clickEM_getElemInfo(int igrokId, Division division, int i, int j)
         {
             //снять выделение со всего
             deselectAll();
 
             //выделить юнит
-            mMasIgroki[igrokId].selectElement(elemId);
+            SelectDivision(division);
             //заполнить структуру с информацией о юните, чтобы передать гую
-            setUnitInfo(mMasIgroki[igrokId].mElements[elemId]);
+            setUnitInfo(division);
             //перерисовать землю под юнитом
-            mGameMap.drawField(mGrf, i, j);
+            graphics.DrawCell(Map.Field[i, j]);
             //перерисовать выделенный юнит
-            mMasIgroki[igrokId].mElements[elemId].drawElement(mGrf, j * mGameMap.mFieldWidth, i * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+            graphics.DrawDivision(division, i * GameGraphics.CellSize, j * GameGraphics.CellSize, GameGraphics.CellSize, true);
         }
 
         /// <summary>Выделить здание и собрать информацию о нём
         /// </summary>
         /// <param name="igrokId">ид игрока, хозяина здания</param>
-        /// <param name="buildId">ид здания</param>
+        /// <param name="building">здание</param>
         /// <param name="i">координата по высоте</param>
         /// <param name="j">координата по ширине</param>
         /// <returns></returns>
-        private void clickEM_getBuildInfo(int igrokId, int buildId, int i, int j)
+        private void clickEM_getBuildInfo(int igrokId, Building building, int i, int j)
         {
             //снять выделение со всего
             deselectAll();
 
             //выделить здание
-            mMasIgroki[igrokId].selectBuilding(buildId);
+            SelectBuilding(building);
 
             //если есть охранение - собрать о нём информацию
-            if (mMasIgroki[igrokId].mBuildings[buildId].mIsOhran)
-                setUnitInfo(mMasIgroki[igrokId].mElements[mMasIgroki[igrokId].mSelectedElementId]);
+            if (building.IsSecured)
+                setUnitInfo(SelectedDivision);
             else //иначе - о здании
-                setUnitInfo(mMasIgroki[igrokId].mBuildings[buildId]);
+                setUnitInfo(building);
 
             //перерисовать землю под зданием
-            mGameMap.drawField(mGrf, i, j);
+            graphics.DrawCell(Map.Field[i, j]);
             //перерисовать выделенное здание
-            mMasIgroki[igrokId].mBuildings[buildId].drawBuilding(mGrf, j * mGameMap.mFieldWidth, i * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+            graphics.DrawBuilding(building, i * GameGraphics.CellSize, j * GameGraphics.CellSize, GameGraphics.CellSize, true);
         }
 
         /// <summary>Просчитать путь до подразделения, поставить флаг (атака или присоединение)
@@ -510,32 +479,31 @@ namespace MT.TacticWar.Core
         /// <returns></returns>
         private void clickEM_countPutToObject(int igrokId, bool enemieClick, int toFEB, int i, int j)
         {
-            Coordinates tmp; //для запоминания координат
-
             //запомнить индекс выделенного юнита
-            int oldSelectInd = mMasIgroki[igrokId].mSelectedElementId;
+            var oldSelected = SelectedDivision;
 
             //снять выделение со всего и заново выделить юнит
             deselectAll();
-            mMasIgroki[igrokId].selectElement(oldSelectInd);
+            SelectDivision(oldSelected);
 
             //перерисовать юнит (уже с выделением)
-            tmp.x = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.x;
-            tmp.y = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.y;
-            mGameMap.drawField(mGrf, tmp.x, tmp.y);
-            mMasIgroki[igrokId].mElements[oldSelectInd].drawElement(mGrf, tmp.y * mGameMap.mFieldWidth, tmp.x * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+            
+            //для запоминания координат
+            var tmp = oldSelected.Coordinates.Clone();
+            graphics.DrawCell(Map.Field[tmp.X, tmp.Y]);
+            graphics.DrawDivision(oldSelected, tmp.X * GameGraphics.CellSize, tmp.Y * GameGraphics.CellSize, GameGraphics.CellSize, true);
 
             //установить флаг на нажатую клетку
-            mMasIgroki[igrokId].mElements[oldSelectInd].setFlag(i, j);
+            oldSelected.setFlag(i, j);
 
             //просчитать путь, и если он существует нарисовать его и флаг
-            if (drawPutManager(igrokId, oldSelectInd, true))
+            if (drawPutManager(igrokId, oldSelected, true))
             {
                 bool redBlue = false;
 
                 //если юнит за день дойдёт до флага, то красный
-                if ((mMasIgroki[igrokId].mElements[oldSelectInd].mFlag.x == mMasIgroki[igrokId].mElements[oldSelectInd].mDayTag.x) &&
-                    (mMasIgroki[igrokId].mElements[oldSelectInd].mFlag.y == mMasIgroki[igrokId].mElements[oldSelectInd].mDayTag.y))
+                if ((oldSelected.Target.X == oldSelected.DayTarget.X) &&
+                    (oldSelected.Target.Y == oldSelected.DayTarget.Y))
                     redBlue = true;
 
                 //нарисовать флаг (координаты, флаг/крест, поле0/подразд1/здание2, добавление/атака, красный/синий)
@@ -544,47 +512,46 @@ namespace MT.TacticWar.Core
             else
             {
                 //нарисовать крест
-                mKrestCoords.x = i;
-                mKrestCoords.y = j;
-                mGameMap.drawKrest(mGrf, i, j);
+                KrestCoords.X = i;
+                KrestCoords.Y = j;
+                graphics.DrawCross(i, j);
             }
         }
 
         /// <summary>Просчитать путь до здания, поставить флаг (захват, атака или присоединение)
         /// </summary>
         /// <param name="igrokId">ид игрока, хозяина выделенного подразделения</param>
-        /// <param name="buildId">ид здания</param>
+        /// <param name="building">здание</param>
         /// <param name="enemieClick">щелчок по зданию врага</param>
         /// <param name="i">координата по высоте</param>
         /// <param name="j">координата по ширине</param>
         /// <returns></returns>
-        private void clickEM_countPutToBuild(int igrokId, int buildId, bool enemieClick, int i, int j)
+        private void clickEM_countPutToBuild(int igrokId, Building building, bool enemieClick, int i, int j)
         {
-            Coordinates tmp; //для запоминания координат
-
             //запомнить нидекс выделенного юнита
-            int oldSelectInd = mMasIgroki[igrokId].mSelectedElementId;
+            var oldSelected = SelectedDivision;
 
             //снять выделение со всего и заново выделить юнит
             deselectAll();
-            mMasIgroki[igrokId].selectElement(oldSelectInd);
+            SelectDivision(oldSelected);
 
             //перерисовать юнит
-            tmp.x = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.x;
-            tmp.y = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.y;
-            //mGameMap.drawField(grf, tmp.x, tmp.y);
-            mMasIgroki[igrokId].mElements[oldSelectInd].drawElement(mGrf, tmp.y * mGameMap.mFieldWidth, tmp.x * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+
+            //для запоминания координат
+            var tmp = oldSelected.Coordinates.Clone();
+            //Map.DrawCell(grf, tmp.x, tmp.y);
+            graphics.DrawDivision(oldSelected, tmp.X * GameGraphics.CellSize, tmp.Y * GameGraphics.CellSize, GameGraphics.CellSize, true);
 
             //установить флаг
-            mMasIgroki[igrokId].mElements[oldSelectInd].setFlag(i, j);
+            oldSelected.setFlag(i, j);
 
             //просчитать путь, и если он существует
-            if (drawPutManager(igrokId, oldSelectInd, true))
+            if (drawPutManager(igrokId, oldSelected, true))
             {
                 bool redBlue = false;
 
-                if ((mMasIgroki[igrokId].mElements[oldSelectInd].mFlag.x == mMasIgroki[igrokId].mElements[oldSelectInd].mDayTag.x) &&
-                    (mMasIgroki[igrokId].mElements[oldSelectInd].mFlag.y == mMasIgroki[igrokId].mElements[oldSelectInd].mDayTag.y))
+                if ((oldSelected.Target.X == oldSelected.DayTarget.X) &&
+                    (oldSelected.Target.Y == oldSelected.DayTarget.Y))
                     redBlue = true;
 
                 //нарисовать флаг
@@ -593,7 +560,7 @@ namespace MT.TacticWar.Core
                 if (enemieClick)
                 {
                     //если есть охранение - поставить флаг атаки
-                    if (mMasIgroki[(igrokId + 1) % 2].mBuildings[buildId].mIsOhran)
+                    if (building.IsSecured)
                         drawFlagManager(i, j, true, 1, !enemieClick, redBlue);
                     else //поставить флаг захвата
                         drawFlagManager(i, j, true, 2, !enemieClick, redBlue);
@@ -601,7 +568,7 @@ namespace MT.TacticWar.Core
                 else
                 {
                     //если есть охранение - поставить флаг добавления
-                    if (mMasIgroki[igrokId].mBuildings[buildId].mIsOhran)
+                    if (building.IsSecured)
                         drawFlagManager(i, j, true, 1, !enemieClick, redBlue);
                     else //поставить флаг защиты здания
                         drawFlagManager(i, j, true, 2, !enemieClick, redBlue);
@@ -610,9 +577,9 @@ namespace MT.TacticWar.Core
             else
             {
                 //нарисовать крест
-                mGameMap.drawKrest(mGrf, i, j);
-                mKrestCoords.x = i;
-                mKrestCoords.y = j;
+                graphics.DrawCross(i, j);
+                KrestCoords.X = i;
+                KrestCoords.Y = j;
             }
         }
 
@@ -629,68 +596,67 @@ namespace MT.TacticWar.Core
             Coordinates tmp; //для запоминания координат
 
             //запомнить нидекс выделенного юнита
-            int oldSelectInd = mMasIgroki[igrokId].mSelectedElementId;
+            var oldSelected = SelectedDivision;
             //запомнить координаты выделенного юнитаюнита
-            tmp = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords;
+            tmp = oldSelected.Coordinates.Clone();
 
             //если путь был найден
-            if (mGameMap.mPutParams.kratPut.Count > 0)
+            if (bellman.WayParams.BestWay.Count > 0)
             {
                 //сдвинуть юнит
-                mMasIgroki[igrokId].mElements[oldSelectInd].pushElement(mGameMap.mPutParams.kratPut);
+                oldSelected.pushElement(bellman.WayParams.BestWay);
                 
                 //если юнит сместился (!)
-                if ((tmp.x != mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.x) ||
-                    (tmp.y != mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.y))
+                if ((tmp.X != oldSelected.Coordinates.X) ||
+                    (tmp.Y != oldSelected.Coordinates.Y))
                 {
                     //стереть юнит со старого места
-                    mGameMap.drawField(mGrf, tmp.x, tmp.y);
-
+                    graphics.DrawCell(Map.Field[tmp.X, tmp.Y]);
 
                     //если на старом месте нет здания - освободить старую ячейку
-                    int indd = mMasIgroki[igrokId].isBuildingAtCoords(tmp.x, tmp.y);
-                    if (indd == -1)
-                        mGameMap.mField[tmp.x, tmp.y].mZanyata = false;
+                    var building = Players[igrokId].GetBuildingAtCoordinates(tmp.X, tmp.Y);
+                    if (null == building)
+                        Map.Field[tmp.X, tmp.Y].Object = null;
                     else //иначе - освободить здание
                     {
-                        mMasIgroki[igrokId].mBuildings[indd].mOhraneniye = null;
-                        mMasIgroki[igrokId].mBuildings[indd].mIsOhran = false;
+                        building.SecurityDivision = null;
+                        building.IsSecured = false;
                     }
 
                     //нарисовать юнит на новом месте
-                    tmp.x = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.x;
-                    tmp.y = mMasIgroki[igrokId].mElements[oldSelectInd].mCoords.y;
+                    tmp.X = oldSelected.Coordinates.X;
+                    tmp.Y = oldSelected.Coordinates.Y;
 
                     //занять новую ячейку
-                    mGameMap.mField[tmp.x, tmp.y].mZanyata = true;
+                    Map.Field[tmp.X, tmp.Y].Object = oldSelected;
 
                     //временно сохранить путь
-                    List<Cell> tmpPut = mGameMap.mPutParams.kratPut.ToList<Cell>();
+                    List<Cell> tmpPut = bellman.WayParams.BestWay.ToList<Cell>();
 
                     //убрать из путь часть, которую уже прошли
                     while (tmpPut.Count > 0)
                     {
-                        if ((tmpPut[0].mCoords.x == tmp.x) && (tmpPut[0].mCoords.y == tmp.y))
+                        if ((tmpPut[0].Coordinates.X == tmp.X) && (tmpPut[0].Coordinates.Y == tmp.Y))
                             break;
 
                         tmpPut.RemoveAt(0);
                     }
 
                     //выделить юнит заново и собрать информацию о нём
-                    clickEM_getElemInfo(igrokId, oldSelectInd, tmp.x, tmp.y);
+                    clickEM_getElemInfo(igrokId, oldSelected, tmp.X, tmp.Y);
 
                     //загрузить путь из временной памяти
-                    mGameMap.mPutParams.kratPut = tmpPut.ToList<Cell>();
+                    bellman.WayParams.BestWay = tmpPut.ToList<Cell>();
 
                     //установить флаг
-                    mMasIgroki[igrokId].mElements[oldSelectInd].setFlag(i, j);
+                    oldSelected.setFlag(i, j);
 
                     //нарисовать путь без пересчёта и нарисавать флаг
-                    if (drawPutManager(igrokId, oldSelectInd, false))
+                    if (drawPutManager(igrokId, oldSelected, false))
                     {
                         //если юнит НЕ дошёл до флага за день
-                        if ((mMasIgroki[igrokId].mElements[oldSelectInd].mFlag.x != mMasIgroki[igrokId].mElements[oldSelectInd].mDayTag.x) ||
-                            (mMasIgroki[igrokId].mElements[oldSelectInd].mFlag.y != mMasIgroki[igrokId].mElements[oldSelectInd].mDayTag.y))
+                        if ((oldSelected.Target.X != oldSelected.DayTarget.X) ||
+                            (oldSelected.Target.Y != oldSelected.DayTarget.Y))
                         {
                             //нарисовать флаг (координаты, флаг/крест, поле0/подразд1/здание2, добавление/атака, красный/синий)
                             drawFlagManager(i, j, true, toFEB, !enemieClick, false);
@@ -709,18 +675,18 @@ namespace MT.TacticWar.Core
         /// <param name="igrok">ид текущего игрока</param>
         /// <param name="enemie">ид врага</param>
         /// <param name="enemieClick">щелчок по подразделению врага</param>
-        /// <param name="ind">индекс подразделения, на которое нажали</param>
+        /// <param name="division">подразделение, на которое нажали</param>
         /// <param name="i">координата по высоте</param>
         /// <param name="j">координата по ширине</param>
         /// <returns>Возвращает сигналы обмена с GUI</returns>
-        private Signals clickElementManager(int igrok, int enemie, bool enemieClick, int ind, int i, int j)
+        private Signals ClickDivisionManager(int igrok, int enemie, bool enemieClick, Division division, int i, int j)
         {
             int switchInt; //варианты движения юнита
 
             if (!enemieClick)
-                switchInt = mMasIgroki[igrok].clickMyElement(ind);
+                switchInt = ClickMyDivision(division);
             else
-                switchInt = mMasIgroki[igrok].clickEnemieElement(mMasIgroki[enemie].mElements[ind].mCoords);
+                switchInt = ClickEnemieDivision(division.Coordinates);
 
             //вызвать обработчик нажатия на свой юнит
             switch (switchInt)
@@ -731,7 +697,7 @@ namespace MT.TacticWar.Core
                     if (enemieClick) igrok = enemie;
 
                     //выделить юнита, заполнить структуру
-                    clickEM_getElemInfo(igrok, ind, i, j);
+                    clickEM_getElemInfo(igrok, division, i, j);
 
                     //готова информация о единице
                     return Signals.s03_READY_UNIT_INFO;
@@ -747,25 +713,25 @@ namespace MT.TacticWar.Core
 
                     //---
 
-                    int oldSelectInd = mMasIgroki[igrok].mSelectedElementId;
+                    int oldSelectInd = SelectedDivision.Id;
 
                     //если атакуем противника
                     if (!enemieClick)
                     {
                         //если координаты юнита совпадают с координатами целевого юнита
-                        if ((mMasIgroki[igrok].mElements[oldSelectInd].mCoords.x == mMasIgroki[igrok].mElements[ind].mCoords.x) &&
-                            (mMasIgroki[igrok].mElements[oldSelectInd].mCoords.y == mMasIgroki[igrok].mElements[ind].mCoords.y))
+                        if ((Players[igrok].Divisions[oldSelectInd].Coordinates.X == division.Coordinates.X) &&
+                            (Players[igrok].Divisions[oldSelectInd].Coordinates.Y == division.Coordinates.Y))
                         {
-                            return achievementTag(mMasIgroki[igrok].mElements[oldSelectInd], mMasIgroki[igrok].mElements[ind]);
+                            return achievementTag(Players[igrok].Divisions[oldSelectInd], division);
                         }
                     }
                     else
                     {
                         //если координаты юнита совпадают с координатами целевого юнита
-                        if ((mMasIgroki[igrok].mElements[oldSelectInd].mCoords.x == mMasIgroki[enemie].mElements[ind].mCoords.x) &&
-                            (mMasIgroki[igrok].mElements[oldSelectInd].mCoords.y == mMasIgroki[enemie].mElements[ind].mCoords.y))
+                        if ((Players[igrok].Divisions[oldSelectInd].Coordinates.X == division.Coordinates.X) &&
+                            (Players[igrok].Divisions[oldSelectInd].Coordinates.Y == division.Coordinates.Y))
                         {
-                            return achievementTag(mMasIgroki[igrok].mElements[oldSelectInd], mMasIgroki[enemie].mElements[ind]);
+                            return achievementTag(Players[igrok].Divisions[oldSelectInd], division);
                         }
                     }
 
@@ -776,26 +742,26 @@ namespace MT.TacticWar.Core
             //передаём гую, что всё хорошо
             return Signals.s01_ALL_IS_GD;
         }
-        
+
         /// <summary>Обработчик нажатия на здание
         /// </summary>
         /// <param name="igrok">ид текущего игрока</param>
         /// <param name="enemie">ид врага</param>
         /// <param name="enemieClick">щелчок по зданию врага</param>
-        /// <param name="ind">индекс здания, на которое нажали</param>
+        /// <param name="building">здание, на которое нажали</param>
         /// <param name="i">координата по высоте</param>
         /// <param name="j">координата по ширине</param>
         /// <returns>Возвращает сигналы обмена с GUI</returns>
-        private Signals clickBuildingManager(int igrok, int enemie, bool enemieClick, int ind, int i, int j)
+        private Signals ClickBuildingManager(int igrok, int enemie, bool enemieClick, Building building, int i, int j)
         {
             int switchInt;
             int oldSelectInd; //индекс уже выделенного юнита
             Coordinates tmp; //для запоминания координат
 
             if (!enemieClick)
-                switchInt = mMasIgroki[igrok].clickMyBuilding(ind);
+                switchInt = ClickMyBuilding(building);
             else
-                switchInt = mMasIgroki[igrok].clickEnemieBuilding(mMasIgroki[enemie].mBuildings[ind].mCoords);
+                switchInt = ClickEnemieBuilding(building.Coordinates);
 
             //вызвать обработчик нажатия на свой юнит
             switch (switchInt)
@@ -806,14 +772,14 @@ namespace MT.TacticWar.Core
                     if (enemieClick) igrok = enemie;
 
                     //выделить здание, заполнить структуру
-                    clickEM_getBuildInfo(igrok, ind, i, j);
+                    clickEM_getBuildInfo(igrok, building, i, j);
 
                     //готова информация о единице
                     return Signals.s03_READY_UNIT_INFO;
                 case 2: //поставить флаг, просчитать путь
 
                     //просчитать путь до здания, поставить флаг (захват, атака или присоединение)
-                    clickEM_countPutToBuild(igrok, ind, enemieClick, i, j);
+                    clickEM_countPutToBuild(igrok, building, enemieClick, i, j);
 
                     break;
                 case 3: //продвинуть выделенный юнит к данному
@@ -823,12 +789,12 @@ namespace MT.TacticWar.Core
 
                     if (enemieClick)
                     {
-                        if (mMasIgroki[enemie].mBuildings[ind].mIsOhran)
+                        if (building.IsSecured)
                             toFEB = 1;
                     }
                     else
                     {
-                        if (mMasIgroki[igrok].mBuildings[ind].mIsOhran)
+                        if (building.IsSecured)
                             toFEB = 1;
                     }
 
@@ -837,34 +803,35 @@ namespace MT.TacticWar.Core
 
                     //---
 
-                    oldSelectInd = mMasIgroki[igrok].mSelectedElementId;
-                    tmp.x = mMasIgroki[igrok].mElements[oldSelectInd].mCoords.x;
-                    tmp.y = mMasIgroki[igrok].mElements[oldSelectInd].mCoords.y;
+                    oldSelectInd = SelectedDivision.Id;
+                    tmp = Players[igrok].Divisions[oldSelectInd].Coordinates.Clone();
 
                     //если двигаем к своему зданию
                     if (!enemieClick)
                     {
                         //если координаты юнита совпадают с координатами целевого здания
-                        if ((mMasIgroki[igrok].mElements[oldSelectInd].mCoords.x == mMasIgroki[igrok].mBuildings[ind].mCoords.x) &&
-                            (mMasIgroki[igrok].mElements[oldSelectInd].mCoords.y == mMasIgroki[igrok].mBuildings[ind].mCoords.y))
+                        if ((Players[igrok].Divisions[oldSelectInd].Coordinates.X == building.Coordinates.X) &&
+                            (Players[igrok].Divisions[oldSelectInd].Coordinates.Y == building.Coordinates.Y))
                         {
-                            Signals tmpSig = achievementTag(mMasIgroki[igrok].mElements[oldSelectInd], mMasIgroki[igrok].mBuildings[ind]);
+                            Signals tmpSig = achievementTag(Players[igrok].Divisions[oldSelectInd], building);
 
-                            mGameMap.drawField(mGrf, tmp.x, tmp.y);
-                            mMasIgroki[igrok].mBuildings[ind].drawBuilding(mGrf, tmp.y * mGameMap.mFieldWidth, tmp.x * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+                            graphics.DrawCell(Map.Field[tmp.X, tmp.Y]);
+                            graphics.DrawBuilding(building, tmp.X * GameGraphics.CellSize, tmp.Y * GameGraphics.CellSize, GameGraphics.CellSize,
+                                building == SelectedBuilding);
                             return tmpSig;
                         }
                     }
                     else
                     {
                         //если координаты юнита совпадают с координатами целевого здания
-                        if ((mMasIgroki[igrok].mElements[oldSelectInd].mCoords.x == mMasIgroki[enemie].mBuildings[ind].mCoords.x) &&
-                            (mMasIgroki[igrok].mElements[oldSelectInd].mCoords.y == mMasIgroki[enemie].mBuildings[ind].mCoords.y))
+                        if ((Players[igrok].Divisions[oldSelectInd].Coordinates.X == building.Coordinates.X) &&
+                            (Players[igrok].Divisions[oldSelectInd].Coordinates.Y == building.Coordinates.Y))
                         {
-                            Signals tmpSig = achievementTag(mMasIgroki[igrok].mElements[oldSelectInd], mMasIgroki[enemie].mBuildings[ind]);
+                            Signals tmpSig = achievementTag(Players[igrok].Divisions[oldSelectInd], building);
 
-                            mGameMap.drawField(mGrf, tmp.x, tmp.y);
-                            mMasIgroki[igrok].mBuildings[mMasIgroki[igrok].mBuildings.Count - 1].drawBuilding(mGrf, tmp.y * mGameMap.mFieldWidth, tmp.x * mGameMap.mFieldWidth, mGameMap.mFieldWidth);
+                            graphics.DrawCell(Map.Field[tmp.X, tmp.Y]);
+                            graphics.DrawBuilding(Players[igrok].Buildings[Players[igrok].Buildings.Count - 1], tmp.X * GameGraphics.CellSize, tmp.Y * GameGraphics.CellSize, GameGraphics.CellSize,
+                                Players[igrok].Buildings[Players[igrok].Buildings.Count - 1] == SelectedBuilding);
                             return tmpSig;
                         }
                     }
@@ -879,15 +846,15 @@ namespace MT.TacticWar.Core
         /// <summary>Обработчик попадания на пустую клетку
         /// </summary>
         /// <param name="igrok">ид текущего игрока</param>
-        /// <param name="ind">индекс выделенного подразделения</param>
+        /// <param name="division">выделенное подразделение</param>
         /// <param name="i">координата по высоте</param>
         /// <param name="j">координата по ширине</param>
         /// <returns>Возвращает сигналы обмена с GUI</returns>
-        private Signals clickEmptyFieldManager(int igrok, int ind, int i, int j)
+        private Signals clickEmptyFieldManager(int igrok, Division division, int i, int j)
         {
             //если на этом месте стоит флаг - продвинуть юнит
-            if ((mMasIgroki[igrok].mElements[ind].mFlag.x == i) &&
-                (mMasIgroki[igrok].mElements[ind].mFlag.y == j))
+            if ((division.Target.X == i) &&
+                (division.Target.Y == j))
             {
                 //продвинуть юнит
                 clickEM_pushElemToObject(igrok, false, 0, i, j);
@@ -915,23 +882,24 @@ namespace MT.TacticWar.Core
         public Signals achievementTag(Division thisElem, Division tagElem)
         {
             //если целевой юнит - это юнит того же игрока
-            if (thisElem.mIgrokId == tagElem.mIgrokId)
+            if (thisElem.PlayerId == tagElem.PlayerId)
             {
                 //присоединить юниты
-                int newUnitId = mMasIgroki[thisElem.mIgrokId].addElementToElement(thisElem.mId, tagElem.mId);
-                setUnitInfo(mMasIgroki[thisElem.mIgrokId].mElements[newUnitId]);
+                int newUnitId = Players[thisElem.PlayerId].addElementToElement(thisElem.Id, tagElem.Id);
+                SelectedDivision = Players[thisElem.PlayerId].Divisions[newUnitId];
+                setUnitInfo(Players[thisElem.PlayerId].Divisions[newUnitId]);
             }
             else
             {
                 //заполняем структуру информации об атаке
-                mAttackInfo.igrokAttacked = thisElem.mIgrokId;
-                mAttackInfo.igrokDefended = tagElem.mIgrokId;
-                mAttackInfo.elemAttacked = thisElem.mId;
-                mAttackInfo.elemDefended = tagElem.mId;
+                AttackInfo.igrokAttacked = thisElem.PlayerId;
+                AttackInfo.igrokDefended = tagElem.PlayerId;
+                AttackInfo.elemAttacked = thisElem.Id;
+                AttackInfo.elemDefended = tagElem.Id;
 
                 //атака всегда отнимает шаги до минимума
-                thisElem.mSteps = 0;
-                tagElem.mSteps = 0;
+                thisElem.Steps = 0;
+                tagElem.Steps = 0;
 
                 return Signals.s04_ATTACK;
             }
@@ -946,19 +914,20 @@ namespace MT.TacticWar.Core
         /// <returns>Возвращает сигналы обмена с GUI</returns>
         public Signals achievementTag(Division thisElem, Building tagBuild)
         {
-            int tmp;
+            Building tmp = null;
 
             //если целевое здание - это здание того же игрока
-            if (thisElem.mIgrokId == tagBuild.mIgrokId)
+            if (thisElem.PlayerId == tagBuild.PlayerId)
             {
                 //если в здании есть охранение
-                if (mMasIgroki[thisElem.mIgrokId].mBuildings[tagBuild.mId].mIsOhran)
+                if (Players[thisElem.PlayerId].Buildings[tagBuild.Id].IsSecured)
                 {
                     //если типы юнитов совпадают
-                    if (thisElem.mType == mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mOhraneniye.mType)
+                    if (thisElem.Type == Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Type)
                     {
                         //присоединить юниты
-                        mMasIgroki[thisElem.mIgrokId].addElementToElement(thisElem.mId, mMasIgroki[thisElem.mIgrokId].mBuildings[tagBuild.mId].mOhraneniye.mId);
+                        var ind = Players[thisElem.PlayerId].addElementToElement(thisElem.Id, Players[thisElem.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Id);
+                        SelectedDivision = Players[thisElem.PlayerId].Divisions[ind];
                     }
                     else //иначе - всё плохо
                         return Signals.s02_ALL_IS_BD;
@@ -966,29 +935,29 @@ namespace MT.TacticWar.Core
                 else
                 {
                     //поставить на охрану
-                    mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mOhraneniye = thisElem;
-                    mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mIsOhran = true;
+                    Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision = thisElem;
+                    Players[tagBuild.PlayerId].Buildings[tagBuild.Id].IsSecured = true;
 
                     //встать на охранение здания - отнимает все шаги
-                    mMasIgroki[thisElem.mIgrokId].mElements[thisElem.mId].mSteps = 0;
+                    Players[thisElem.PlayerId].Divisions[thisElem.Id].Steps = 0;
                 }
 
-                tmp = tagBuild.mId;
+                tmp = tagBuild;
             }
             else
             {
                 //если в здании есть охранение
-                if (mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mIsOhran)
+                if (Players[tagBuild.PlayerId].Buildings[tagBuild.Id].IsSecured)
                 {
                     //заполняем структуру информации об атаке
-                    mAttackInfo.igrokAttacked = thisElem.mIgrokId;
-                    mAttackInfo.igrokDefended = mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mOhraneniye.mIgrokId;
-                    mAttackInfo.elemAttacked = thisElem.mId;
-                    mAttackInfo.elemDefended = mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mOhraneniye.mId;
+                    AttackInfo.igrokAttacked = thisElem.PlayerId;
+                    AttackInfo.igrokDefended = Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision.PlayerId;
+                    AttackInfo.elemAttacked = thisElem.Id;
+                    AttackInfo.elemDefended = Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Id;
 
                     //атака всегда отнимает шаги до минимума
-                    thisElem.mSteps = 0;
-                    mMasIgroki[tagBuild.mIgrokId].mBuildings[tagBuild.mId].mOhraneniye.mSteps = 0;
+                    thisElem.Steps = 0;
+                    Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Steps = 0;
 
                     return Signals.s04_ATTACK;
                 }
@@ -997,24 +966,24 @@ namespace MT.TacticWar.Core
                     Building tmpBuild;
 
                     //захват постройки
-                    tmp = tagBuild.mId;
+                    tmp = tagBuild;
                     tmpBuild = tagBuild.copyBuilding();
-                    mMasIgroki[thisElem.mIgrokId].mBuildings.Add(tmpBuild);
-                    mMasIgroki[thisElem.mIgrokId].recountIds();
-                    mMasIgroki[tagBuild.mIgrokId].mBuildings.RemoveAt(tmp);
-                    mMasIgroki[tagBuild.mIgrokId].recountIds();
+                    Players[thisElem.PlayerId].Buildings.Add(tmpBuild);
+                    Players[thisElem.PlayerId].recountIds();
+                    Players[tagBuild.PlayerId].Buildings.Remove(tmp);
+                    Players[tagBuild.PlayerId].recountIds();
 
                     //захват всегда отнимает все шаги
-                    thisElem.mSteps = 0;
+                    thisElem.Steps = 0;
 
                     //поставить юнита на охранение
-                    tmp = mMasIgroki[thisElem.mIgrokId].mBuildings[mMasIgroki[thisElem.mIgrokId].mBuildings.Count - 1].mId;
-                    mMasIgroki[thisElem.mIgrokId].mBuildings[tmp].mOhraneniye = thisElem;
-                    mMasIgroki[thisElem.mIgrokId].mBuildings[tmp].mIsOhran = true;
+                    tmp = Players[thisElem.PlayerId].Buildings[Players[thisElem.PlayerId].Buildings.Count - 1];
+                    tmp.SecurityDivision = thisElem;
+                    tmp.IsSecured = true;
                 }
             }
 
-            mMasIgroki[thisElem.mIgrokId].selectBuilding(tmp);
+            SelectBuilding(tmp);
 
             return Signals.s03_READY_UNIT_INFO;
         }
@@ -1026,99 +995,95 @@ namespace MT.TacticWar.Core
         /// <param name="x">координата по высоте (!)</param>
         /// <param name="y">координата по ширине (!)</param>
         /// <returns>Возвращает сигналы обмена с GUI</returns>
-        public Signals zonaClick(int x, int y)
+        public Signals ZonaClick(int x, int y)
         {
-            int i = y / mGameMap.mFieldWidth;
-            int j = x / mGameMap.mFieldWidth;
+            int i = x / GameGraphics.CellSize;
+            int j = y / GameGraphics.CellSize;
 
             //если координаты за границами карты
-            if((i < 0) || (i > (mGameMap.mHeight-1))) return Signals.s05_OUT_OF_RANGE;
-            if((j < 0) || (j > (mGameMap.mWidth-1))) return Signals.s05_OUT_OF_RANGE;
+            if (i < 0 || i > Map.Width - 1) return Signals.s05_OUT_OF_RANGE;
+            if (j < 0 || j > Map.Height-1) return Signals.s05_OUT_OF_RANGE;
 
             //проверяем, по чему щёлкнули...
 
-            int ind; //индекс текущего юнита
-
-            //mIgrok = 1; //!!!!!!!! дебаг !!!!!!!!
+            //PlayerCurrent = 1; //!!!!!!!! дебаг !!!!!!!!
 
             //если ходит игрок 0
-            if (mIgrok == 0)
+            if (PlayerCurrent == 0)
             {
                 //--- здание игрока 0 ---
 
-                ind = mMasIgroki[0].isBuildingAtCoords(i, j);
+                var building = Players[0].GetBuildingAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickBuildingManager(0, 1, false, ind, i, j);
+                if (null != building)
+                    return ClickBuildingManager(0, 1, false, building, i, j);
 
                 //--- здание игрока 1 ---
 
-                ind = mMasIgroki[1].isBuildingAtCoords(i, j);
+                building = Players[1].GetBuildingAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickBuildingManager(0, 1, true, ind, i, j);
+                if (null != building)
+                    return ClickBuildingManager(0, 1, true, building, i, j);
 
                 //--- если щёлкнули по юниту игрока 0 ---
 
-                ind = mMasIgroki[0].isElementAtCoords(i, j);
+                var division = Players[0].GetDivisionAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickElementManager(0, 1, false, ind, i, j);
+                if (null != division)
+                    return ClickDivisionManager(0, 1, false, division, i, j);
 
                 //--- если щёлкнули по юниту игрока 1 ---
 
-                ind = mMasIgroki[1].isElementAtCoords(i, j);
+                division = Players[1].GetDivisionAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickElementManager(0, 1, true, ind, i, j);
-
-
+                if (null != division)
+                    return ClickDivisionManager(0, 1, true, division, i, j);
 
                 //--- попали на пустую клетку ---
 
                 //если выделен юнит игрока 0
-                ind = mMasIgroki[0].mSelectedElementId;
+                division = SelectedDivision;
 
-                if (ind != -1)
-                    return clickEmptyFieldManager(0, ind, i, j);
+                if (null != division && 0 == division.PlayerId)
+                    return clickEmptyFieldManager(0, division, i, j);
             }
-            else //если ходит игрок 1 (mIgrok == 1)
+            else //если ходит игрок 1 (PlayerCurrent == 1)
             {
                 //--- если щёлкнули по юниту игрока 0 ---
 
-                ind = mMasIgroki[0].isElementAtCoords(i, j);
+                var division = Players[0].GetDivisionAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickElementManager(1, 0, true, ind, i, j);
+                if (null != division)
+                    return ClickDivisionManager(1, 0, true, division, i, j);
 
                 //--- если щёлкнули по юниту игрока 1 ---
 
-                ind = mMasIgroki[1].isElementAtCoords(i, j);
+                division = Players[1].GetDivisionAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickElementManager(1, 0, false, ind, i, j);
+                if (null != division)
+                    return ClickDivisionManager(1, 0, false, division, i, j);
 
                 //--- здание игрока 0 ---
 
-                ind = mMasIgroki[0].isBuildingAtCoords(i, j);
+                var building = Players[0].GetBuildingAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickBuildingManager(1, 0, true, ind, i, j);
+                if (null != building)
+                    return ClickBuildingManager(1, 0, true, building, i, j);
 
                 //--- здание игрока 1 ---
 
-                ind = mMasIgroki[1].isBuildingAtCoords(i, j);
+                building = Players[1].GetBuildingAtCoordinates(i, j);
 
-                if (ind != -1)
-                    return clickBuildingManager(1, 0, false, ind, i, j);
+                if (null != building)
+                    return ClickBuildingManager(1, 0, false, building, i, j);
 
                 //--- попали на пустую клетку ---
 
                 //если выделен юнит игрока 1
-                ind = mMasIgroki[1].mSelectedElementId;
+                division = SelectedDivision;
 
-                if (ind != -1)
-                    return clickEmptyFieldManager(1, ind, i, j);
+                if (null != division && 1 == division.PlayerId)
+                    return clickEmptyFieldManager(1, division, i, j);
             }
 
             //передаём гую, что всё хорошо
@@ -1139,7 +1104,7 @@ namespace MT.TacticWar.Core
             bool elem1_none_supl = false; //если у нападающего кончатся патроны
 
             //пока есть юниты в обоих подразделениях
-            while ((elem1.mUnits.Count > 0) && (elem2.mUnits.Count > 0))
+            while ((elem1.Units.Count > 0) && (elem2.Units.Count > 0))
             {
                 //- ПРЯМАЯ АТАКА -
 
@@ -1150,40 +1115,40 @@ namespace MT.TacticWar.Core
                 if (elem == 0)
                 {
                     //случайно выбираем юнита из атакующего подразделения
-                    indUnit1 = rand.Next(0, elem1.mUnits.Count - 1);
+                    indUnit1 = rand.Next(0, elem1.Units.Count - 1);
 
                     //случайно выбираем юнита из атакуемого подразделения
-                    indUnit2 = rand.Next(0, elem2.mUnits.Count - 1);
+                    indUnit2 = rand.Next(0, elem2.Units.Count - 1);
 
                     //атакуем
-                    sui1 = elem1.mUnits[indUnit1];
-                    sui2 = elem2.mUnits[indUnit2];
+                    sui1 = elem1.Units[indUnit1];
+                    sui2 = elem2.Units[indUnit2];
                     unitAtakUnit(ref sui1, ref sui2);
-                    elem1.mUnits[indUnit1] = sui1;
-                    elem2.mUnits[indUnit2] = sui2;
+                    elem1.Units[indUnit1] = sui1;
+                    elem2.Units[indUnit2] = sui2;
                 }
                 else //если это подразделение ПОДДЕРЖКИ
                 {
                     //случайно выбираем юнита из выбранного подразделения поддержки
-                    indUnit1 = rand.Next(0, podderzh1[elem-1].mUnits.Count - 1);
+                    indUnit1 = rand.Next(0, podderzh1[elem-1].Units.Count - 1);
 
                     //случайно выбираем юнита из атакуемого подразделения
-                    indUnit2 = rand.Next(0, elem2.mUnits.Count - 1);
+                    indUnit2 = rand.Next(0, elem2.Units.Count - 1);
 
                     //атакуем
-                    sui1 = podderzh1[elem - 1].mUnits[indUnit1];
-                    sui2 = elem2.mUnits[indUnit2];
+                    sui1 = podderzh1[elem - 1].Units[indUnit1];
+                    sui2 = elem2.Units[indUnit2];
                     unitAtakUnit(ref sui1, ref sui2);
-                    podderzh1[elem - 1].mUnits[indUnit1] = sui1;
-                    elem2.mUnits[indUnit2] = sui2;
+                    podderzh1[elem - 1].Units[indUnit1] = sui1;
+                    elem2.Units[indUnit2] = sui2;
                 }
 
                 //удалить юнита, если его убили
-                if (elem2.mUnits[indUnit2].unit.mHealth == Health.Dead)
-                    elem2.mUnits.RemoveAt(indUnit2);
+                if (elem2.Units[indUnit2].unit.Health == Health.Dead)
+                    elem2.Units.RemoveAt(indUnit2);
 
                 //если врага убили - конец цикла
-                if (elem2.mUnits.Count < 1)
+                if (elem2.Units.Count < 1)
                     break;
 
                 //- ОТВЕТНАЯ АТАКА -
@@ -1195,46 +1160,46 @@ namespace MT.TacticWar.Core
                 if (elem == 0)
                 {
                     //случайно выбираем юнита из атакующего подразделения
-                    indUnit2 = rand.Next(0, elem2.mUnits.Count - 1);
+                    indUnit2 = rand.Next(0, elem2.Units.Count - 1);
 
                     //случайно выбираем юнита из атакуемого подразделения
-                    indUnit1 = rand.Next(0, elem1.mUnits.Count - 1);
+                    indUnit1 = rand.Next(0, elem1.Units.Count - 1);
 
                     //атакуем
-                    sui1 = elem2.mUnits[indUnit2];
-                    sui2 = elem1.mUnits[indUnit1];
+                    sui1 = elem2.Units[indUnit2];
+                    sui2 = elem1.Units[indUnit1];
                     unitAtakUnit(ref sui1, ref sui2);
-                    elem2.mUnits[indUnit2] = sui1;
-                    elem1.mUnits[indUnit1] = sui2;
+                    elem2.Units[indUnit2] = sui1;
+                    elem1.Units[indUnit1] = sui2;
                 }
                 else //если это подразделение ПОДДЕРЖКИ
                 {
                     //случайно выбираем юнита из выбранного подразделения поддержки
-                    indUnit2 = rand.Next(0, podderzh2[elem - 1].mUnits.Count - 1);
+                    indUnit2 = rand.Next(0, podderzh2[elem - 1].Units.Count - 1);
 
                     //случайно выбираем юнита из атакуемого подразделения
-                    indUnit1 = rand.Next(0, elem1.mUnits.Count - 1);
+                    indUnit1 = rand.Next(0, elem1.Units.Count - 1);
 
                     //атакуем
-                    sui1 = podderzh2[elem - 1].mUnits[indUnit2];
-                    sui2 = elem1.mUnits[indUnit1];
+                    sui1 = podderzh2[elem - 1].Units[indUnit2];
+                    sui2 = elem1.Units[indUnit1];
                     unitAtakUnit(ref sui1, ref sui2);
-                    podderzh2[elem - 1].mUnits[indUnit2] = sui1;
-                    elem1.mUnits[indUnit1] = sui2;
+                    podderzh2[elem - 1].Units[indUnit2] = sui1;
+                    elem1.Units[indUnit1] = sui2;
                 }
 
                 //удалить юнита, если его убили
-                if (elem1.mUnits[indUnit1].unit.mHealth == Health.Dead)
-                    elem1.mUnits.RemoveAt(indUnit1);
+                if (elem1.Units[indUnit1].unit.Health == Health.Dead)
+                    elem1.Units.RemoveAt(indUnit1);
 
                 //если врага убили - конец цикла
-                if (elem1.mUnits.Count < 1)
+                if (elem1.Units.Count < 1)
                     break;
 
                 //----------
 
                 //если у нападающего кончились патроны - он отступает
-                if(elem1.mUnits[indUnit1].unit.mSuplies == 0)
+                if(elem1.Units[indUnit1].unit.Suplies == 0)
                 {
                     elem1_none_supl = true;
                     recedeElem(elem1); //отступить
@@ -1246,7 +1211,7 @@ namespace MT.TacticWar.Core
 
             int win = 0; //ид победителя (0 - ничья, 1 - атакующий, 2 - атакуемый)
 
-            if (elem1.mUnits.Count > 0)
+            if (elem1.Units.Count > 0)
             {
                 win = 1;
                 elem1.recountParams();
@@ -1256,7 +1221,7 @@ namespace MT.TacticWar.Core
                     podderzh1[k].recountParams();
             }
 
-            if (elem2.mUnits.Count > 0)
+            if (elem2.Units.Count > 0)
             {
                 win = 2;
                 elem2.recountParams();
@@ -1302,20 +1267,20 @@ namespace MT.TacticWar.Core
             double level;           //уровни юнитов (для подсчёта силы удара и защиты)
 
             //выбираем уровень атакуемого юнита
-            level = getLevelVes(structUnit2.unit.mLevel);
+            level = getLevelVes(structUnit2.unit.Level);
 
             //по типу атакующего юнита определяем защиту
-            switch (structUnit1.unit.mType)
+            switch (structUnit1.unit.Type)
             {
                 case DivisionType.Infantry:
-                    armour = (double)structUnit2.unit.mArmourFromInf;
+                    armour = (double)structUnit2.unit.ArmourFromInf;
                     break;
                 case DivisionType.Aviation:
                 case DivisionType.Vehicle:
                 case DivisionType.Artillery:
                 case DivisionType.Ship:
                 default:
-                    armour = (double)structUnit2.unit.mArmourFromBron;
+                    armour = (double)structUnit2.unit.ArmourFromBron;
                     break;
             }
 
@@ -1325,22 +1290,22 @@ namespace MT.TacticWar.Core
             //----------
 
             //выбираем уровень атакующего юнита
-            level = getLevelVes(structUnit1.unit.mLevel);
+            level = getLevelVes(structUnit1.unit.Level);
 
             //по типу атакуемого юнита определяем мощь атаки
-            switch (structUnit2.unit.mType)
+            switch (structUnit2.unit.Type)
             {
                 case DivisionType.Infantry:
-                    attack_power = (double)structUnit1.unit.mPowerAntiInf;
+                    attack_power = (double)structUnit1.unit.PowerAntiInf;
                     break;
                 case DivisionType.Aviation:
-                    attack_power = (double)structUnit1.unit.mPowerAntiAir;
+                    attack_power = (double)structUnit1.unit.PowerAntiAir;
                     break;
                 case DivisionType.Vehicle:
                 case DivisionType.Artillery:
                 case DivisionType.Ship:
                 default:
-                    attack_power = (double)structUnit1.unit.mPowerAntiBron;
+                    attack_power = (double)structUnit1.unit.PowerAntiBron;
                     break;
             }
 
@@ -1349,14 +1314,14 @@ namespace MT.TacticWar.Core
                                 (rand.NextDouble() * (1 - level) + level);
 
             //если патронов у юнита не хватает
-            if (structUnit1.unit.mSuplies < attack_power)
+            if (structUnit1.unit.Suplies < attack_power)
             {
-                attack_power = structUnit1.unit.mSuplies;
-                structUnit1.unit.mSuplies = 0;
+                attack_power = structUnit1.unit.Suplies;
+                structUnit1.unit.Suplies = 0;
             }
             else
             {
-                structUnit1.unit.mSuplies -= (int)attack_power;
+                structUnit1.unit.Suplies -= (int)attack_power;
             }
 
             //----------
@@ -1366,16 +1331,16 @@ namespace MT.TacticWar.Core
             if (wound <= 0)
             {
                 structUnit2.count = 0;
-                structUnit2.unit.mHealth = Health.Dead;
+                structUnit2.unit.Health = Health.Dead;
             }
-            else if ((wound / (double)structUnit2.unit.mArmourFromInf) < 1)
+            else if ((wound / (double)structUnit2.unit.ArmourFromInf) < 1)
             {
                 structUnit2.count = 1;
-                structUnit2.unit.mHealth = Health.Wounded;
+                structUnit2.unit.Health = Health.Wounded;
             }
             else
             {
-                structUnit2.count = (int)(wound / (double)structUnit2.unit.mArmourFromInf);
+                structUnit2.count = (int)(wound / (double)structUnit2.unit.ArmourFromInf);
             }
         }
 
@@ -1383,27 +1348,25 @@ namespace MT.TacticWar.Core
         private void recedeElem(Division elem)
         {
             bool fl = true;
-            Coordinates coords;
-            coords.x = elem.mCoords.x;
-            coords.y = elem.mCoords.y;
+            var coords = elem.Coordinates.Clone();
 
             //лево
-            if ((!mGameMap.mField[coords.x, coords.y - 1].mZanyata) &&
-                (mGameMap.mField[coords.x, coords.y - 1].mProhodima))
+            if ((!Map.Field[coords.X, coords.Y - 1].Occupied) &&
+                (Map.Field[coords.X, coords.Y - 1].Passable))
             {
                 //если вода, а юнит не плавает
-                if ((mGameMap.mField[coords.x, coords.y - 1].mZemType == CellType.Water) &&
-                    (!elem.mStepAqua))
+                if ((Map.Field[coords.X, coords.Y - 1].Type == CellType.Water) &&
+                    (!elem.CanStepAqua))
                     fl = false;
 
                 //если не вода, а юнит только плавает
-                if ((mGameMap.mField[coords.x, coords.y - 1].mZemType != CellType.Water) &&
-                    (!elem.mStepLand))
+                if ((Map.Field[coords.X, coords.Y - 1].Type != CellType.Water) &&
+                    (!elem.CanStepLand))
                     fl = false;
 
                 if (fl)
                 {
-                    elem.mCoords.y -= 1;
+                    elem.Coordinates.Y -= 1;
                     return;
                 }
             }
@@ -1411,22 +1374,22 @@ namespace MT.TacticWar.Core
             fl = true;
 
             //верх
-            if ((!mGameMap.mField[coords.x - 1, coords.y].mZanyata) &&
-                (mGameMap.mField[coords.x - 1, coords.y].mProhodima))
+            if ((!Map.Field[coords.X - 1, coords.Y].Occupied) &&
+                (Map.Field[coords.X - 1, coords.Y].Passable))
             {
                 //если вода, а юнит не плавает
-                if ((mGameMap.mField[coords.x - 1, coords.y].mZemType == CellType.Water) &&
-                    (!elem.mStepAqua))
+                if ((Map.Field[coords.X - 1, coords.Y].Type == CellType.Water) &&
+                    (!elem.CanStepAqua))
                     fl = false;
 
                 //если не вода, а юнит только плавает
-                if ((mGameMap.mField[coords.x - 1, coords.y].mZemType != CellType.Water) &&
-                    (!elem.mStepLand))
+                if ((Map.Field[coords.X - 1, coords.Y].Type != CellType.Water) &&
+                    (!elem.CanStepLand))
                     fl = false;
 
                 if (fl)
                 {
-                    elem.mCoords.x -= 1;
+                    elem.Coordinates.X -= 1;
                     return;
                 }
             }
@@ -1434,22 +1397,22 @@ namespace MT.TacticWar.Core
             fl = true;
 
             //право
-            if ((!mGameMap.mField[coords.x, coords.y + 1].mZanyata) &&
-                (mGameMap.mField[coords.x, coords.y + 1].mProhodima))
+            if ((!Map.Field[coords.X, coords.Y + 1].Occupied) &&
+                (Map.Field[coords.X, coords.Y + 1].Passable))
             {
                 //если вода, а юнит не плавает
-                if ((mGameMap.mField[coords.x, coords.y + 1].mZemType == CellType.Water) &&
-                    (!elem.mStepAqua))
+                if ((Map.Field[coords.X, coords.Y + 1].Type == CellType.Water) &&
+                    (!elem.CanStepAqua))
                     fl = false;
 
                 //если не вода, а юнит только плавает
-                if ((mGameMap.mField[coords.x, coords.y + 1].mZemType != CellType.Water) &&
-                    (!elem.mStepLand))
+                if ((Map.Field[coords.X, coords.Y + 1].Type != CellType.Water) &&
+                    (!elem.CanStepLand))
                     fl = false;
 
                 if (fl)
                 {
-                    elem.mCoords.y += 1;
+                    elem.Coordinates.Y += 1;
                     return;
                 }
             }
@@ -1457,25 +1420,189 @@ namespace MT.TacticWar.Core
             fl = true;
 
             //вниз
-            if ((!mGameMap.mField[coords.x + 1, coords.y].mZanyata) &&
-                (mGameMap.mField[coords.x + 1, coords.y].mProhodima))
+            if ((!Map.Field[coords.X + 1, coords.Y].Occupied) &&
+                (Map.Field[coords.X + 1, coords.Y].Passable))
             {
                 //если вода, а юнит не плавает
-                if ((mGameMap.mField[coords.x + 1, coords.y].mZemType == CellType.Water) &&
-                    (!elem.mStepAqua))
+                if ((Map.Field[coords.X + 1, coords.Y].Type == CellType.Water) &&
+                    (!elem.CanStepAqua))
                     fl = false;
 
                 //если не вода, а юнит только плавает
-                if ((mGameMap.mField[coords.x + 1, coords.y].mZemType != CellType.Water) &&
-                    (!elem.mStepLand))
+                if ((Map.Field[coords.X + 1, coords.Y].Type != CellType.Water) &&
+                    (!elem.CanStepLand))
                     fl = false;
 
                 if (fl)
                 {
-                    elem.mCoords.x += 1;
+                    elem.Coordinates.X += 1;
                     return;
                 }
             }
+        }
+
+        /// <summary>Обработчик нажатия по своему подразделению
+        /// </summary>
+        /// <param name="index">индекс подразделения</param>
+        /// <returns>Возвращает команды: 1 - собрать информацию об этом подразделении,
+        /// 2 - поставить флаг, просчитать и проложить путь,
+        /// 3 - продвинуть выделенное подразделение</returns>
+        public int ClickMyDivision(Division division)
+        {
+            //если ЕСТЬ выделенный юнит и щёлкнули НЕ по нему
+            if ((SelectedDivision != null) && (SelectedDivision != division) && SelectedDivision.PlayerId == PlayerCurrent)
+            {
+                //если флаг выделенного юнита указывает сюда
+                if ((SelectedDivision.Target.X == division.Coordinates.X) &&
+                    (SelectedDivision.Target.Y == division.Coordinates.Y))
+                {
+                    //продвинуть выделенный юнит
+                    return 3;
+                }
+                else
+                {
+                    //если типы юнитов не совпадают - выделить нового юнита
+                    if (SelectedDivision.Type != division.Type)
+                        return 1;
+
+                    //поставить флаг, просчитать путь
+                    return 2;
+                }
+            }
+            else
+            {
+                //передать информацию о выделенном юните
+                return 1;
+            }
+
+            //return 0;
+        }
+
+        /// <summary>Обработчик нажатия по чужому подразделению
+        /// </summary>
+        /// <param name="enemie">координаты противника</param>
+        /// <returns>Возвращает команды: 1 - собрать информацию об этом подразделении,
+        /// 2 - поставить флаг, просчитать и проложить путь,
+        /// 3 - продвинуть выделенное подразделение</returns>
+        public int ClickEnemieDivision(Coordinates enemie)
+        {
+            //если ЕСТЬ выделенный юнит
+            //if (SelectedDivisionId != -1)
+            if (SelectedDivision != null && SelectedDivision.PlayerId == PlayerCurrent)
+            {
+                //если флаг выделенного юнита указывает сюда
+                //if ((Divisions[SelectedDivisionId].Target.X == enemie.X) &&
+                //    (Divisions[SelectedDivisionId].Target.Y == enemie.Y))
+                if ((SelectedDivision.Target.X == enemie.X) &&
+                    (SelectedDivision.Target.Y == enemie.Y))
+                {
+                    //продвинуть выделенный юнит
+                    return 3;
+                }
+                else
+                {
+                    //поставить флаг, просчитать путь
+                    return 2;
+                }
+            }
+            else
+            {
+                //передать информацию о выделенном юните
+                return 1;
+            }
+
+            //return 0;
+        }
+
+        /// <summary>Обработчик нажатия по своему зданию
+        /// </summary>
+        /// <param name="building">здание</param>
+        /// <returns>Возвращает команды: 1 - собрать информацию о здании
+        /// или подразделении на охранении,
+        /// 2 - поставить флаг, просчитать и проложить путь,
+        /// 3 - продвинуть выделенное подразделение</returns>
+        public int ClickMyBuilding(Building building)
+        {
+            // TODO: проверить, что здание принадлежит игроку
+
+            //int ohrInd = -1;
+
+            //если есть охранение
+            //if (Buildings[index].IsSecured)
+            //    ohrInd = Buildings[index].SecurityDivision.Id;
+
+            //если ЕСТЬ выделенный юнит и щёлкнули НЕ по нему
+            //if ((SelectedDivisionId != -1) && (SelectedDivisionId != ohrInd))
+            if ((SelectedDivision != null) && (SelectedDivision != building.SecurityDivision) && SelectedDivision.PlayerId == PlayerCurrent)
+            {
+                //если флаг выделенного юнита указывает сюда
+                //if ((Divisions[SelectedDivisionId].Target.X == Buildings[index].Coordinates.X) &&
+                //    (Divisions[SelectedDivisionId].Target.Y == Buildings[index].Coordinates.Y))
+                if ((SelectedDivision.Target.X == building.Coordinates.X) &&
+                    (SelectedDivision.Target.Y == building.Coordinates.Y))
+                {
+                    //продвинуть выделенный юнит
+                    return 3;
+                }
+                else
+                {
+                    //если есть охранение в здании
+                    if (building.IsSecured)
+                    {
+                        //если типы юнита и охранения не совпадают - выделить здание и его охранение
+                        //if (Divisions[SelectedDivisionId].Type != Buildings[index].SecurityDivision.Type)
+                        if (SelectedDivision.Type != building.SecurityDivision.Type)
+                            return 1;
+                    }
+
+                    //поставить флаг, просчитать путь
+                    return 2;
+                }
+            }
+            else
+            {
+                //передать информацию о выделенном юните
+                return 1;
+            }
+
+            //return 0;
+        }
+
+        /// <summary>Обработчик нажатия по чужому зданию
+        /// </summary>
+        /// <param name="enemie">координаты противника</param>
+        /// <returns>Возвращает команды: 1 - собрать информацию о здании
+        /// или подразделении на охранении,
+        /// 2 - поставить флаг, просчитать и проложить путь,
+        /// 3 - продвинуть выделенное подразделение</returns>
+        public int ClickEnemieBuilding(Coordinates enemie)
+        {
+            //если ЕСТЬ выделенный юнит
+            //if (SelectedDivisionId != -1)
+            if (SelectedDivision != null && SelectedDivision.PlayerId == PlayerCurrent)
+            {
+                //если флаг выделенного юнита указывает сюда
+                //if ((Divisions[SelectedDivisionId].Target.X == enemie.X) &&
+                //    (Divisions[SelectedDivisionId].Target.Y == enemie.Y))
+                if ((SelectedDivision.Target.X == enemie.X) &&
+                    (SelectedDivision.Target.Y == enemie.Y))
+                {
+                    //продвинуть выделенный юнит
+                    return 3;
+                }
+                else
+                {
+                    //поставить флаг, просчитать путь
+                    return 2;
+                }
+            }
+            else
+            {
+                //передать информацию о выделенном юните
+                return 1;
+            }
+
+            //return 0;
         }
     }
 }

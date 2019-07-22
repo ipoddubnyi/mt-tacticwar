@@ -10,29 +10,31 @@ namespace MT.TacticWar.Core
 {
     #region Для земли и ориентации
 
-    //Направления, с которыми клетка уже имела контакт
-    public struct Directions
+    // Направления, с которыми клетка уже имела контакт
+    public class Directions
     {
-        public bool m1_levo;    //левое
-        public bool m2_verh;    //верхнее
-        public bool m3_pravo;   //правое
-        public bool m4_niz;     //нижнее
+        public bool Left { get; set; }
+        public bool Top { get; set; }
+        public bool Right { get; set; }
+        public bool Bottom { get; set; }
 
-        public int prioritet;   //приоритет направления (более выгодное)
-        //1 - лево, 2 - верх, 3 - право, 4 - низ
-    }
+        // Приоритет направления (более выгодное).
+        // 1 - лево, 2 - верх, 3 - право, 4 - низ
+        public int Priority { get; set; }
 
-    //Структура параметров при поиске кратчайшего пути
-    public struct BellmanParam
-    {
-        public int cost;                    //цена всего пути
+        public Directions()
+        {
+            NullDirections();
+            Priority = 0;
+        }
 
-        public List<Cell> kratPut;        //путь - массив координат
-
-        public Division elem;      //юнит - нужны его параметры
-
-        public Coordinates unitCoords;      //координаты юнита (откуда идём)
-        public Coordinates flagCoords;      //координаты флага (куда идём)
+        public void NullDirections()
+        {
+            Left = false;
+            Top = false;
+            Right = false;
+            Bottom = false;
+        }
     }
 
     #endregion

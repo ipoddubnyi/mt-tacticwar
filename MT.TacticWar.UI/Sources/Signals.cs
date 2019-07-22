@@ -1,5 +1,5 @@
 ﻿
-namespace MT.TacticWar.Core
+namespace MT.TacticWar.UI
 {
     /// <summary>
     /// Сигналы для обмена графики и симулятора.

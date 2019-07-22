@@ -42,16 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sources\Bellman.cs" />
     <Compile Include="Sources\Coordinates.cs" />
     <Compile Include="Sources\Money.cs" />
-    <Compile Include="Sources\Simulator.cs" />
+    <Compile Include="Sources\Objects\Extensions.cs" />
     <Compile Include="Sources\Types\Mission\MissionManage.cs" />
     <Compile Include="Sources\Types\Simulator\AttackInfo.cs" />
     <Compile Include="Sources\Types\Simulator\GameParams.cs" />
     <Compile Include="Sources\Types\Mission\MissionStatus.cs" />
     <Compile Include="Sources\Types\Structures.cs" />
     <Compile Include="Sources\Landscape\Cell.cs" />
-    <Compile Include="Sources\Landscape\Field.cs" />
+    <Compile Include="Sources\Landscape\Map.cs" />
     <Compile Include="Sources\Landscape\LandscapeSchema.cs" />
     <Compile Include="Sources\Landscape\CellType.cs" />
     <Compile Include="Sources\Mission.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Sources\Objects\IObject.cs" />
     <Compile Include="Sources\Objects\Unit.cs" />
     <Compile Include="Sources\Objects\UnitCollection.cs" />
-    <Compile Include="Sources\Signals.cs" />
     <Compile Include="Sources\Types\Simulator\UnitInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

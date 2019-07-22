@@ -6,14 +6,14 @@ using System.Drawing;
 
 namespace MT.TacticWar.Core.Objects
 {
-    //Объект (может быть нарисован на карте)
-    interface IObject
+    // Объект (может быть нарисован на карте)
+    public interface IObject
     {
-        /*int mId;
-        string mName;
-        int mIgrokId;
-        int mHealth;*/
+        /*int Id;
+        string Name;
+        int PlayerId;
+        int Health;*/
 
-        void drawMe(Graphics grf, int left, int top);
+        //void drawMe(Graphics grf, int left, int top);
     }
 }

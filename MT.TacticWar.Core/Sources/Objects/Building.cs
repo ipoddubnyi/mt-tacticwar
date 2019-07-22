@@ -9,23 +9,20 @@ namespace MT.TacticWar.Core.Objects
     //Строение
     public class Building : IObject
     {
-        public BuildingType mType;    //тип строения
+        public BuildingType Type;    //тип строения
 
-        public Coordinates mCoords;     //координаты на зоне БД
+        public Coordinates Coordinates;     //координаты на зоне БД
 
-        public int mId;                 //номер
-        public string mName;            //имя
-        public int mIgrokId;            //ид игрока
-        public int mHealth;             //здоровье
+        public int Id;                 //номер
+        public string Name;            //имя
+        public int PlayerId;            //ид игрока
+        public int Health;             //здоровье
 
-        public int mRadius;             //радиус действия
-        public int mObzor;              //радиус обзора
+        public int RadiusActive;             //радиус действия
+        public int RadiusView;              //радиус обзора
 
-        public bool mIsOhran;           //есть ли охранение в здании
-        public Division mOhraneniye;   //подразделение на охранении
-
-        public bool mSelected;                  //выделен ли объект
-        string mImage;                          //путь к изображению
+        public bool IsSecured;           //есть ли охранение в здании
+        public Division SecurityDivision;   //подразделение на охранении
 
         //********************************************************************************
 
@@ -34,7 +31,7 @@ namespace MT.TacticWar.Core.Objects
         [System.ComponentModel.Description("Номер владельца строения")] 
         public string Игрок
         {
-            get { return ("Игрок " + mIgrokId.ToString()); }
+            get { return ("Игрок " + PlayerId.ToString()); }
         }
 
         [System.ComponentModel.Description("Тип строения")] 
@@ -44,7 +41,7 @@ namespace MT.TacticWar.Core.Objects
             {
                 string res = "";
 
-                switch (mType)
+                switch (Type)
                 {
                     case BuildingType.Factory:
                         res = "Завод";
@@ -73,31 +70,31 @@ namespace MT.TacticWar.Core.Objects
         [System.ComponentModel.Description("Название строения")] 
         public string Название
         {
-            get { return mName; }
+            get { return Name; }
         }
 
         [System.ComponentModel.Description("Координаты строения на карте")] 
         public string Координаты
         {
-            get { return ("(" + mCoords.y + ", " + mCoords.x + ")"); }
+            get { return ("(" + Coordinates.Y + ", " + Coordinates.X + ")"); }
         }
 
         /*[System.ComponentModel.Description("")] 
         public string Здоровье
         {
-            get { return mHealth.ToString(); }
+            get { return Health.ToString(); }
         }*/
 
         [System.ComponentModel.Description("На каком радиусе здание может выполнять функции")] 
         public string Радиус
         {
-            get { return mRadius.ToString(); }
+            get { return RadiusActive.ToString(); }
         }
 
         [System.ComponentModel.Description("Дальность видимости здания")] 
         public string Обзор
         {
-            get { return mObzor.ToString(); }
+            get { return RadiusView.ToString(); }
         }
 
         #endregion
@@ -113,164 +110,58 @@ namespace MT.TacticWar.Core.Objects
         //Конструктор
         public Building(int igrok, int id, int type, string name, int i, int j, int health, int radius, int obzor, bool isOhr, Division elemOhr)
         {
-            //тип строения
-            switch (type)
-            {
-                case 1:
-                    mType = BuildingType.Barracks;
-                    break;
-                case 2:
-                    mType = BuildingType.Storehouse;
-                    break;
-                case 3:
-                    mType = BuildingType.Radar;
-                    break;
-                case 4:
-                    mType = BuildingType.Airfield;
-                    break;
-                case 5:
-                    mType = BuildingType.Port;
-                    break;
-                case 0:
-                default:
-                    mType = BuildingType.Factory;
-                    break;
-            }
+            Type = (BuildingType)type;
 
-            mCoords.x = i; //координаты на зоне БД
-            mCoords.y = j;
+            //координаты на зоне БД
+            Coordinates = new Coordinates(i, j);
 
-            mId = id; //номер здания
-            mName = name; //имя
-            mIgrokId = igrok; //ид игрока
-            mHealth = health; //здоровье
+            Id = id; //номер здания
+            Name = name; //имя
+            PlayerId = igrok; //ид игрока
+            Health = health; //здоровье
 
-            mRadius = radius; //радиус действия
-            mObzor = obzor; //радиус обзора
+            RadiusActive = radius; //радиус действия
+            RadiusView = obzor; //радиус обзора
 
-            mIsOhran = isOhr; //есть ли охранение в здании
-            mOhraneniye = elemOhr; //подразделение на охранении
-
-            mSelected = false; //выделен ли объект
-            mImage = "Zavod1.png"; //путь к изображению
+            IsSecured = isOhr; //есть ли охранение в здании
+            SecurityDivision = elemOhr; //подразделение на охранении
         }
 
         //********************************************************************************
-
-        /// <summary>Рисование строения
-        /// </summary>
-        /// <param name="grf">объект, на котором рисуется</param>
-        /// <param name="left">отступ слева</param>
-        /// <param name="top">отступ сверху</param>
-        /// <returns></returns>
-        void IObject.drawMe(Graphics grf, int left, int top)
-        {
-
-        }
 
         //Копировать здание
         public Building copyBuilding()
         {
             Building newBuilding = new Building();
 
-            newBuilding.mType = mType; //тип строения
+            newBuilding.Type = Type; //тип строения
 
-            newBuilding.mCoords.x = mCoords.x; //координаты на зоне БД
-            newBuilding.mCoords.y = mCoords.y;
+            newBuilding.Coordinates.X = Coordinates.X; //координаты на зоне БД
+            newBuilding.Coordinates.Y = Coordinates.Y;
 
-            newBuilding.mId = mId; ; //номер
-            newBuilding.mName = mName; //имя
-            newBuilding.mIgrokId = mIgrokId; //ид игрока
-            newBuilding.mHealth = mHealth; //здоровье
+            newBuilding.Id = Id; ; //номер
+            newBuilding.Name = Name; //имя
+            newBuilding.PlayerId = PlayerId; //ид игрока
+            newBuilding.Health = Health; //здоровье
 
-            newBuilding.mRadius = mRadius; //радиус действия
-            newBuilding.mObzor = mObzor; //радиус обзора
+            newBuilding.RadiusActive = RadiusActive; //радиус действия
+            newBuilding.RadiusView = RadiusView; //радиус обзора
 
-            newBuilding.mIsOhran = mIsOhran; //есть ли охранение в здании
-            newBuilding.mOhraneniye = mOhraneniye; //подразделение на охранении
-
-            newBuilding.mSelected = mSelected; //выделен ли объект
-            newBuilding.mImage = mImage; //путь к изображению
+            newBuilding.IsSecured = IsSecured; //есть ли охранение в здании
+            newBuilding.SecurityDivision = SecurityDivision; //подразделение на охранении
 
             return newBuilding;
         }
 
-        //Выделить здание
-        public void selectMe()
-        {
-            mSelected = true;
-        }
-
-        //Снять выделение со здания
-        public void deselectMe()
-        {
-            mSelected = false;
-        }
-
-        //Нарисовать здание
-        public void drawBuilding(Graphics grf, int left, int top, int fieldSize)
-        {
-            mImage = "img\\buildings\\";
-
-            //выбрать изображение по типу подразделения
-            switch (mType)
-            {
-                case BuildingType.Barracks:
-                    mImage += "Kazarma";
-                    break;
-                case BuildingType.Storehouse:
-                    mImage += "Sklad";
-                    break;
-                case BuildingType.Radar:
-                    mImage += "Radar";
-                    break;
-                case BuildingType.Airfield:
-                    mImage += "Aeroport";
-                    break;
-                case BuildingType.Port:
-                    mImage += "Port";
-                    break;
-                case BuildingType.Factory:
-                default:
-                    mImage += "Zavod";
-                    break;
-            }
-
-            string endOfImg = ".png";
-
-            //если выделен
-            if (mSelected)
-                endOfImg = "_selected.png";
-
-            mImage += (mIgrokId + 1).ToString() + endOfImg;
-
-            Image newImage = Image.FromFile(mImage);
-            grf.DrawImage(newImage, left, top, fieldSize, fieldSize); //j * fieldSize, i * fieldSize);
-
-            //---
-
-            //если есть охранение - пометить
-            if (mIsOhran)
-            {
-                mImage = "img\\features\\Defend.png";
-
-                newImage = Image.FromFile(mImage);
-                grf.DrawImage(newImage, left, top, fieldSize, fieldSize); //j * fieldSize, i * fieldSize);
-            }
-
-            newImage.Dispose();
-            //grf.Dispose();
-        }
-
         //Добавить охранение в здание
         //Возвращает false при ошибке
-        public bool addOhraneniye(Division ohran)
+        public bool AddSecurity(Division security)
         {
             //если уже есть охранение - ошибка
-            if (mIsOhran) return false;
+            if (IsSecured) return false;
 
-            mIsOhran = true;
-            mOhraneniye = ohran;
+            IsSecured = true;
+            SecurityDivision = security;
 
             return true;
         }
