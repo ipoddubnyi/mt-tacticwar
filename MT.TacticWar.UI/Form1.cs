@@ -29,15 +29,14 @@ namespace MT.TacticWar.UI
         //Загрузка миссии
         private void loadMission(string missionName)
         {
-            FrmUsersControl ucForm = new FrmUsersControl();
-
-            if (ucForm.ShowDialog() == DialogResult.OK)
+            using (var ucForm = new FrmUsersControl())
             {
-                startSimulator(missionName, ucForm.igrk1Name, ucForm.igrk2Name,
-                                ucForm.igrk1AI, ucForm.igrk2AI);
+                if (ucForm.ShowDialog() == DialogResult.OK)
+                {
+                    startSimulator(missionName, ucForm.igrk1Name, ucForm.igrk2Name,
+                                    ucForm.igrk1AI, ucForm.igrk2AI);
+                }
             }
-
-            ucForm.Dispose();
         }
 
         private void startSimulator(string missionName, string igrk0Name, string igrk1Name,
@@ -66,7 +65,9 @@ namespace MT.TacticWar.UI
 
                 //рисование карты
                 SIMUL.InitGraphics(gameMap.CreateGraphics());
-                SIMUL.drawAll();
+
+                // TODO: исправить двойное обновление картинки при первой загрузке
+                SIMUL.DrawAll();
 
                 // TODO: показ брифинга
                 //MessageBox.Show(SIMUL.Mission.mBriefing, "Брифинг");
@@ -82,7 +83,7 @@ namespace MT.TacticWar.UI
             //если нажатие не левой кнопкой
             if (e.Button != MouseButtons.Left)
             {
-                SIMUL.deselectAll();
+                SIMUL.DeselectAll();
                 ClearObjectInfo();
             }
             else
@@ -94,10 +95,10 @@ namespace MT.TacticWar.UI
                 //если собрана информация о юните
                 switch (signal)
                 {
-                    case Signals.s03_READY_UNIT_INFO:
+                    case Signals.READY_UNIT_INFO:
                         ShowObjectInfo();
                         break;
-                    case Signals.s04_ATTACK:
+                    case Signals.ATTACK:
                         BattleDivisionVsDivision();
                         break;
                 }
@@ -198,7 +199,6 @@ namespace MT.TacticWar.UI
                     }
 
                     //собрать информацию об этом юните
-                    SIMUL.setUnitInfo(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked]);
                     ShowObjectInfo();
                 }
                 else if (win == 2) //если победил защищавшийся
@@ -220,7 +220,6 @@ namespace MT.TacticWar.UI
                     SIMUL.SelectDivision(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended]);
 
                     //собрать информацию об этом юните
-                    SIMUL.setUnitInfo(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerDefended].Divisions[SIMUL.AttackInfo.DivisionDefended]);
                     ShowObjectInfo();
 
                     //устанавливаем выделение на защищавшегося
@@ -233,7 +232,6 @@ namespace MT.TacticWar.UI
                     SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked].Target.Y = -1;
 
                     //собрать информацию об этом юните
-                    SIMUL.setUnitInfo(SIMUL.Game.Players[SIMUL.AttackInfo.PlayerAttacked].Divisions[SIMUL.AttackInfo.DivisionAttacked]);
                     ShowObjectInfo();
                 }
 
@@ -246,13 +244,13 @@ namespace MT.TacticWar.UI
             frmAt.Dispose();
 
             //перерисовываем поле боя
-            SIMUL.drawAll();
+            SIMUL.DrawAll();
         }
 
         private void gameMap_Paint(object sender, PaintEventArgs e)
         {
             if(SIMUL != null)
-                SIMUL.drawAll();
+                SIMUL.DrawAll();
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -275,6 +273,29 @@ namespace MT.TacticWar.UI
             }
 
             newForm.Dispose();
+        }
+
+        private void BtnEndStep_Click(object sender, EventArgs e)
+        {
+            var ans = MessageBox.Show(
+                "Завершить ход?",
+                "Завершение хода",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (ans == DialogResult.Yes)
+            {
+                gameMap.Visible = false;
+                SIMUL.PassStep();
+
+                MessageBox.Show(
+                    $"Ход игрока {SIMUL.PlayerCurrent}",
+                    "Начало хода",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                gameMap.Visible = true;
+            }
         }
     }
 }

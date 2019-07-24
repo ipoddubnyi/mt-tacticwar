@@ -10,8 +10,7 @@ namespace MT.TacticWar.Core.Objects
 
         public Coordinates Position { get; set; }
 
-        public Coordinates Target;   //координаты места назначения
-        public Coordinates DayTarget; //координаты цели юнита в этот день
+        public Coordinates Target { get; set; }   //координаты места назначения
 
         public int Id;             //номер подразделения
         public string Name;        //имя
@@ -37,19 +36,19 @@ namespace MT.TacticWar.Core.Objects
 
         public List<StructUnits> Units;    //список юнитов
 
-        public Division(int igrok, int id, int type, string name, int i, int j, List<StructUnits> units)
+        public Building SecuredBuilding { get; set; } //охраняемое здание
+        public bool IsSecuring => null != SecuredBuilding;
+
+        public Division(int igrok, int id, int type, string name, int x, int y, List<StructUnits> units)
         {
             //тип подразделения
             Type = (DivisionType)type;
 
             //координаты на зоне БД
-            Position = new Coordinates(i, j);
+            Position = new Coordinates(x, y);
 
             //координаты места назначения
-            Target = new Coordinates(-1, -1);
-
-            //координаты цели юнита в этот день
-            DayTarget = new Coordinates(-1, -1);
+            Target = Coordinates.Empty;
 
             Id = id;             //номер подразделения
             Name = name;        //имя
@@ -58,82 +57,78 @@ namespace MT.TacticWar.Core.Objects
             //список юнитов
             Units = units; //new List<StructUnits>();
 
+            SecuredBuilding = null;
+
             //пересчитать показатели
-            recountParams();
+            ResetParams();
         }
 
         //Продвинуть подразделение к цели на этот день
         //!!!!!!!!!! Возврат: true - достигли цели
-        public void pushElement(List<Cell> put)
+        public void Move(List<Cell> way)
         {
             //просчитать путь для юнита на один день (для рисования на карте)
-            Cell[] tmpArr = new Cell[put.Count];
-            put.CopyTo(tmpArr);
-            List<Cell> oneDayPut = tmpArr.ToList();
-            countOneDayOfElement(ref oneDayPut);
+            //Cell[] tmpArr = new Cell[put.Count];
+            //put.CopyTo(tmpArr);
+            var tmpArr = new List<Cell>(way);
+            var oneday = GetOneDayWay(tmpArr);
 
             //бежим по точкам пути
-            for (int k = 0; k < (oneDayPut.Count - 1); k++)
+            for (int k = 0; k < (oneday.Count - 1); k++)
             {
-                Steps -= oneDayPut.ElementAt(k).PassCost;
+                Steps -= oneday[k].PassCost;
 
                 //если юниту хватает шагов, чтобы пройти по данной ячейке
                 //if (Steps < 0)
                 //    k = put.Count; //иначе - завершаем цикл
             }
 
-            Position.X = DayTarget.X;
-            Position.Y = DayTarget.Y;
-
-            DayTarget.X = -1;
-            DayTarget.Y = -1;
+            var dayTarget = oneday.Last().Coordinates.Clone();
+            Position = dayTarget.Clone();
         }
 
         //Просчитать часть пути, которую юнит пройдёт за один день
-        public void countOneDayOfElement(ref List<Cell> put)
+        private List<Cell> GetOneDayWay(List<Cell> wayall)
+        {
+            int index = GetOneDayIndex(wayall);
+            return wayall.GetRange(0, index + 1);
+        }
+
+        public int GetOneDayIndex(List<Cell> wayall)
         {
             int curSteps = Steps; //шаги в текущем ходе
-            int tmp = 0;
+            int index = 0;
 
-            //бежим по точкам пути
-            for (int k = 0; k < put.Count; k++)
+            for (int i = 0; i < wayall.Count; i++)
             {
-                //если юниту хватает шагов, чтобы пройти по данной ячейке
-                if (curSteps >= 0)
-                {
-                    tmp = k; //запоминаем ячейку по списку
-                    curSteps -= put.ElementAt(k).PassCost;
-                }
-                else
-                    k = put.Count; //иначе - завершаем цикл
+                //если юниту не хватает шагов, чтобы пройти по данной ячейке
+                if (curSteps < 0)
+                    break;
+
+                index = i; //запоминаем ячейку по списку
+                curSteps -= wayall[i].PassCost;
             }
 
-            //запоминаем координаты цели на этот день
-            DayTarget = put.ElementAt(tmp).Coordinates.Clone();
-
-            //бежим по оставшимся точкам пути
-            put.RemoveRange(tmp + 1, put.Count - tmp - 1); //удаляем элементы
+            return index;
         }
 
-        //Поставить флаг для подразделения
-        public void setFlag(int i, int j)
+        public void SetTarget(int x, int y)
         {
-            Target.X = i;
-            Target.Y = j;
+            SetTarget(new Coordinates(x, y));
         }
 
-        //Убрать флаг для подразделения
-        public void removeFlag()
+        public void SetTarget(Coordinates target)
         {
-            Target.X = -1;
-            Target.Y = -1;
+            Target = target.Clone();
+        }
 
-            DayTarget.X = -1;
-            DayTarget.Y = -1;
+        public void RemoveTarget()
+        {
+            Target = Coordinates.Empty;
         }
 
         //Пересчитать показатели подразделения
-        public void recountParams()
+        public void ResetParams()
         {
             //???? если есть повторяющиеся юниты - объединить их
             for (int k = 0; k < Units.Count; k++)

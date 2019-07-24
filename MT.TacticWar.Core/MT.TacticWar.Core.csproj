@@ -46,6 +46,7 @@
     <Compile Include="Sources\Algorithm\BellmanParam.cs" />
     <Compile Include="Sources\Algorithm\BellmanCell.cs" />
     <Compile Include="Sources\Coordinates.cs" />
+    <Compile Include="Sources\Fog.cs" />
     <Compile Include="Sources\Money.cs" />
     <Compile Include="Sources\Objects\Extensions.cs" />
     <Compile Include="Sources\MoveType.cs" />

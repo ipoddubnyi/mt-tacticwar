@@ -5,6 +5,8 @@ namespace MT.TacticWar.Core
     [DebuggerDisplay("({X}, {Y})")]
     public class Coordinates
     {
+        public static Coordinates Empty = new Coordinates(-1, -1);
+
         public int X { get; set; }
         public int Y { get; set; }
 

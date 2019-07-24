@@ -180,7 +180,6 @@ namespace MT.TacticWar.Core.Serialization
                     bld.Health,
                     bld.Radius,
                     bld.View,
-                    bld.Security.HasValue,
                     security
                 ));
             }

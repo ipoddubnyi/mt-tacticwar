@@ -17,6 +17,10 @@ namespace MT.TacticWar.Core.Landscape
         public int Width;              //ширина поля боя
         public int Height;             //высота поля боя
 
+        public Cell this[int x, int y] => Field[x, y];
+
+        public Cell this[Coordinates pt] => Field[pt.X, pt.Y];
+
         public Map(int width, int height)
         {
             Width = width;

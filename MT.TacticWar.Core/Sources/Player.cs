@@ -94,7 +94,7 @@ namespace MT.TacticWar.Core
             IsPlaying = true; //играет ли данный игрок (возможно, уже проиграл)
         }
 
-        public Division GetDivisionAtCoordinates(int x, int y)
+        public Division GetDivisionAt(int x, int y)
         {
             foreach (var division in Divisions)
             {
@@ -105,7 +105,7 @@ namespace MT.TacticWar.Core
             return null;
         }
 
-        public Building GetBuildingAtCoordinates(int x, int y)
+        public Building GetBuildingAt(int x, int y)
         {
             foreach (var building in Buildings)
             {
@@ -114,6 +114,14 @@ namespace MT.TacticWar.Core
             }
 
             return null;
+        }
+
+        public void ResetDivisionsParams()
+        {
+            foreach (var division in Divisions)
+            {
+                division.ResetParams();
+            }
         }
 
         /// <summary>Пересчитать идентификаторы подразделений и зданий игрока
@@ -169,7 +177,7 @@ namespace MT.TacticWar.Core
             }
 
             //пересчитать показатели нового подразделения
-            Divisions[idBigEl].recountParams();
+            Divisions[idBigEl].ResetParams();
 
             //изменяем число шагов
             Divisions[idBigEl].Steps = steps;

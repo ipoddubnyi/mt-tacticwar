@@ -15,14 +15,14 @@ namespace MT.TacticWar.Core.Objects
         public int RadiusActive;             //радиус действия
         public int RadiusView;              //радиус обзора
 
-        public bool IsSecured;           //есть ли охранение в здании
-        public Division SecurityDivision;   //подразделение на охранении
+        public Division SecurityDivision { get; set; }   //подразделение на охранении
+        public bool IsSecured => null != SecurityDivision;
 
         private Building()
         {
         }
 
-        public Building(int igrok, int id, int type, string name, int i, int j, int health, int radius, int obzor, bool isOhr, Division elemOhr)
+        public Building(int igrok, int id, int type, string name, int i, int j, int health, int radius, int obzor, Division elemOhr)
         {
             Type = (BuildingType)type;
 
@@ -37,8 +37,10 @@ namespace MT.TacticWar.Core.Objects
             RadiusActive = radius; //радиус действия
             RadiusView = obzor; //радиус обзора
 
-            IsSecured = isOhr; //есть ли охранение в здании
-            SecurityDivision = elemOhr; //подразделение на охранении
+            SecurityDivision = null;
+
+            if (null != elemOhr)
+                AddSecurity(elemOhr);
         }
 
         public Building Copy()
@@ -58,8 +60,8 @@ namespace MT.TacticWar.Core.Objects
             newBuilding.RadiusActive = RadiusActive; //радиус действия
             newBuilding.RadiusView = RadiusView; //радиус обзора
 
-            newBuilding.IsSecured = IsSecured; //есть ли охранение в здании
             newBuilding.SecurityDivision = SecurityDivision; //подразделение на охранении
+            // TODO: поменять охранение???
 
             return newBuilding;
         }
@@ -71,10 +73,18 @@ namespace MT.TacticWar.Core.Objects
             //если уже есть охранение - ошибка
             if (IsSecured) return false;
 
-            IsSecured = true;
             SecurityDivision = security;
+            security.SecuredBuilding = this;
 
             return true;
+        }
+
+        public void RemoveSecurity()
+        {
+            if (null != SecurityDivision)
+                SecurityDivision.SecuredBuilding = null;
+
+            SecurityDivision = null;
         }
     }
 }

@@ -44,6 +44,20 @@
                         <unit type="tank" count="5" />
                     </units>
                 </division>
+
+                <division id="3" name="Штурмовая танковая группа" type="1">
+                    <position x="14" y="19" />
+                    <units>
+                        <unit type="tank" count="2" />
+                    </units>
+                </division>
+                
+                <division id="4" name="Взвод пехоты 2" type="0">
+                    <position x="15" y="19" />
+                    <units>
+                        <unit type="soldier" count="3" />
+                    </units>
+                </division>
             </divisions>
 
             <buildings>
@@ -54,7 +68,23 @@
                     <view>1</view>
                 </building>
 
-                <building id="1" name="Склад 2" type="2">
+                <building id="1" name="Завод 1" type="0">
+                    <position x="14" y="19" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                    <security>3</security>
+                </building>
+                
+                <building id="2" name="Казармы 1" type="1">
+                    <position x="15" y="19" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                    <security>4</security>
+                </building>
+
+                <building id="3" name="Склад 2" type="2">
                     <position x="3" y="19" />
                     <health>100</health>
                     <radius>0</radius>
