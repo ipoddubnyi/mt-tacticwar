@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MT.TacticWar.Core", "MT.Tac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F60D4D8-E8A4-44CC-AF0B-C0638F2A13EB}"
 	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MT.TacticWar.Core.Serialization", "MT.TacticWar.Core.Serialization\MT.TacticWar.Core.Serialization.csproj", "{A9AF49CF-708F-4AA7-A4CF-323F8BFA27F4}"
