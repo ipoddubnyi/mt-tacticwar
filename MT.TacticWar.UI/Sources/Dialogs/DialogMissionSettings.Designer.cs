@@ -1,6 +1,6 @@
-﻿namespace MT.TacticWar.UI
+﻿namespace MT.TacticWar.UI.Dialogs
 {
-    partial class FrmUsersControl
+    partial class DialogMissionSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -83,7 +83,7 @@
             this.radioPC1.TabIndex = 4;
             this.radioPC1.Text = "Компьютер";
             this.radioPC1.UseVisualStyleBackColor = true;
-            this.radioPC1.CheckedChanged += new System.EventHandler(this.radioPC1_CheckedChanged);
+            this.radioPC1.CheckedChanged += new System.EventHandler(this.RadioPC1_CheckedChanged);
             // 
             // radioHuman1
             // 
@@ -96,7 +96,7 @@
             this.radioHuman1.TabStop = true;
             this.radioHuman1.Text = "Человек";
             this.radioHuman1.UseVisualStyleBackColor = true;
-            this.radioHuman1.CheckedChanged += new System.EventHandler(this.radioHuman1_CheckedChanged);
+            this.radioHuman1.CheckedChanged += new System.EventHandler(this.RadioHuman1_CheckedChanged);
             // 
             // groupIgrok2
             // 
@@ -132,7 +132,7 @@
             this.radioHuman2.TabStop = true;
             this.radioHuman2.Text = "Человек";
             this.radioHuman2.UseVisualStyleBackColor = true;
-            this.radioHuman2.CheckedChanged += new System.EventHandler(this.radioHuman2_CheckedChanged);
+            this.radioHuman2.CheckedChanged += new System.EventHandler(this.RadioHuman2_CheckedChanged);
             // 
             // txtName2
             // 
@@ -152,7 +152,7 @@
             this.radioPC2.TabIndex = 6;
             this.radioPC2.Text = "Компьютер";
             this.radioPC2.UseVisualStyleBackColor = true;
-            this.radioPC2.CheckedChanged += new System.EventHandler(this.radioPC2_CheckedChanged);
+            this.radioPC2.CheckedChanged += new System.EventHandler(this.RadioPC2_CheckedChanged);
             // 
             // btnStart
             // 
@@ -162,7 +162,7 @@
             this.btnStart.TabIndex = 0;
             this.btnStart.Text = "Начать";
             this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.btnStart.Click += new System.EventHandler(this.BtnStart_Click);
             // 
             // FrmUsersControl
             // 

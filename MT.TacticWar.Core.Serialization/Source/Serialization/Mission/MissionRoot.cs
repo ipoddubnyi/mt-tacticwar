@@ -13,6 +13,9 @@ namespace MT.TacticWar.Core.Serialization
         [XmlArrayItem("player")]
         public MissionPlayer[] Players { get; set; }
 
+        [XmlElement("types")]
+        public MissionTypes Types { get; set; }
+
         public static void Serialize(string filePath, MissionRoot mission)
         {
             using (var fs = new FileStream(filePath, FileMode.Create))

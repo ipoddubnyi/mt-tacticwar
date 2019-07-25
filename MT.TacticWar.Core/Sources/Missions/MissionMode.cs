@@ -1,5 +1,5 @@
 ﻿
-namespace MT.TacticWar.Core.Types
+namespace MT.TacticWar.Core
 {
     /// <summary>
     /// Режимы миссии.

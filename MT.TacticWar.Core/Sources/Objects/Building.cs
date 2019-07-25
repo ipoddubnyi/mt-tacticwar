@@ -3,12 +3,12 @@ namespace MT.TacticWar.Core.Objects
 {
     public class Building : IObject
     {
-        public BuildingType Type;    //тип строения
+        public int Id { get; protected set; }
 
         public Coordinates Position { get; set; }
 
-        public int Id;                 //номер
         public string Name;            //имя
+        public BuildingType Type;    //тип строения
         public int PlayerId;            //ид игрока
         public int Health;             //здоровье
 

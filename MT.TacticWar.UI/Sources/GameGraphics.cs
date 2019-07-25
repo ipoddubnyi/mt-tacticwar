@@ -8,15 +8,15 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI
 {
-    class GameGraphics
+    public class GameGraphics
     {
-        public const int CellSize = 21;
-
+        public int CellSize { get; private set; }
         private readonly Graphics grf;
 
-        public GameGraphics(Graphics grf)
+        public GameGraphics(Graphics grf, int cellsize = 21)
         {
             this.grf = grf;
+            CellSize = cellsize;
         }
 
         public void DrawMap(Map map)
@@ -80,7 +80,7 @@ namespace MT.TacticWar.UI
 
         public void DrawCell(Cell cell)
         {
-            var color = GetCellColor(cell.Type);
+            var color = GetCellColor(cell.Type, cell.Schema);
             using (Brush brush = new SolidBrush(color))
             {
                 int x = cell.Coordinates.X;
@@ -91,7 +91,7 @@ namespace MT.TacticWar.UI
 
         public void DrawCellOne(Cell cell, Fog fog)
         {
-            var color = GetCellColor(cell.Type);
+            var color = GetCellColor(cell.Type, cell.Schema);
             using (var brush = new SolidBrush(color))
             {
                 int xpx = cell.Coordinates.X * CellSize;
@@ -104,22 +104,22 @@ namespace MT.TacticWar.UI
             }
         }
 
-        private Color GetCellColor(CellType type)
+        private Color GetCellColor(CellType type, MapSchema schema)
         {
             switch (type)
             {
                 case CellType.Grass:
-                    return Color.Green;
+                    return (MapSchema.Winter == schema) ? Color.White : Color.Green;
                 case CellType.Snow:
                     return Color.WhiteSmoke;
                 case CellType.Sand:
-                    return Color.Yellow;
+                    return (MapSchema.Winter == schema) ? Color.LightYellow : Color.Yellow;
                 case CellType.Water:
-                    return Color.Blue;
+                    return (MapSchema.Winter == schema) ? Color.DarkBlue : Color.Blue;
                 case CellType.Stones:
-                    return Color.Gray;
+                    return (MapSchema.Winter == schema) ? Color.DimGray : Color.Gray;
                 case CellType.Forest:
-                    return Color.DarkGreen;
+                    return (MapSchema.Winter == schema) ? Color.DarkSeaGreen : Color.DarkGreen;
                 case CellType.Road:
                     return Color.LightGray;
                 case CellType.Buildings:
@@ -128,7 +128,7 @@ namespace MT.TacticWar.UI
                     return Color.LightBlue;
             }
 
-            return Color.White;
+            return Color.Black;
         }
 
         // Рисования креста (когда путь не найден)

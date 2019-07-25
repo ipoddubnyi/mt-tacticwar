@@ -1,7 +1,7 @@
 ﻿
 namespace MT.TacticWar.Core.Landscape
 {
-    public enum LandscapeSchema
+    public enum MapSchema
     {
         Summer  = 0,
         Winter  = 1,

@@ -1,42 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.IO;
-using MT.TacticWar.Core.Objects;
-
+﻿
 namespace MT.TacticWar.Core.Landscape
 {
     public class Map
     {
-        public string Name;            //имя карты
-
-        public Cell[,] Field;        //массив - поле боя
-
-        public int Width;              //ширина поля боя
-        public int Height;             //высота поля боя
+        public string Name { get; private set; }
+        public MapSchema Schema { get; private set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public Cell[,] Field { get; private set; }
 
         public Cell this[int x, int y] => Field[x, y];
-
         public Cell this[Coordinates pt] => Field[pt.X, pt.Y];
 
-        public Map(int width, int height)
+        public Map(int width, int height) :
+            this("Карта местности", width, height)
         {
-            Width = width;
-            Height = height;
-
-            Field = new Cell[height, width];
-
-            for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
-                    Field[x, y] = new Cell(x, y);
         }
 
-        /// <summary>Определить занятость ячеек
-        /// </summary>
+        public Map(string name, int width, int height, MapSchema schema = MapSchema.Summer) :
+            this(name, width, height, null, schema)
+        {
+            // инициализация пустыми ячейками
+            Field = new Cell[height, width];
+            for (int y = 0; y < Height; y++)
+                for (int x = 0; x < Width; x++)
+                    Field[x, y] = new Cell(x, y, schema);
+        }
+
+        public Map(string name, int width, int height, Cell[,] field, MapSchema schema)
+        {
+            Name = name;
+            Schema = schema;
+            Width = width;
+            Height = height;
+            Field = field;
+        }
+
+        /// <summary>Задать занятость ячеек</summary>
         /// <param name="players">массив игроков (для доступа к их объектам)</param>
-        /// <returns></returns>
         public void OccupateCells(Player[] players)
         {
             int x, y;

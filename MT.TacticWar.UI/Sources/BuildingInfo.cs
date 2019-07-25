@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MT.TacticWar.Core;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI
@@ -40,7 +41,7 @@ namespace MT.TacticWar.UI
         public int RadiusActive => building.RadiusActive;
 
         [Category("Данные")]
-        [DisplayName("Радиус обзора")]
+        [DisplayName("Обзор")]
         [Description("Дальность видимости здания")]
         public int RadiusView => building.RadiusView;
 

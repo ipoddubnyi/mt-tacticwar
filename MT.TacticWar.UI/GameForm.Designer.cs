@@ -1,6 +1,6 @@
 ﻿namespace MT.TacticWar.UI
 {
-    partial class frmMain
+    partial class GameForm
     {
         /// <summary>
         /// Required designer variable.
@@ -82,7 +82,7 @@
             // menuFile
             // 
             this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(59, 24);
+            this.menuFile.Size = new System.Drawing.Size(57, 24);
             this.menuFile.Text = "Файл";
             // 
             // menuMission
@@ -90,13 +90,13 @@
             this.menuMission.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuMisLoad});
             this.menuMission.Name = "menuMission";
-            this.menuMission.Size = new System.Drawing.Size(76, 24);
+            this.menuMission.Size = new System.Drawing.Size(74, 24);
             this.menuMission.Text = "Миссия";
             // 
             // menuMisLoad
             // 
             this.menuMisLoad.Name = "menuMisLoad";
-            this.menuMisLoad.Size = new System.Drawing.Size(160, 26);
+            this.menuMisLoad.Size = new System.Drawing.Size(152, 26);
             this.menuMisLoad.Text = "Загрузить";
             this.menuMisLoad.Click += new System.EventHandler(this.menuMisLoad_Click);
             // 
@@ -105,13 +105,13 @@
             this.menuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuHlpAbout});
             this.menuHelp.Name = "menuHelp";
-            this.menuHelp.Size = new System.Drawing.Size(83, 24);
+            this.menuHelp.Size = new System.Drawing.Size(81, 24);
             this.menuHelp.Text = "Помощь";
             // 
             // menuHlpAbout
             // 
             this.menuHlpAbout.Name = "menuHlpAbout";
-            this.menuHlpAbout.Size = new System.Drawing.Size(148, 26);
+            this.menuHlpAbout.Size = new System.Drawing.Size(140, 26);
             this.menuHlpAbout.Text = "Об игре";
             // 
             // listInfoUnits
@@ -146,7 +146,7 @@
             this.btnEndStep.UseVisualStyleBackColor = true;
             this.btnEndStep.Click += new System.EventHandler(this.BtnEndStep_Click);
             // 
-            // frmMain
+            // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -161,7 +161,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.Name = "frmMain";
+            this.Name = "GameForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Тактическая войнушка";
             this.Load += new System.EventHandler(this.frmMain_Load);

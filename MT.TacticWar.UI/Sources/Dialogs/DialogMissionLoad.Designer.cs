@@ -1,6 +1,6 @@
-﻿namespace MT.TacticWar.UI
+﻿namespace MT.TacticWar.UI.Dialogs
 {
-    partial class FrmLoadMission
+    partial class DialogMissionLoad
     {
         /// <summary>
         /// Required designer variable.
@@ -52,7 +52,7 @@
             this.listMissions.Name = "listMissions";
             this.listMissions.Size = new System.Drawing.Size(171, 264);
             this.listMissions.TabIndex = 0;
-            this.listMissions.SelectedIndexChanged += new System.EventHandler(this.listMissions_SelectedIndexChanged);
+            this.listMissions.SelectedIndexChanged += new System.EventHandler(this.ListMissions_SelectedIndexChanged);
             // 
             // lblMissionsList
             // 
@@ -71,7 +71,7 @@
             this.pnlMapEskiz.Name = "pnlMapEskiz";
             this.pnlMapEskiz.Size = new System.Drawing.Size(100, 100);
             this.pnlMapEskiz.TabIndex = 2;
-            this.pnlMapEskiz.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMapEskiz_Paint);
+            this.pnlMapEskiz.Paint += new System.Windows.Forms.PaintEventHandler(this.PnlMapSketch_Paint);
             // 
             // txtBriefing
             // 
@@ -82,6 +82,7 @@
             this.txtBriefing.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtBriefing.Size = new System.Drawing.Size(201, 83);
             this.txtBriefing.TabIndex = 3;
+            this.txtBriefing.ReadOnly = true;
             // 
             // lblBriefing
             // 
@@ -212,7 +213,7 @@
             this.Name = "FrmLoadMission";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Загрузка миссии";
-            this.Load += new System.EventHandler(this.FrmLoadMission_Load);
+            this.Load += new System.EventHandler(this.DialogMissionLoad_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

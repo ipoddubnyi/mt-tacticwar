@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MT.TacticWar.Core;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI
@@ -37,7 +38,7 @@ namespace MT.TacticWar.UI
         [Category("Данные")]
         [DisplayName("Мощь против бронетехники")]
         [Description("Боевая мощь противотанкового оружия")]
-        public int PowerAntiBron => division.PowerAntiBron;
+        public int PowerAntiBron => division.PowerAntiTank;
 
         [Category("Данные")]
         [DisplayName("Мощь против авиации")]
@@ -52,7 +53,7 @@ namespace MT.TacticWar.UI
         [Category("Данные")]
         [DisplayName("Защита от техники")]
         [Description("Защита от противотанкового оружия")]
-        public int ArmourFromBron => division.ArmourFromBron;
+        public int ArmourFromBron => division.ArmourFromTank;
 
         [Category("Данные")]
         [DisplayName("Радиус атаки")]
@@ -60,22 +61,22 @@ namespace MT.TacticWar.UI
         public int RadiusAttack => division.RadiusAttack;
 
         [Category("Данные")]
-        [DisplayName("Радиус обзора")]
+        [DisplayName("Обзор")]
         [Description("Дальность видимости подразделения")]
         public int RadiusView => division.RadiusView;
 
         [Category("Данные")]
-        [DisplayName("Уровень")]
-        [Description("Уровень поздразделения")]
-        public string Level => division.Level.AsString();
+        [DisplayName("Опыт")]
+        [Description("Опыт поздразделения")]
+        public int Experience => division.Experience;
 
         [Category("Данные")]
-        [DisplayName("Количество патронов")]
+        [DisplayName("Патроны")]
         [Description("Количество патронов. Без патронов подразделение не может вести боевые действия")]
-        public int Suplies => division.Suplies;
+        public int Suplies => division.Supply;
 
         [Category("Данные")]
-        [DisplayName("Количество шагов")]
+        [DisplayName("Шаги")]
         [Description("Число шагов подразделения")]
         public int Steps => division.Steps;
 

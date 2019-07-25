@@ -1,14 +1,10 @@
-﻿using MT.TacticWar.Core.Landscape;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Sources.Algorithm
 {
     // Структура параметров при поиске кратчайшего пути
-    public struct BellmanParam
+    internal struct BellmanParam
     {
         public Coordinates From;    // откуда идём
         public Coordinates To;      // куда идём

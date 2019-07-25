@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace MT.TacticWar.Core.Objects
 {
     #region Пехота
@@ -30,35 +26,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Infantry;
+            DivisionType = DivisionType.Infantry;
             //имя
             Name = "Партизаны";
             //цена юнита
-            Cost.value = 400;
+            Cost = 400;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 2;
+            PowerAntiTank = 2;
             //общая мощь против воздуха
             PowerAntiAir = 2;
 
             //общая защита от пехоты
             ArmourFromInf = 20;
             //общая защита от любой техники
-            ArmourFromBron = 30;
+            ArmourFromTank = 30;
             //число патронов и снарядов
-            Suplies = 1500;
+            Supply = 1500;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Recruit;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 10;
@@ -94,35 +90,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Infantry;
+            DivisionType = DivisionType.Infantry;
             //имя
             Name = "Солдаты";
             //цена юнита
-            Cost.value = 700;
+            Cost = 700;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 25;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 10;
+            PowerAntiTank = 10;
             //общая мощь против воздуха
             PowerAntiAir = 5;
 
             //общая защита от пехоты
             ArmourFromInf = 30;
             //общая защита от любой техники
-            ArmourFromBron = 30;
+            ArmourFromTank = 30;
             //число патронов и снарядов
-            Suplies = 5000;
+            Supply = 5000;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Recruit;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 8;
@@ -159,35 +155,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Infantry;
+            DivisionType = DivisionType.Infantry;
             //имя
             Name = "Диверсанты";
             //цена юнита
-            Cost.value = 3000;
+            Cost = 3000;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 35;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 20;
+            PowerAntiTank = 20;
             //общая мощь против воздуха
             PowerAntiAir = 2;
 
             //общая защита от пехоты
             ArmourFromInf = 80;
             //общая защита от любой техники
-            ArmourFromBron = 30;
+            ArmourFromTank = 30;
             //число патронов и снарядов
-            Suplies = 3000;
+            Supply = 3000;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 2;
             //уровень повышения
-            Level = UnitLevel.Warrior;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 10;
@@ -222,35 +218,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Infantry;
+            DivisionType = DivisionType.Infantry;
             //имя
             Name = "Лейтенант";
             //цена юнита
-            Cost.value = 50000;
+            Cost = 50000;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 80;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 80;
+            PowerAntiTank = 80;
             //общая мощь против воздуха
             PowerAntiAir = 80;
 
             //общая защита от пехоты
             ArmourFromInf = 80;
             //общая защита от любой техники
-            ArmourFromBron = 80;
+            ArmourFromTank = 80;
             //число патронов и снарядов
-            Suplies = 1500;
+            Supply = 1500;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Hero;
+            Experience = ExperienceHero;
 
             //число шагов
             Steps = 5;
@@ -287,35 +283,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Vehicle;
+            DivisionType = DivisionType.Vehicle;
             //имя
             Name = "Мотопехота";
             //цена юнита
-            Cost.value = 800;
+            Cost = 800;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 15;
+            PowerAntiTank = 15;
             //общая мощь против воздуха
             PowerAntiAir = 5;
 
             //общая защита от пехоты
             ArmourFromInf = 30;
             //общая защита от любой техники
-            ArmourFromBron = 30;
+            ArmourFromTank = 30;
             //число патронов и снарядов
-            Suplies = 5000;
+            Supply = 5000;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Recruit;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 8;
@@ -347,35 +343,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Vehicle;
+            DivisionType = DivisionType.Vehicle;
             //имя
             Name = "Средний танк";
             //цена юнита
-            Cost.value = 1500;
+            Cost = 1500;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 50;
+            PowerAntiTank = 50;
             //общая мощь против воздуха
             PowerAntiAir = 5;
 
             //общая защита от пехоты
             ArmourFromInf = 80;
             //общая защита от любой техники
-            ArmourFromBron = 50;
+            ArmourFromTank = 50;
             //число патронов и снарядов
-            Suplies = 1500;
+            Supply = 1500;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Recruit;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 5;
@@ -410,35 +406,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Vehicle;
+            DivisionType = DivisionType.Vehicle;
             //имя
             Name = "Тяжёлый танк";
             //цена юнита
-            Cost.value = 3000;
+            Cost = 3000;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 15;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 80;
+            PowerAntiTank = 80;
             //общая мощь против воздуха
             PowerAntiAir = 10;
 
             //общая защита от пехоты
             ArmourFromInf = 80;
             //общая защита от любой техники
-            ArmourFromBron = 80;
+            ArmourFromTank = 80;
             //число патронов и снарядов
-            Suplies = 1000;
+            Supply = 1000;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Recruit;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 4;
@@ -473,35 +469,35 @@ namespace MT.TacticWar.Core.Objects
             Id = id;
 
             //тип подразделения
-            Type = DivisionType.Vehicle;
+            DivisionType = DivisionType.Vehicle;
             //имя
             Name = "ЗРК";
             //цена юнита
-            Cost.value = 2500;
+            Cost = 2500;
 
             //здоровье
-            Health = Health.Ready;
+            Health = 100;
 
             //общая мощь против пехоты и артиллерии
             PowerAntiInf = 5;
             //общая мощь против бронетехники и кораблей
-            PowerAntiBron = 10;
+            PowerAntiTank = 10;
             //общая мощь против воздуха
             PowerAntiAir = 80;
 
             //общая защита от пехоты
             ArmourFromInf = 30;
             //общая защита от любой техники
-            ArmourFromBron = 15;
+            ArmourFromTank = 15;
             //число патронов и снарядов
-            Suplies = 1000;
+            Supply = 1000;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Level = UnitLevel.Recruit;
+            Experience = ExperienceRecruit;
 
             //число шагов
             Steps = 5;

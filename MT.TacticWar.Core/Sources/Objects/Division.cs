@@ -6,40 +6,40 @@ namespace MT.TacticWar.Core.Objects
 {
     public class Division : IObject
     {
-        public DivisionType Type; //тип подразделения
+        public int Id { get; protected set; }
 
         public Coordinates Position { get; set; }
 
         public Coordinates Target { get; set; }   //координаты места назначения
 
-        public int Id;             //номер подразделения
         public string Name;        //имя
+        public DivisionType Type; //тип подразделения
         public int PlayerId;        //ид игрока
 
         public int PowerAntiInf;   //общая мощь против пехоты и артиллерии
-        public int PowerAntiBron;  //общая мощь против бронетехники и кораблей
+        public int PowerAntiTank;  //общая мощь против бронетехники и кораблей
         public int PowerAntiAir;   //общая мощь против воздуха
 
         public int ArmourFromInf;  //общая защита от пехоты
-        public int ArmourFromBron; //общая защита от любой техники
+        public int ArmourFromTank; //общая защита от любой техники
 
-        public int Suplies;        //число патронов и снарядов
+        public int Supply;        //число патронов и снарядов
 
         public int RadiusAttack;         //радиус действия (для артиллерии)
         public int RadiusView;          //радиус обзора
 
-        public UnitLevel Level;      //уровень повышения
+        public int Experience;      //опыт
 
         public int Steps;          //число шагов (равно числу шагов самого медленного юнита)
         public bool CanStepLand;      //ходит ли по земле
         public bool CanStepAqua;      //ходит ли по воде
 
-        public List<StructUnits> Units;    //список юнитов
+        public List<Unit> Units;    //список юнитов
 
         public Building SecuredBuilding { get; set; } //охраняемое здание
         public bool IsSecuring => null != SecuredBuilding;
 
-        public Division(int igrok, int id, int type, string name, int x, int y, List<StructUnits> units)
+        public Division(int igrok, int id, int type, string name, int x, int y, List<Unit> units)
         {
             //тип подразделения
             Type = (DivisionType)type;
@@ -127,148 +127,87 @@ namespace MT.TacticWar.Core.Objects
             Target = Coordinates.Empty;
         }
 
-        //Пересчитать показатели подразделения
+        // Пересчитать показатели подразделения
         public void ResetParams()
         {
-            //???? если есть повторяющиеся юниты - объединить их
-            for (int k = 0; k < Units.Count; k++)
-            {
-                for (int l = 0; l < Units.Count; l++)
-                {
-                    if(k == l) continue;
-
-                    if (Units[k].unit.Name == Units[l].unit.Name)
-                    {
-                        //!!!!!!!!!!!!
-                        StructUnits temp = Units[k];
-                        temp.count += Units[l].count;
-
-                        //если юниты ранены - учесть это
-                        if (Units[l].unit.Health != Health.Ready)
-                            Units[k].unit.Health = Units[l].unit.Health;
-
-                        //удаляем и начинаем цик заново
-                        Units.RemoveAt(l);
-                        k = 0;
-                        l = 0;
-                    }
-                }
-            }
-
-            //пересчитываем остальные параметры
-
-            //
-            int allUnits = 0;       //все юниты в сумме
-
             PowerAntiInf = 0;      //средняя мощь против пехоты и артиллерии
             PowerAntiAir = 0;      //средняя мощь против воздуха
-            PowerAntiBron = 0;     //средняя мощь против бронетехники и кораблей
+            PowerAntiTank = 0;     //средняя мощь против бронетехники и кораблей
 
             ArmourFromInf = 0;     //средняя защита от пехоты
-            ArmourFromBron = 0;    //средняя защита от любой техники
+            ArmourFromTank = 0;    //средняя защита от любой техники
 
-            Suplies = 0;           //число патронов и снарядов
+            Supply = 0;           //число патронов и снарядов
             RadiusAttack = int.MaxValue; //радиус действия (для артиллерии)
             RadiusView = 0;             //радиус обзора
 
-            int level = 0;          //средний уровень
+            Experience = 0;          //средний опыт
 
             Steps = int.MaxValue;  //число шагов (равно числу шагов самого медленного юнита)
             CanStepLand = true;       //ходит ли по земле
             CanStepAqua = true;       //ходит ли по воде
 
-            for (int k = 0; k < Units.Count; k++)
+            foreach (var unit in Units)
             {
-                allUnits += Units[k].count;
-
                 //считаем средние следующих величин
-                PowerAntiInf += Units[k].unit.PowerAntiInf * Units[k].count;
-                PowerAntiAir += Units[k].unit.PowerAntiAir * Units[k].count;
-                PowerAntiBron += Units[k].unit.PowerAntiBron * Units[k].count;
+                PowerAntiInf += unit.PowerAntiInf;
+                PowerAntiAir += unit.PowerAntiAir;
+                PowerAntiTank += unit.PowerAntiTank;
 
-                ArmourFromInf += Units[k].unit.ArmourFromInf * Units[k].count;
-                ArmourFromBron += Units[k].unit.ArmourFromBron * Units[k].count;
+                ArmourFromInf += unit.ArmourFromInf;
+                ArmourFromTank += unit.ArmourFromTank;
 
-                switch (Units[k].unit.Level)
-                {
-                    case UnitLevel.Recruit:
-                        level += 1 * Units[k].count;
-                        break;
-                    case UnitLevel.Warrior:
-                        level += 2 * Units[k].count;
-                        break;
-                    case UnitLevel.Veteran:
-                        level += 3 * Units[k].count;
-                        break;
-                    case UnitLevel.Hero:
-                        level += 4 * Units[k].count;
-                        break;
-                 }
+                Experience += unit.Experience;
 
                 //сумма патронов
-                Suplies += Units[k].unit.Suplies;
+                Supply += unit.Supply;
 
-                //выбираем минимальный радиус
-                if (Units[k].unit.RadiusAttack < RadiusAttack)
-                    RadiusAttack = Units[k].unit.RadiusAttack;
+                //выбираем минимальный радиус атаки
+                if (unit.RadiusAttack < RadiusAttack)
+                    RadiusAttack = unit.RadiusAttack;
 
                 //выбираем максимальный обзор
-                if (Units[k].unit.RadiusView > RadiusView)
-                    RadiusView = Units[k].unit.RadiusView;
+                if (unit.RadiusView > RadiusView)
+                    RadiusView = unit.RadiusView;
 
                 //выбираем минимальное число шагов
-                if (Units[k].unit.Steps < Steps)
-                    Steps = Units[k].unit.Steps;
+                if (unit.Steps < Steps)
+                    Steps = unit.Steps;
 
                 //если хоть 1 юнит не ходит по земле - никто не ходит
-                if (!Units[k].unit.StepLand)
+                if (!unit.StepLand)
                     CanStepLand = false;
 
                 //если хоть 1 юнит не плавает - никто не плавает
-                if (!Units[k].unit.StepAqua)
+                if (!unit.StepAqua)
                     CanStepAqua = false;
             }
 
-            PowerAntiInf /= allUnits;
-            PowerAntiAir /= allUnits;
-            PowerAntiBron /= allUnits;
+            //
 
-            ArmourFromInf /= allUnits;
-            ArmourFromBron /= allUnits;
+            PowerAntiInf /= Units.Count;
+            PowerAntiAir /= Units.Count;
+            PowerAntiTank /= Units.Count;
 
-            level /= allUnits;
+            ArmourFromInf /= Units.Count;
+            ArmourFromTank /= Units.Count;
 
-            switch (level)
-            {
-                case 1:
-                    Level = UnitLevel.Recruit;
-                    break;
-                case 3:
-                    Level = UnitLevel.Veteran;
-                    break;
-                case 4:
-                    Level = UnitLevel.Hero;
-                    break;
-                case 2:
-                default:
-                    Level = UnitLevel.Warrior;
-                    break;
-            }
+            Experience /= Units.Count;
         }
 
-        //Чинить войска
-        //Если нет сломанной техники и раненых - false
-        public bool repairUnits()
+        // Чинить войска
+        // Если нет сломанной техники и раненых - false
+        public bool RepairUnits()
         {
             bool res = false;
 
-            for (int k = 0; k < Units.Count; k++)
+            foreach (var unit in Units)
             {
-                //если есть раненые
-                if (Units[k].unit.Health == Health.Wounded)
+                // если есть раненые
+                if (unit.Health < 100 && unit.Health > 0)
                 {
                     res = true;
-                    Units[k].unit.Repair();
+                    unit.Repair();
                 }
             }
 

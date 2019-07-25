@@ -5,7 +5,6 @@ using System.Text;
 using System.IO;
 using MT.TacticWar.Core.Players;
 using MT.TacticWar.Core.Objects;
-using MT.TacticWar.Core.Types;
 
 namespace MT.TacticWar.Core
 {
@@ -96,24 +95,12 @@ namespace MT.TacticWar.Core
 
         public Division GetDivisionAt(int x, int y)
         {
-            foreach (var division in Divisions)
-            {
-                if (division.Position.Equals(x, y))
-                    return division;
-            }
-
-            return null;
+            return Divisions.GetAt(new Coordinates(x, y));
         }
 
         public Building GetBuildingAt(int x, int y)
         {
-            foreach (var building in Buildings)
-            {
-                if (building.Position.Equals(x, y))
-                    return building;
-            }
-
-            return null;
+            return Buildings.GetAt(new Coordinates(x, y));
         }
 
         public void ResetDivisionsParams()
@@ -124,32 +111,12 @@ namespace MT.TacticWar.Core
             }
         }
 
-        /// <summary>Пересчитать идентификаторы подразделений и зданий игрока
-        /// </summary>
-        /// <returns></returns>
-        public void recountIds()
-        {
-            //бежим по подразделениям
-            for (int k = 0; k < Divisions.Count; k++)
-            {
-                Divisions[k].Id = k;
-                Divisions[k].PlayerId = Id;
-            }
-
-            //бежим по зданиям
-            for (int k = 0; k < Buildings.Count; k++)
-            {
-                Buildings[k].Id = k;
-                Buildings[k].PlayerId = Id;
-            }
-        }
-
         /// <summary>Объединить два подразделения
         /// </summary>
         /// <param name="idAddedEl">ид подразделения, которое добавляют</param>
         /// <param name="idBigEl">ид подразделения, к которому добавляют</param>
         /// <returns>Возвращает ид нового большого подразделения или -1</returns>
-        public int addElementToElement(int idAddedEl, int idBigEl)
+        public int JoinDivisionToDivision(int idAddedEl, int idBigEl)
         {
             //если типы подразделений не совпадают
             if(Divisions[idBigEl].Type != Divisions[idAddedEl].Type)
@@ -171,10 +138,10 @@ namespace MT.TacticWar.Core
             idBigEl = Math.Min(idAddedEl, idBigEl); //!!!
 
             //сдвигаем идентификаторы всех юнитов
-            for (int i = 0; i < Divisions.Count; i++)
-            {
-                Divisions[i].Id = i;
-            }
+            //for (int i = 0; i < Divisions.Count; i++)
+            //{
+            //    Divisions[i].Id = i;
+            //}
 
             //пересчитать показатели нового подразделения
             Divisions[idBigEl].ResetParams();

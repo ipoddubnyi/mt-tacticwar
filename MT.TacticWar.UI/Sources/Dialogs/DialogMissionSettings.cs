@@ -1,30 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
-namespace MT.TacticWar.UI
+namespace MT.TacticWar.UI.Dialogs
 {
-    public partial class FrmUsersControl : Form
+    public partial class DialogMissionSettings : Form
     {
-        public FrmUsersControl()
+        // имена игроков
+        public string Player1Name { get; private set; }
+        public string Player2Name { get; private set; }
+        // управление ИИ
+        public bool Player1AI { get; private set; }
+        public bool Player2AI { get; private set; }
+
+        public DialogMissionSettings()
         {
             InitializeComponent();
         }
 
-        //имена игроков
-        public string igrk1Name;
-        public string igrk2Name;
-        //управление ИИ
-        public bool igrk1AI;
-        public bool igrk2AI;
-
         //Начать
-        private void btnStart_Click(object sender, EventArgs e)
+        private void BtnStart_Click(object sender, EventArgs e)
         {
             //если оба игрока - ПК
             if (radioPC1.Checked && radioPC2.Checked)
@@ -50,33 +44,33 @@ namespace MT.TacticWar.UI
                 return;
             }
 
-            igrk1Name = txtName1.Text;
-            igrk2Name = txtName2.Text;
+            Player1Name = txtName1.Text;
+            Player2Name = txtName2.Text;
 
-            igrk1AI = radioPC1.Checked;
-            igrk2AI = radioPC2.Checked;
+            Player1AI = radioPC1.Checked;
+            Player2AI = radioPC2.Checked;
 
             //вернуть результат диалога
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void radioHuman1_CheckedChanged(object sender, EventArgs e)
+        private void RadioHuman1_CheckedChanged(object sender, EventArgs e)
         {
             txtName1.Enabled = true;
         }
 
-        private void radioPC1_CheckedChanged(object sender, EventArgs e)
+        private void RadioPC1_CheckedChanged(object sender, EventArgs e)
         {
             txtName1.Enabled = false;
         }
 
-        private void radioHuman2_CheckedChanged(object sender, EventArgs e)
+        private void RadioHuman2_CheckedChanged(object sender, EventArgs e)
         {
             txtName2.Enabled = true;
         }
 
-        private void radioPC2_CheckedChanged(object sender, EventArgs e)
+        private void RadioPC2_CheckedChanged(object sender, EventArgs e)
         {
             txtName2.Enabled = false;
         }

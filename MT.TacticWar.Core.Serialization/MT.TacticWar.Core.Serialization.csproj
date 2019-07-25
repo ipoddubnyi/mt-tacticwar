@@ -57,6 +57,7 @@
     <Compile Include="Source\Serialization\Mission\MissionPlayer.cs" />
     <Compile Include="Source\Serialization\Mission\MissionPosition.cs" />
     <Compile Include="Source\Serialization\Mission\MissionRoot.cs" />
+    <Compile Include="Source\Serialization\Mission\MissionTypes.cs" />
     <Compile Include="Source\Serialization\Mission\MissionUnit.cs" />
   </ItemGroup>
   <ItemGroup>

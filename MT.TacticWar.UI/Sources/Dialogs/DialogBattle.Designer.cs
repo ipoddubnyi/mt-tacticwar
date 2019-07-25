@@ -1,6 +1,6 @@
-﻿namespace MT.TacticWar.UI
+﻿namespace MT.TacticWar.UI.Dialogs
 {
-    partial class FrmAttack
+    partial class DialogBattle
     {
         /// <summary>
         /// Required designer variable.
@@ -138,7 +138,7 @@
             this.Name = "FrmAttack";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Атака";
-            this.Load += new System.EventHandler(this.FrmAttack_Load);
+            this.Load += new System.EventHandler(this.DialogBattle_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

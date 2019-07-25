@@ -1,11 +1,8 @@
-﻿using MT.TacticWar.Core.Objects;
-
-namespace MT.TacticWar.Core
+﻿
+namespace MT.TacticWar.Core.Algorithm
 {
-    #region Для земли и ориентации
-
     // Направления, с которыми клетка уже имела контакт
-    public class Directions
+    internal class BellmanDirections
     {
         public bool Left { get; set; }
         public bool Top { get; set; }
@@ -16,7 +13,7 @@ namespace MT.TacticWar.Core
         // 1 - лево, 2 - верх, 3 - право, 4 - низ
         public int Priority { get; set; }
 
-        public Directions()
+        public BellmanDirections()
         {
             NullDirections();
             Priority = 0;
@@ -30,18 +27,4 @@ namespace MT.TacticWar.Core
             Bottom = false;
         }
     }
-
-    #endregion
-
-    #region Для юнитов
-
-    //Структура боевых единиц
-    public struct StructUnits
-    {
-        public Unit unit;      //юнит
-        public int count;       //число таких юнитов
-        //public bool selected;   //выделены ли эти юниты
-    }
-
-    #endregion
 }

@@ -8,6 +8,8 @@ namespace MT.TacticWar.Core.Objects
         int PlayerId;
         int Health;*/
 
+        int Id { get; }
+
         Coordinates Position { get; set; }
     }
 }

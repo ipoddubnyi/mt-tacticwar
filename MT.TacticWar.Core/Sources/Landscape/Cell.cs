@@ -8,21 +8,30 @@ namespace MT.TacticWar.Core.Landscape
 
         public CellType Type { get; set; }
 
-        // Проходима ли ячейка.
+        public MapSchema Schema { get; set; }
+
+        /// <summary>Проходима ли ячейка</summary>
         public bool Passable;
 
-        // Величина проходимости.
+        /// <summary>Величина проходимости</summary>
         public int PassCost;
 
-        // Ссылка на объект, который находится в ячейке.
+        /// <summary>Ссылка на объект, который находится в ячейке</summary>
         public IObject Object { get; set; }
 
+        /// <summary>Есть ли объект в ячейке</summary>
         public bool Occupied => (null != Object);
 
-        public Cell(int x, int y, CellType type = CellType.Grass)
+        public Cell(int x, int y, CellType type) :
+            this(x, y, MapSchema.Summer, type)
+        {
+        }
+
+        public Cell(int x, int y, MapSchema schema = MapSchema.Summer, CellType type = CellType.Grass)
         {
             Coordinates = new Coordinates(x, y);
             Type = type;
+            Schema = schema;
             Passable = true; //по умолчанию, ячейка проходима // proh;
             //if (proh) PassableCost = prohCost;
             //else PassableCost = int.MaxValue;
@@ -31,7 +40,7 @@ namespace MT.TacticWar.Core.Landscape
         }
 
         /// <summary>Получить цену прохода по ячейке.</summary>
-        public static int GetPassCost(CellType type)
+        public static int GetPassCost(CellType type, MapSchema schema = MapSchema.Summer)
         {
             int cost;
 
@@ -66,6 +75,10 @@ namespace MT.TacticWar.Core.Landscape
                     cost = 2; //по траве ехать нормально
                     break;
             }
+
+            // зимой передвижение хуже
+            if (MapSchema.Winter == schema)
+                cost += 1;
 
             return cost;
         }

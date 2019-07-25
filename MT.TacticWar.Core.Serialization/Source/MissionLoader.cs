@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Players;
-using MT.TacticWar.Core.Types;
 
 namespace MT.TacticWar.Core.Serialization
 {
@@ -31,6 +31,7 @@ namespace MT.TacticWar.Core.Serialization
             var name = mp.Info.Name;
             var width = mp.Info.Size.Width;
             var height = mp.Info.Size.Height;
+            var schema = (MapSchema)mp.Info.Schema;
 
             var landlines = MapLandscapeSplit(mp.Landscape, width);
             if (landlines.Length != height)
@@ -40,17 +41,13 @@ namespace MT.TacticWar.Core.Serialization
             if (impasslines.Length != height)
                 throw new FormatException("Неверный формат карты проходимости.");
 
-            var field = LoadMapField(width, height, landlines);
+            var field = LoadMapField(width, height, schema, landlines);
             field = LoadMapField(width, height, field, impasslines);
 
-            return new Map(width, height)
-            {
-                Name = name,
-                Field = field
-            };
+            return new Map(name, width, height, field, schema);
         }
 
-        private static Cell[,] LoadMapField(int width, int height, string[] landlines)
+        private static Cell[,] LoadMapField(int width, int height, MapSchema schema, string[] landlines)
         {
             var field = new Cell[width, height];
             for (int y = 0; y < height; y++)
@@ -58,7 +55,7 @@ namespace MT.TacticWar.Core.Serialization
                 for (int x = 0; x < width; x++)
                 {
                     var type = (CellType)int.Parse(landlines[y].Substring(x, 1));
-                    field[x, y] = new Cell(x, y, type);
+                    field[x, y] = new Cell(x, y, schema, type);
                 }
             }
             return field;
@@ -93,6 +90,20 @@ namespace MT.TacticWar.Core.Serialization
                 .Select(i => landscape.Substring(i * chunkSize, chunkSize)).ToArray();
         }
 
+        private static string MissionTextTrim(string text)
+        {
+            var buffer = new StringBuilder();
+            using (TextReader sr = new StringReader(text))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    buffer.AppendLine(line.Trim());
+                }
+            }
+            return buffer.ToString().Trim();
+        }
+
         public static Mission LoadMission(string filePath, Map map)
         {
             var mis = MissionRoot.Deserialize(filePath);
@@ -100,7 +111,7 @@ namespace MT.TacticWar.Core.Serialization
             var players = LoadMissionPlayers(mis);
             return new Mission(
                 mis.Info.Name,
-                mis.Info.Description,
+                MissionTextTrim(mis.Info.Description),
                 (MissionMode)mis.Info.Mode,
                 players,
                 map
@@ -112,16 +123,16 @@ namespace MT.TacticWar.Core.Serialization
             var players = new List<Player>();
             foreach (var pl in mis.Players)
             {
-                var player = LoadMissionPlayer(pl);
+                var player = LoadMissionPlayer(pl, mis.Types);
                 players.Add(player);
             }
 
             return players.ToArray();
         }
 
-        private static Player LoadMissionPlayer(MissionPlayer pl)
+        private static Player LoadMissionPlayer(MissionPlayer pl, MissionTypes types)
         {
-            var divisions = LoadMissionPlayerDivisions(pl);
+            var divisions = LoadMissionPlayerDivisions(pl, types);
             var buildings = LoadMissionPlayerBuildings(pl, divisions);
 
             var player = new Player(pl.Id, pl.Name, pl.AI);
@@ -134,19 +145,15 @@ namespace MT.TacticWar.Core.Serialization
             return player;
         }
 
-        private static List<Division> LoadMissionPlayerDivisions(MissionPlayer pl)
+        private static List<Division> LoadMissionPlayerDivisions(MissionPlayer pl, MissionTypes types)
         {
             var divisions = new List<Division>();
             foreach (var div in pl.Divisions)
             {
-                var units = new List<StructUnits>();
-                foreach (var u in div.Units)
+                var units = new List<Unit>();
+                foreach (var un in div.Units)
                 {
-                    units.Add(new StructUnits()
-                    {
-                        unit = CreateUnitByType(u.Type),
-                        count = u.Count
-                    });
+                    units.Add(CreateUnit(un, types));
                 }
 
                 divisions.Add(new Division(
@@ -197,7 +204,20 @@ namespace MT.TacticWar.Core.Serialization
             return gates;
         }
 
-        private static Unit CreateUnitByType(string type)
+        private static Unit CreateUnit(MissionUnit u, MissionTypes types)
+        {
+            var unit = CreateUnitByBaseType(u.Type);
+            if (null != unit)
+                return u.Update(unit);
+
+            unit = CreateUnitByCustomType(u.Type, types);
+            if (null != unit)
+                return u.Update(unit);
+
+            throw new Exception($"Неизвестный тип юнита {u.Type}");
+        }
+
+        private static Unit CreateUnitByBaseType(string type)
         {
             switch (type)
             {
@@ -220,6 +240,17 @@ namespace MT.TacticWar.Core.Serialization
                     return new CuvZRK(0);
                 case "motorized":
                     return new CuvMotopehota(0);
+            }
+
+            return null;
+        }
+
+        private static Unit CreateUnitByCustomType(string type, MissionTypes types)
+        {
+            foreach (var unittype in types.Units)
+            {
+                if (unittype.Type.Equals(type))
+                    return unittype.Create();
             }
 
             return null;

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace MT.TacticWar.Core.Types
+namespace MT.TacticWar.Core
 {
     // Структура с условиями победы/поражения
     public struct MissionManage

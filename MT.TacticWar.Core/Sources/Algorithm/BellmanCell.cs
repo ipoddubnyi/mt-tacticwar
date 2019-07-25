@@ -2,7 +2,7 @@
 
 namespace MT.TacticWar.Core.Algorithm
 {
-    public class BellmanCell
+    internal class BellmanCell
     {
         private Cell cell;
         public CellType Type => cell.Type;
@@ -10,13 +10,13 @@ namespace MT.TacticWar.Core.Algorithm
         public bool Occupied => cell.Occupied;
         public int PassCost => cell.PassCost;
 
-        public Directions Directions { get; set; }
+        public BellmanDirections Directions { get; set; }
         public int Cost { get; set; }
 
         public BellmanCell(Cell cell)
         {
             this.cell = cell;
-            Directions = new Directions();
+            Directions = new BellmanDirections();
             Cost = int.MaxValue;
         }
     }

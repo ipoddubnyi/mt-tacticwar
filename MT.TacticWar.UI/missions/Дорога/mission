@@ -13,9 +13,9 @@
             Затем освободить населённый пункт и захватить завод.
 
             РЕЗЮМЕ:
-            1.Захватить склады боеприпасов и штаб противника.
-            2.Освободить город.
-            3.Захватить завод.
+            1. Захватить склады боеприпасов и штаб противника.
+            2. Освободить город.
+            3. Захватить завод.
         </desc>
         <version>1.0</version>
         <mode>0</mode>
@@ -27,35 +27,35 @@
                 <division id="0" name="Взвод пехоты" type="0">
                     <position x="3" y="19" />
                     <units>
-                        <unit type="soldier" count="3" />
+                        <unit type="soldier" />
                     </units>
                 </division>
 
                 <division id="1" name="Ударная танковая группа" type="1">
                     <position x="8" y="20" />
                     <units>
-                        <unit type="tank" count="3" />
+                        <unit type="tank" />
                     </units>
                 </division>
 
                 <division id="2" name="Штурмовая танковая группа" type="1">
                     <position x="8" y="22" />
                     <units>
-                        <unit type="tank" count="5" />
+                        <unit type="tank" />
                     </units>
                 </division>
 
                 <division id="3" name="Штурмовая танковая группа" type="1">
                     <position x="14" y="19" />
                     <units>
-                        <unit type="tank" count="2" />
+                        <unit type="tank" />
                     </units>
                 </division>
                 
                 <division id="4" name="Взвод пехоты 2" type="0">
                     <position x="15" y="19" />
                     <units>
-                        <unit type="soldier" count="3" />
+                        <unit type="soldier" />
                     </units>
                 </division>
             </divisions>
@@ -103,37 +103,37 @@
                 <division id="0" name="Взвод пехоты 1" type="0">
                     <position x="3" y="5" />
                     <units>
-                        <unit type="soldier" count="3" />
+                        <unit type="soldier" />
                     </units>
                 </division>
 
                 <division id="1" name="Разведгруппа" type="0">
                     <position x="15" y="2" />
                     <units>
-                        <unit type="saboteur" count="3" />
+                        <unit type="saboteur" />
                     </units>
                 </division>
 
                 <division id="2" name="Взвод мотопехоты 2" type="0">
                     <position x="23" y="5" />
                     <units>
-                        <unit type="motorized" count="3" />
+                        <unit type="motorized" />
                     </units>
                 </division>
 
                 <division id="3" name="Танковая группа 1" type="1">
                     <position x="8" y="5" />
                     <units>
-                        <unit type="tank" count="3" />
-                        <unit type="motorized" count="5" />
+                        <unit type="tank" />
+                        <unit type="motorized" />
                     </units>
                 </division>
 
                 <division id="4" name="Танковая группа 2" type="1">
                     <position x="3" y="1" />
                     <units>
-                        <unit type="tank" count="2" />
-                        <unit type="tankheavy" count="1" />
+                        <unit type="tank" />
+                        <unit type="tankheavy" />
                     </units>
                 </division>
             </divisions>
