@@ -10,9 +10,10 @@ namespace MT.TacticWar.Core.Algorithm
 {
     public class Bellman
     {
-        private static List<Cell>  NotFound = new List<Cell>();
+        private static List<Cell> NotFound = new List<Cell>();
 
         private Map map;
+        private Fog fog;
         private BellmanCell[,] cells;
         private Division div;
 
@@ -20,9 +21,10 @@ namespace MT.TacticWar.Core.Algorithm
         private Coordinates to;
         private int cost;
 
-        public Bellman(Map map)
+        public Bellman(Map map, Fog fog)
         {
             this.map = map;
+            this.fog = fog;
             cells = new BellmanCell[map.Width, map.Height];
         }
 
@@ -103,8 +105,8 @@ namespace MT.TacticWar.Core.Algorithm
 
             var cell = cells[i, j];
 
-            //если ячейка НЕ проходима ИЛИ занята
-            if (!cell.Passable || cell.Occupied)
+            //если ячейка (НЕ проходима) ИЛИ (видна И занята)
+            if (!cell.Passable || (!fog[i, j] && cell.Occupied))
             {
                 //если координаты не совпадают с координатами юнита
                 if (!from.Equals(i, j))

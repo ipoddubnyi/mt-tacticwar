@@ -9,7 +9,7 @@ namespace MT.TacticWar.Core.Objects
 
         public string Name;            //имя
         public BuildingType Type;    //тип строения
-        public int PlayerId;            //ид игрока
+        public Player Player { get; set; }            // игрок
         public int Health;             //здоровье
 
         public int RadiusActive;             //радиус действия
@@ -22,7 +22,7 @@ namespace MT.TacticWar.Core.Objects
         {
         }
 
-        public Building(int igrok, int id, int type, string name, int i, int j, int health, int radius, int obzor, Division elemOhr)
+        public Building(Player player, int id, int type, string name, int i, int j, int health, int radius, int obzor, Division elemOhr)
         {
             Type = (BuildingType)type;
 
@@ -31,7 +31,7 @@ namespace MT.TacticWar.Core.Objects
 
             Id = id; //номер здания
             Name = name; //имя
-            PlayerId = igrok; //ид игрока
+            Player = player; //ид игрока
             Health = health; //здоровье
 
             RadiusActive = radius; //радиус действия
@@ -54,7 +54,7 @@ namespace MT.TacticWar.Core.Objects
 
             newBuilding.Id = Id; ; //номер
             newBuilding.Name = Name; //имя
-            newBuilding.PlayerId = PlayerId; //ид игрока
+            newBuilding.Player = Player; //ид игрока
             newBuilding.Health = Health; //здоровье
 
             newBuilding.RadiusActive = RadiusActive; //радиус действия
@@ -77,6 +77,15 @@ namespace MT.TacticWar.Core.Objects
             security.SecuredBuilding = this;
 
             return true;
+        }
+
+        public void Capture(Division enemy)
+        {
+            Player.Buildings.Remove(this);
+            Player = enemy.Player;
+            Player.Buildings.Add(this);
+
+            AddSecurity(enemy);
         }
 
         public void RemoveSecurity()

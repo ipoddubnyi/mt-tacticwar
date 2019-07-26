@@ -32,13 +32,15 @@ namespace MT.TacticWar.UI
 
         private void LoadMission(Mission mission)
         {
-            using (var dialog = new DialogMissionSettings())
+            // TODO: вернуть диалог с настройками перед миссией
+            //using (var dialog = new DialogMissionSettings())
             {
-                if (dialog.ShowDialog() == DialogResult.OK)
+                //if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     propertyGrid1.SelectedObject = null;
                     listInfoUnits.Items.Clear();
-                    StartSimulator(mission, dialog.Player1Name, dialog.Player2Name, dialog.Player1AI, dialog.Player2AI);
+                    //StartSimulator(mission, dialog.Player1Name, dialog.Player2Name, dialog.Player1AI, dialog.Player2AI);
+                    StartSimulator(mission, "", "", false, false);
                 }
             }
         }
@@ -149,7 +151,8 @@ namespace MT.TacticWar.UI
                         SIMUL.AttackInfo.DivisionAttacker,
                         SIMUL.AttackInfo.DivisionDefender,
                         new List<Division>(),
-                        new List<Division>()
+                        new List<Division>(),
+                        SIMUL.AttackInfo.BuildingToCapture
                     );
 
                     switch (result)

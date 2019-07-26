@@ -28,7 +28,7 @@
                     </units>
                 </division>
                 <division id="1011" type="1" name="Ударная танковая группа">
-                    <position x="8" y="14" />
+                    <position x="8" y="5" />
                     <units>
                         <unit type="tank">
                             <name>T-34</name>
@@ -46,7 +46,7 @@
                             <supply>1700</supply>
 
                             <radiusattack>0</radiusattack>
-                            <radiusview>1</radiusview>
+                            <radiusview>2</radiusview>
                             
                             <steps>5</steps>
                             <stepland>true</stepland>

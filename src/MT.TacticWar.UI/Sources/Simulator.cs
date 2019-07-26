@@ -217,7 +217,7 @@ namespace MT.TacticWar.UI
 
         private List<Cell> GetBestWay(Division division, Coordinates target)
         {
-            return new Bellman(Game.Map).BellmanPoiskPuti(division, target);
+            return new Bellman(Game.Map, fog).BellmanPoiskPuti(division, target);
         }
 
         #endregion
@@ -286,8 +286,6 @@ namespace MT.TacticWar.UI
             // обновляем туман войны
             var areaOld = fog.UpdateArea(positionOld, SelectedDivision.RadiusView, false);
             var areaNew = fog.UpdateArea(SelectedDivision.Position, SelectedDivision.RadiusView, true);
-            Graphics.DrawArea(Game, areaOld, fog);
-            Graphics.DrawArea(Game, areaNew, fog);
 
             //если на старом месте нет здания - освободить старую ячейку
             var building = SelectedDivision.SecuredBuilding;
@@ -305,6 +303,10 @@ namespace MT.TacticWar.UI
             //выделить юнит заново и собрать информацию о нём
             SelectAndDrawDivision(SelectedDivision);
 
+            // перерисовать туман войны
+            Graphics.DrawArea(Game, areaOld, fog);
+            Graphics.DrawArea(Game, areaNew, fog);
+
             //загрузить путь из временной памяти
             BestWay = new List<Cell>(tmpPut);
 
@@ -312,8 +314,10 @@ namespace MT.TacticWar.UI
             if (null != building)
                 Graphics.DrawBuilding(building, false);
 
-
-            //нарисовать путь без пересчёта и нарисавать флаг
+            // пересчитать путь, т.к.
+            // на новой позиции могли обнаружить помеху,
+            // скрытую до этого в тумане войны
+            BestWay = GetBestWay(SelectedDivision, target);
             if (BestWay.Count > 0)
             {
                 //установить флаг
@@ -370,7 +374,7 @@ namespace MT.TacticWar.UI
         /// <summary>Обработчик нажатия на подразделение</summary>
         private Signals ClickOnDivision(Division division)
         {
-            var isEnemy = division.PlayerId != PlayerCurrent;
+            var isEnemy = division.Player.Id != PlayerCurrent;
             var command = isEnemy ? ClickEnemieDivision(division) : ClickMyDivision(division);
 
             MoveType moveType;
@@ -389,7 +393,7 @@ namespace MT.TacticWar.UI
 
                     //если координаты юнита совпадают с координатами целевого юнита
                     if (SelectedDivision.Position.Equals(division.Position))
-                        return achievementTag(SelectedDivision, division);
+                        return ReachTheGoal(SelectedDivision, division);
 
                     return Signals.READY_UNIT_INFO;
             }
@@ -400,7 +404,7 @@ namespace MT.TacticWar.UI
         /// <summary>Обработчик нажатия на здание</summary>
         private Signals ClickOnBuilding(Building building)
         {
-            var isEnemy = building.PlayerId != PlayerCurrent;
+            var isEnemy = building.Player.Id != PlayerCurrent;
             var command = isEnemy ? ClickEnemieBuilding(building) : ClickMyBuilding(building);
 
             MoveType moveType;
@@ -421,7 +425,7 @@ namespace MT.TacticWar.UI
                     if (SelectedDivision.Position.Equals(building.Position))
                     {
                         // TODO: разобраться
-                        var tmpSig = achievementTag(SelectedDivision, building);
+                        var tmpSig = ReachTheGoal(SelectedDivision, building);
                         Graphics.DrawCell(Game.Map[building.Position]);
                         Graphics.DrawBuilding(building, building == SelectedBuilding);
                         return tmpSig;
@@ -439,7 +443,7 @@ namespace MT.TacticWar.UI
             if (null == SelectedDivision)
                 return Signals.SUCCESS;
 
-            if (SelectedDivision.PlayerId != PlayerCurrent)
+            if (SelectedDivision.Player.Id != PlayerCurrent)
                 return Signals.SUCCESS;
 
             // если эта точка определа как цель выделенного подразделения
@@ -451,7 +455,7 @@ namespace MT.TacticWar.UI
                 //если координаты юнита совпадают с координатами целевого юнита
                 var obj = Game.GetObjectAt(SelectedDivision.Position, PlayerCurrent);
                 if (null != obj)
-                    return achievementTag(SelectedDivision, obj);
+                    return ReachTheGoal(SelectedDivision, obj);
 
                 return Signals.READY_UNIT_INFO;
             }
@@ -462,39 +466,43 @@ namespace MT.TacticWar.UI
 
         //----------------------
 
-        public Signals achievementTag(Division thisElem, IObject tagObj)
+        public Signals ReachTheGoal(Division divisionThis, IObject objectTag)
         {
-            if (tagObj is Division)
-                return achievementTag(thisElem, tagObj as Division);
+            if (objectTag is Division)
+                return ReachTheGoal(divisionThis, objectTag as Division);
 
-            if (tagObj is Building)
-                return achievementTag(thisElem, tagObj as Building);
+            if (objectTag is Building)
+                return ReachTheGoal(divisionThis, objectTag as Building);
 
             throw new Exception("Неизвестный объект.");
         }
 
         /// <summary>Обработчик достижения цели (подразделения)</summary>
-        /// <param name="thisDiv">текущее подразделение</param>
-        /// <param name="tagDiv">целевое подразделение</param>
-        /// <returns>Возвращает сигналы обмена с GUI</returns>
-        public Signals achievementTag(Division thisDiv, Division tagDiv)
+        public Signals ReachTheGoal(Division divisionThis, Division divisionTag)
         {
-            //если целевой юнит - это юнит того же игрока
-            if (thisDiv.PlayerId == tagDiv.PlayerId)
+            // если целевое подразделение - того же игрока
+            if (divisionThis.Player == divisionTag.Player)
             {
-                //присоединить юниты
-                int newUnitId = Game.Players[thisDiv.PlayerId].JoinDivisionToDivision(thisDiv.Id, tagDiv.Id);
-                SelectedDivision = Game.Players[thisDiv.PlayerId].Divisions[newUnitId];
+                // если типы подразделений совпадают
+                if (divisionThis.Type != divisionTag.Type)
+                    return Signals.FAILURE;
+
+                // войти в его состав
+                if (!divisionTag.AttachDivision(divisionThis))
+                    return Signals.FAILURE; // TODO: наверное, надо сделать отступление
+
+                SelectAndDrawDivision(divisionTag);
             }
             else
             {
-                //заполняем структуру информации об атаке
-                AttackInfo.DivisionAttacker = thisDiv;
-                AttackInfo.DivisionDefender = tagDiv;
+                // заполняем структуру информации об атаке
+                AttackInfo.DivisionAttacker = divisionThis;
+                AttackInfo.DivisionDefender = divisionTag;
+                AttackInfo.BuildingToCapture = null;
 
                 //атака всегда отнимает шаги до минимума
-                thisDiv.Steps = 0;
-                tagDiv.Steps = 0;
+                divisionThis.Steps = 0;
+                divisionTag.Steps = 0;
 
                 return Signals.ATTACK;
             }
@@ -503,77 +511,62 @@ namespace MT.TacticWar.UI
         }
 
         /// <summary>Обработчик достижения цели (здания)</summary>
-        /// <param name="thisDiv">текущее подразделение</param>
-        /// <param name="tagBuild">целевое здание</param>
-        /// <returns>Возвращает сигналы обмена с GUI</returns>
-        public Signals achievementTag(Division thisDiv, Building tagBuild)
+        public Signals ReachTheGoal(Division divisionThis, Building buildingTag)
         {
-            Building tmp = null;
-
-            //если целевое здание - это здание того же игрока
-            if (thisDiv.PlayerId == tagBuild.PlayerId)
+            // если целевое здание - того же игрока
+            if (divisionThis.Player == buildingTag.Player)
             {
-                //если в здании есть охранение
-                if (Game.Players[thisDiv.PlayerId].Buildings[tagBuild.Id].IsSecured)
+                // если в здании есть охранение
+                if (buildingTag.IsSecured)
                 {
-                    //если типы юнитов совпадают
-                    if (thisDiv.Type == Game.Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Type)
-                    {
-                        //присоединить юниты
-                        var ind = Game.Players[thisDiv.PlayerId].JoinDivisionToDivision(thisDiv.Id, Game.Players[thisDiv.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Id);
-                        SelectedDivision = Game.Players[thisDiv.PlayerId].Divisions[ind];
-                    }
-                    else //иначе - всё плохо
+                    var divisionTag = buildingTag.SecurityDivision;
+
+                    // если типы подразделений совпадают
+                    if (divisionThis.Type != divisionTag.Type)
                         return Signals.FAILURE;
+
+                    // войти в его состав
+                    if (!divisionTag.AttachDivision(divisionThis))
+                        return Signals.FAILURE; // TODO: наверное, надо сделать отступление
+
+                    SelectAndDrawBuilding(buildingTag);
                 }
                 else
                 {
-                    //поставить на охрану
-                    Game.Players[tagBuild.PlayerId].Buildings[tagBuild.Id].AddSecurity(thisDiv);
+                    // поставить на охрану
+                    buildingTag.AddSecurity(divisionThis);
 
-                    //встать на охранение здания - отнимает все шаги
-                    Game.Players[thisDiv.PlayerId].Divisions[thisDiv.Id].Steps = 0;
+                    // встать на охранение здания - отнимает все шаги
+                    divisionThis.Steps = 0;
+
+                    SelectAndDrawBuilding(buildingTag);
                 }
-
-                tmp = tagBuild;
             }
             else
             {
-                //если в здании есть охранение
-                if (Game.Players[tagBuild.PlayerId].Buildings[tagBuild.Id].IsSecured)
+                // если в здании есть охранение
+                if (buildingTag.IsSecured)
                 {
-                    //заполняем структуру информации об атаке
-                    AttackInfo.DivisionAttacker = thisDiv;
-                    AttackInfo.DivisionDefender = Game.Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision;
+                    var divisionTagEnemy = buildingTag.SecurityDivision;
 
-                    //атака всегда отнимает шаги до минимума
-                    thisDiv.Steps = 0;
-                    Game.Players[tagBuild.PlayerId].Buildings[tagBuild.Id].SecurityDivision.Steps = 0;
+                    // заполняем структуру информации об атаке
+                    AttackInfo.DivisionAttacker = divisionThis;
+                    AttackInfo.DivisionDefender = divisionTagEnemy;
+                    AttackInfo.BuildingToCapture = buildingTag;
+
+                    // атака всегда отнимает шаги до минимума
+                    divisionThis.Steps = 0;
+                    divisionTagEnemy.Steps = 0;
 
                     return Signals.ATTACK;
                 }
                 else
                 {
-                    Building tmpBuild;
-
-                    //захват постройки
-                    tmp = tagBuild;
-                    tmpBuild = tagBuild.Copy();
-                    Game.Players[thisDiv.PlayerId].Buildings.Add(tmpBuild);
-                    //Game.Players[thisElem.PlayerId].recountIds();
-                    Game.Players[tagBuild.PlayerId].Buildings.Remove(tmp);
-                    //Game.Players[tagBuild.PlayerId].recountIds();
-
-                    //захват всегда отнимает все шаги
-                    thisDiv.Steps = 0;
-
-                    //поставить юнита на охранение
-                    tmp = Game.Players[thisDiv.PlayerId].Buildings[Game.Players[thisDiv.PlayerId].Buildings.Count - 1];
-                    tmp.AddSecurity(thisDiv);
+                    // захват постройки
+                    buildingTag.Capture(divisionThis);
+                    SelectAndDrawBuilding(buildingTag);
                 }
             }
-
-            SelectBuilding(tmp);
 
             return Signals.READY_UNIT_INFO;
         }
@@ -606,15 +599,20 @@ namespace MT.TacticWar.UI
             // если нет тумана войны
             if (!fog[x, y])
             {
-                // щелчок по подразделению
-                var division = Game.GetDivisionAt(x, y);
-                if (null != division)
-                    return ClickOnDivision(division);
+                // TODO: подумать и переделать
+                // сначала проверяем щелчок по зданию,
+                // т.к. в здании может быть охранение
+                // и тогда попадём не в тот обработчик
 
                 // щелчок по строению
                 var building = Game.GetBuildingAt(x, y);
                 if (null != building)
                     return ClickOnBuilding(building);
+
+                // щелчок по подразделению
+                var division = Game.GetDivisionAt(x, y);
+                if (null != division)
+                    return ClickOnDivision(division);
             }
 
             // щелчок по пустой клетке
@@ -623,7 +621,7 @@ namespace MT.TacticWar.UI
 
         #endregion
 
-        public BattleResult BattleBegin(Division div1, Division div2, List<Division> support1, List<Division> support2)
+        public BattleResult BattleBegin(Division div1, Division div2, List<Division> support1, List<Division> support2, Building bldToCapture)
         {
             // битва становится главной целью
             BestWay.Clear();
@@ -634,6 +632,16 @@ namespace MT.TacticWar.UI
             // если атакующий проиграл, снять с него выделение
             if (BattleResult.Lose == result)
                 SelectedDivision = null;
+
+            if (BattleResult.Win == result)
+            {
+                // если был захват постройки - занять её
+                if (null != bldToCapture)
+                {
+                    bldToCapture.Capture(div1);
+                    SelectAndDrawBuilding(bldToCapture);
+                }
+            }
 
             return result;
         }
@@ -657,7 +665,7 @@ namespace MT.TacticWar.UI
             if (SelectedDivision == division)
                 return ClickResult.Select;
 
-            if (SelectedDivision.PlayerId != PlayerCurrent)
+            if (SelectedDivision.Player.Id != PlayerCurrent)
                 return ClickResult.Select;
 
             //если флаг выделенного юнита указывает сюда
@@ -681,7 +689,7 @@ namespace MT.TacticWar.UI
             if (SelectedDivision == null)
                 return ClickResult.Select;
 
-            if (SelectedDivision.PlayerId != PlayerCurrent)
+            if (SelectedDivision.Player.Id != PlayerCurrent)
                 return ClickResult.Select;
 
             //если флаг выделенного юнита указывает сюда
@@ -704,7 +712,7 @@ namespace MT.TacticWar.UI
             if (SelectedDivision == building.SecurityDivision)
                 return ClickResult.Select;
 
-            if (SelectedDivision.PlayerId != PlayerCurrent)
+            if (SelectedDivision.Player.Id != PlayerCurrent)
                 return ClickResult.Select;
 
             // если флаг выделенного юнита указывает сюда
@@ -732,7 +740,7 @@ namespace MT.TacticWar.UI
             if (SelectedDivision == null)
                 return ClickResult.Select;
 
-            if (SelectedDivision.PlayerId != PlayerCurrent)
+            if (SelectedDivision.Player.Id != PlayerCurrent)
                 return ClickResult.Select;
 
             // если флаг выделенного юнита указывает сюда

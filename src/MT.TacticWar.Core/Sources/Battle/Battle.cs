@@ -147,7 +147,7 @@ namespace MT.TacticWar.Core.Battle
             var result = BattleResult.Draw;
             if (0 == div2.Units.Count)
             {
-                mission.Players[div2.PlayerId].Divisions.Remove(div2);
+                div2.Destroy();
                 result = BattleResult.Win;
 
                 // обнуляем шаги у вступивших в битву
@@ -156,7 +156,7 @@ namespace MT.TacticWar.Core.Battle
             }
             else if (0 == div1.Units.Count)
             {
-                mission.Players[div1.PlayerId].Divisions.Remove(div1);
+                div1.Destroy();
                 result = BattleResult.Lose;
 
                 // обнуляем шаги у вступивших в битву

@@ -110,46 +110,5 @@ namespace MT.TacticWar.Core
                 division.ResetParams();
             }
         }
-
-        /// <summary>Объединить два подразделения
-        /// </summary>
-        /// <param name="idAddedEl">ид подразделения, которое добавляют</param>
-        /// <param name="idBigEl">ид подразделения, к которому добавляют</param>
-        /// <returns>Возвращает ид нового большого подразделения или -1</returns>
-        public int JoinDivisionToDivision(int idAddedEl, int idBigEl)
-        {
-            //если типы подразделений не совпадают
-            if(Divisions[idBigEl].Type != Divisions[idAddedEl].Type)
-                return -1;
-
-            //добавить все юниты добавляемого подразделения в новый
-            for(int k = 0; k < Divisions[idAddedEl].Units.Count; k++)
-            {
-                Divisions[idBigEl].Units.Add(Divisions[idAddedEl].Units[k]);
-            }
-
-            //число шагов нового подразделения = минимуму из числа шагов составных подразделений
-            int steps = Math.Min(Divisions[idBigEl].Steps, Divisions[idAddedEl].Steps);
-
-            //уничтожить добавляемое подразделение
-            Divisions.RemoveAt(idAddedEl);
-
-            //меняем ид нового элемента
-            idBigEl = Math.Min(idAddedEl, idBigEl); //!!!
-
-            //сдвигаем идентификаторы всех юнитов
-            //for (int i = 0; i < Divisions.Count; i++)
-            //{
-            //    Divisions[i].Id = i;
-            //}
-
-            //пересчитать показатели нового подразделения
-            Divisions[idBigEl].ResetParams();
-
-            //изменяем число шагов
-            Divisions[idBigEl].Steps = steps;
-
-            return idBigEl;
-        }
     }
 }

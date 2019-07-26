@@ -347,7 +347,7 @@ namespace MT.TacticWar.UI
                     break;
             }
 
-            src.Append((division.PlayerId + 1).ToString());
+            src.Append((division.Player.Id + 1).ToString());
             src.Append(selected ? "_selected.png" : ".png");
             return src.ToString();
         }
@@ -401,7 +401,7 @@ namespace MT.TacticWar.UI
                     break;
             }
 
-            src.Append((building.PlayerId + 1).ToString());
+            src.Append((building.Player.Id + 1).ToString());
             src.Append(selected ? "_selected.png" : ".png");
             return src.ToString();
         }

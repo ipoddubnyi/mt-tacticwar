@@ -7,5 +7,6 @@ namespace MT.TacticWar.UI
     {
         public Division DivisionAttacker { get; set; }
         public Division DivisionDefender { get; set; }
+        public Building BuildingToCapture { get; set; }
     }
 }

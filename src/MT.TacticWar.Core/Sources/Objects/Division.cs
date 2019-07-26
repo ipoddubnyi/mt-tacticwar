@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MT.TacticWar.Core.Landscape;
 
@@ -14,7 +15,7 @@ namespace MT.TacticWar.Core.Objects
 
         public string Name;        //имя
         public DivisionType Type; //тип подразделения
-        public int PlayerId;        //ид игрока
+        public Player Player { get; set; }        // игрок
 
         public int PowerAntiInf;   //общая мощь против пехоты и артиллерии
         public int PowerAntiTank;  //общая мощь против бронетехники и кораблей
@@ -39,7 +40,7 @@ namespace MT.TacticWar.Core.Objects
         public Building SecuredBuilding { get; set; } //охраняемое здание
         public bool IsSecuring => null != SecuredBuilding;
 
-        public Division(int igrok, int id, int type, string name, int x, int y, List<Unit> units)
+        public Division(Player player, int id, int type, string name, int x, int y, List<Unit> units)
         {
             //тип подразделения
             Type = (DivisionType)type;
@@ -52,7 +53,7 @@ namespace MT.TacticWar.Core.Objects
 
             Id = id;             //номер подразделения
             Name = name;        //имя
-            PlayerId = igrok;        //ид игрока
+            Player = player;        //ид игрока
 
             //список юнитов
             Units = units; //new List<StructUnits>();
@@ -193,6 +194,40 @@ namespace MT.TacticWar.Core.Objects
             ArmourFromTank /= Units.Count;
 
             Experience /= Units.Count;
+        }
+
+        /// <summary>Присоединить подразделение</summary>
+        /// <param name="guest">Подразделение, которое присоединяют</param>
+        public bool AttachDivision(Division guest)
+        {
+            // если типы подразделений не совпадают
+            if (Type != guest.Type)
+                return false;
+
+            // добавить все юниты добавляемого подразделения в новый
+            foreach (var unit in guest.Units)
+            {
+                Units.Add(unit);
+            }
+
+            // число шагов нового подразделения = минимуму из числа шагов составных подразделений
+            int steps = Math.Min(Steps, guest.Steps);
+
+            // расформировываем добавляемое подразделение
+            guest.Destroy();
+
+            // пересчитать показатели нового подразделения
+            ResetParams();
+
+            // изменяем число шагов
+            Steps = steps;
+
+            return true;
+        }
+
+        public void Destroy()
+        {
+            Player.Divisions.Remove(this);
         }
 
         // Чинить войска

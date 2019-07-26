@@ -10,8 +10,10 @@ namespace MT.TacticWar.Core
         public int Width;
         public int Height;
 
+        /// <summary>Есть ли туман в данной ячейке.</summary>
         public bool this[int x, int y] => 0 == fog[x, y];
 
+        /// <summary>Есть ли туман в данной ячейке.</summary>
         public bool this[Coordinates pt] => 0 == fog[pt.X, pt.Y];
 
         public Fog(int width, int height, Player player)

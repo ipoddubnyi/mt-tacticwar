@@ -20,7 +20,7 @@ namespace MT.TacticWar.UI
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new GameForm());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show(
                     "Произошла критическая ошибка.",

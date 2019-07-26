@@ -132,20 +132,18 @@ namespace MT.TacticWar.Core.Serialization
 
         private static Player LoadMissionPlayer(MissionPlayer pl, MissionTypes types)
         {
-            var divisions = LoadMissionPlayerDivisions(pl, types);
-            var buildings = LoadMissionPlayerBuildings(pl, divisions);
-
             var player = new Player(pl.Id, pl.Name, pl.AI);
             player.Rank = (PlayerRank)pl.Rank;
             player.Money = pl.Money;
-            player.Divisions = divisions;
-            player.Buildings = buildings;
+
+            player.Divisions = LoadMissionPlayerDivisions(pl, types, player);
+            player.Buildings = LoadMissionPlayerBuildings(pl, player);
             player.Gates = GetPlayerGates(pl);
 
             return player;
         }
 
-        private static List<Division> LoadMissionPlayerDivisions(MissionPlayer pl, MissionTypes types)
+        private static List<Division> LoadMissionPlayerDivisions(MissionPlayer pl, MissionTypes types, Player player)
         {
             var divisions = new List<Division>();
             foreach (var div in pl.Divisions)
@@ -157,7 +155,7 @@ namespace MT.TacticWar.Core.Serialization
                 }
 
                 divisions.Add(new Division(
-                    pl.Id,
+                    player,
                     div.Id,
                     div.Type,
                     div.Name,
@@ -170,15 +168,17 @@ namespace MT.TacticWar.Core.Serialization
             return divisions;
         }
 
-        private static List<Building> LoadMissionPlayerBuildings(MissionPlayer pl, List<Division> divisions)
+        private static List<Building> LoadMissionPlayerBuildings(MissionPlayer pl, Player player)
         {
             var buildings = new List<Building>();
             foreach (var bld in pl.Buildings)
             {
-                var security = bld.Security.HasValue ? divisions.GetById(bld.Security.Value) : null;
+                var security = bld.Security.HasValue ?
+                    player.Divisions.GetById(bld.Security.Value) :
+                    null;
 
                 buildings.Add(new Building(
-                    pl.Id,
+                    player,
                     bld.Id,
                     bld.Type,
                     bld.Name,
