@@ -65,6 +65,6 @@
     </impassability>
     
     <cells>
-        <cell id='A' name="Болото" passable="false" passcost="10" color="#00ff00" image="" />
+        <cell id='A' name="Болото" passable="false" passcost="10" color="#ff0000" image="" />
     </cells>
 </map>

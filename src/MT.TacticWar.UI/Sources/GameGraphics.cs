@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
+using MT.TacticWar.Core.Players;
+using MT.TacticWar.Gameplay;
 
 namespace MT.TacticWar.UI
 {
-    public class GameGraphics
+    public class GameGraphics : IGraphics
     {
         public int CellSize { get; private set; }
         private readonly Graphics grf;
@@ -58,26 +61,6 @@ namespace MT.TacticWar.UI
             }
         }
 
-        /*public void DrawObjectOne(Player player, Division selectedDivision, Building selectedBuilding, Fog fog)
-        {
-            foreach (var division in player.Divisions)
-            {
-                if (!fog[division.Position])
-                {
-                    if (!division.IsSecuring)
-                        DrawDivision(division, division == selectedDivision);
-                }
-            }
-
-            foreach (var building in player.Buildings)
-            {
-                if (!fog[building.Position])
-                {
-                    DrawBuilding(building, building == selectedBuilding);
-                }
-            }
-        }*/
-
         public void DrawCell(Cell cell)
         {
             var color = GetCellColor(cell.Type, cell.Schema);
@@ -98,9 +81,11 @@ namespace MT.TacticWar.UI
                 int ypx = cell.Coordinates.Y * CellSize;
                 grf.FillRectangle(brush, xpx, ypx, CellSize, CellSize);
 
-                brush.Color = Color.FromArgb(200, Color.DarkGray);
                 if (fog[cell.Coordinates])
+                {
+                    brush.Color = GetFogColor();
                     grf.FillRectangle(brush, xpx, ypx, CellSize, CellSize);
+                }
             }
         }
 
@@ -134,12 +119,10 @@ namespace MT.TacticWar.UI
         // Рисования креста (когда путь не найден)
         public void DrawCross(Coordinates pt)
         {
-            DrawCross(pt.X, pt.Y);
-        }
+            int x = pt.X;
+            int y = pt.Y;
 
-        public void DrawCross(int x, int y)
-        {
-            string src = "img\\features\\Krest.png";
+            string src = @"images\features\cross.png";
             using (var image = Image.FromFile(src))
             {
                 grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
@@ -148,61 +131,58 @@ namespace MT.TacticWar.UI
 
         public void DrawFlag(Coordinates pt, MoveType moveType, bool isOneday)
         {
-            DrawFlag(pt.X, pt.Y, moveType, isOneday);
-        }
+            int x = pt.X;
+            int y = pt.Y;
 
-        public void DrawFlag(int x, int y, MoveType moveType, bool isOneday)
-        {
             string src = GetFlagImagePath(moveType, isOneday);
             using (var image = Image.FromFile(src))
             {
-                grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
+                var attr = GetFlagColorReplacement(isOneday);
+                var rect = new Rectangle(x * CellSize, y * CellSize, CellSize, CellSize);
+                grf.DrawImage(image, rect, 0, 0, CellSize, CellSize, GraphicsUnit.Pixel, attr);
             }
         }
 
         private string GetFlagImagePath(MoveType moveType, bool isOneday)
         {
-            var src = new StringBuilder("img\\flags\\Flag");
-
+            var path = @"images\flags\";
             switch (moveType)
             {
                 case MoveType.Join:
-                    src.Append("Add");
-                    break;
+                    return $"{path}join.png";
                 case MoveType.Attack:
-                    src.Append("Atak");
-                    break;
+                    return $"{path}attack.png";
                 case MoveType.Defend:
-                    src.Append("Defend");
-                    break;
+                    return $"{path}defend.png";
                 case MoveType.Capture:
-                    src.Append("Capture");
-                    break;
+                    return $"{path}capture.png";
                 case MoveType.Go:
-                default:
-                    src.Append("F");
-                    break;
+                    return $"{path}flag.png";
             }
 
-            //если весь путь можно пройти за 1 день
-            src.Append(isOneday ? "Red" : "Blue");
-            src.Append(".png");
-            return src.ToString();
+            throw new Exception("Неизвестный тип флага.");
         }
 
+        private ImageAttributes GetFlagColorReplacement(bool isOneday)
+        {
+            var colorMap = new List<ColorMap>();
+            colorMap.Add(new ColorMap
+            {
+                OldColor = Color.Silver,
+                NewColor = isOneday ? Color.Red : Color.Blue
+            });
+            var attr = new ImageAttributes();
+            attr.SetRemapTable(colorMap.ToArray());
+            return attr;
+        }
+
+        /// <summary>Рисование пути, в том числе однодневную часть (красным цветом)</summary>
+        /// <param name="wayall">весь путь (список ячеек)</param>
+        /// <param name="onedayIndex">индекс, где заканчивается однодневный путь</param>
         public void DrawWay(List<Cell> wayall, int onedayIndex)
         {
             var oneday = wayall.GetRange(0, onedayIndex + 1);
-            DrawWay(wayall, oneday);
-        }
 
-        /// <summary>Рисование пути, в том числе однодневную часть (синим цветом)
-        /// </summary>
-        /// <param name="allPut">весь путь (список координат)</param>
-        /// <param name="oneDayPut">однодневный путь (часть всего пути)</param>
-        /// <returns></returns>
-        public void DrawWay(List<Cell> wayall, List<Cell> oneday)
-        {
             using (var pen = new Pen(Color.Red))
             {
                 int x1, y1, x2, y2;
@@ -245,39 +225,18 @@ namespace MT.TacticWar.UI
             }*/
         }
 
-        public void DrawPlayersObjects(Player[] players, Map map, Division selectedDivision, Building selectedBuilding)
+        public void DrawPlayersObjects(Player[] players, int playerCurrent, Division selectedDivision, Building selectedBuilding, Fog fog)
         {
             foreach (var player in players)
             {
-                foreach (var division in player.Divisions)
-                {
-                    if (!division.IsSecuring)
-                        DrawDivision(division, division == selectedDivision);
-                }
-
-                foreach (var building in player.Buildings)
-                {
-                    // если есть охранение у здания, стереть уже нарисованного юнита
-                    //if (building.IsSecured)
-                    //    DrawCell(map[building.Position]);
-
-                    DrawBuilding(building, building == selectedBuilding);
-                }
-            }
-        }
-
-        public void DrawPlayersObjects(Player[] players, int playerId, Division selectedDivision, Building selectedBuilding, Fog fog)
-        {
-            foreach (var player in players)
-            {
-                if (player.Id == playerId)
+                if (player.Id == playerCurrent)
                     DrawPlayerObjects(player, selectedDivision, selectedBuilding);
                 else
                     DrawPlayerObjectsWithFog(player, selectedDivision, selectedBuilding, fog);
             }
         }
 
-        public void DrawPlayerObjects(Player player, Division selectedDivision, Building selectedBuilding)
+        private void DrawPlayerObjects(Player player, Division selectedDivision, Building selectedBuilding)
         {
             foreach (var division in player.Divisions)
             {
@@ -291,7 +250,7 @@ namespace MT.TacticWar.UI
             }
         }
 
-        public void DrawPlayerObjectsWithFog(Player player, Division selectedDivision, Building selectedBuilding, Fog fog)
+        private void DrawPlayerObjectsWithFog(Player player, Division selectedDivision, Building selectedBuilding, Fog fog)
         {
             foreach (var division in player.Divisions)
             {
@@ -316,40 +275,13 @@ namespace MT.TacticWar.UI
             int x = division.Position.X;
             int y = division.Position.Y;
 
-            var src = GetDivisionImagePath(division, selected);
-            using (var newImage = Image.FromFile(src))
+            var src = GetDivisionImagePath(division);
+            using (var image = Image.FromFile(src))
             {
-                grf.DrawImage(newImage, x * CellSize, y * CellSize, CellSize, CellSize);
+                var attr = GetObjectColorReplacement(division.Player.Color, selected);
+                var rect = new Rectangle(x * CellSize, y * CellSize, CellSize, CellSize);
+                grf.DrawImage(image, rect, 0, 0, CellSize, CellSize, GraphicsUnit.Pixel, attr);
             }
-        }
-
-        private string GetDivisionImagePath(Division division, bool selected)
-        {
-            var src = new StringBuilder("img\\elements\\");
-
-            switch (division.Type)
-            {
-                case DivisionType.Infantry:
-                    src.Append("Human");
-                    break;
-                case DivisionType.Ship:
-                    src.Append("Ship");
-                    break;
-                case DivisionType.Aviation:
-                    src.Append("Plane");
-                    break;
-                case DivisionType.Artillery:
-                    src.Append("Artiller");
-                    break;
-                case DivisionType.Vehicle:
-                default:
-                    src.Append("Tank");
-                    break;
-            }
-
-            src.Append((division.Player.Id + 1).ToString());
-            src.Append(selected ? "_selected.png" : ".png");
-            return src.ToString();
         }
 
         public void DrawBuilding(Building building, bool selected)
@@ -357,16 +289,18 @@ namespace MT.TacticWar.UI
             int x = building.Position.X;
             int y = building.Position.Y;
 
-            var src = GetBuildingImagePath(building, selected);
+            var src = GetBuildingImagePath(building);
             using (var image = Image.FromFile(src))
             {
-                grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
+                var attr = GetObjectColorReplacement(building.Player.Color, selected);
+                var rect = new Rectangle(x * CellSize, y * CellSize, CellSize, CellSize);
+                grf.DrawImage(image, rect, 0, 0, CellSize, CellSize, GraphicsUnit.Pixel, attr);
             }
 
             //если есть охранение - пометить
             if (building.IsSecured)
             {
-                src = "img\\features\\Defend.png";
+                src = @"images\features\defend.png";
                 using (var image = Image.FromFile(src))
                 {
                     grf.DrawImage(image, x * CellSize, y * CellSize, CellSize, CellSize);
@@ -374,41 +308,91 @@ namespace MT.TacticWar.UI
             }
         }
 
-        private string GetBuildingImagePath(Building building, bool selected)
+        private string GetDivisionImagePath(Division division)
         {
-            var src = new StringBuilder("img\\buildings\\");
+            var path = @"images\divisions\";
+            switch (division.Type)
+            {
+                case DivisionType.Infantry:
+                    return $"{path}human.png";
+                case DivisionType.Ship:
+                    return $"{path}ship.png";
+                case DivisionType.Aviation:
+                    return $"{path}plane.png";
+                case DivisionType.Artillery:
+                    return $"{path}artillery.png";
+                case DivisionType.Vehicle:
+                    return $"{path}tank.png";
+            }
 
+            throw new Exception("Неизвестный тип подразделения.");
+        }
+
+        private string GetBuildingImagePath(Building building)
+        {
+            var path = @"images\buildings\";
             switch (building.Type)
             {
                 case BuildingType.Barracks:
-                    src.Append("Kazarma");
-                    break;
+                    return $"{path}barracks.png";
                 case BuildingType.Storehouse:
-                    src.Append("Sklad");
-                    break;
+                    return $"{path}storehouse.png";
                 case BuildingType.Radar:
-                    src.Append("Radar");
-                    break;
+                    return $"{path}radar.png";
                 case BuildingType.Airfield:
-                    src.Append("Aeroport");
-                    break;
+                    return $"{path}airfield.png";
                 case BuildingType.Port:
-                    src.Append("Port");
-                    break;
+                    return $"{path}port.png";
                 case BuildingType.Factory:
-                default:
-                    src.Append("Zavod");
-                    break;
+                    return $"{path}factory.png";
             }
 
-            src.Append((building.Player.Id + 1).ToString());
-            src.Append(selected ? "_selected.png" : ".png");
-            return src.ToString();
+            throw new Exception("Неизвестный тип строения.");
+        }
+
+        private ImageAttributes GetObjectColorReplacement(PlayerColor color, bool selected)
+        {
+            var colorMap = new List<ColorMap>();
+            colorMap.Add(new ColorMap
+            {
+                OldColor = Color.Silver,
+                NewColor = ConvertPlayerColor(color)
+            });
+            if (selected)
+            {
+                colorMap.Add(new ColorMap
+                {
+                    OldColor = Color.Black,
+                    NewColor = Color.DarkOrange
+                });
+            }
+            var attr = new ImageAttributes();
+            attr.SetRemapTable(colorMap.ToArray());
+            return attr;
+        }
+
+        private Color ConvertPlayerColor(PlayerColor color)
+        {
+            switch (color)
+            {
+                case PlayerColor.White:
+                    return Color.Snow;
+                case PlayerColor.Green:
+                    return Color.MediumSeaGreen;
+                case PlayerColor.Red:
+                    return Color.OrangeRed;
+                case PlayerColor.Yellow:
+                    return Color.Gold;
+                case PlayerColor.Blue:
+                    return Color.SlateBlue;
+            }
+
+            throw new Exception("Неизвестный цвет.");
         }
 
         public void DrawFog(Fog fog)
         {
-            var color = Color.FromArgb(200, Color.DarkGray);
+            var color = GetFogColor();
             using (Brush myBrsh = new SolidBrush(color))
             {
                 for (int y = 0; y < fog.Height; y++)
@@ -422,13 +406,9 @@ namespace MT.TacticWar.UI
             }
         }
 
-        /*public void DrawFogCell(int x, int y)
+        private Color GetFogColor()
         {
-            var color = Color.FromArgb(200, Color.DarkGray);
-            using (Brush myBrsh = new SolidBrush(color))
-            {
-                grf.FillRectangle(myBrsh, x * CellSize, y * CellSize, CellSize, CellSize);
-            }
-        }*/
+            return Color.FromArgb(96, Color.Black);
+        }
     }
 }

@@ -8,12 +8,10 @@ namespace MT.TacticWar.Core
         public string Name { get; private set; }
         public string Briefing { get; private set; }
         public MissionMode Mode { get; private set; }
+        public Map Map { get; private set; }
+        public Player[] Players { get; private set; }
 
-        public Map Map { get; set; }
-
-        public Player[] Players { get; set; }
-
-        private MissionManage manage;
+        //private MissionManage manage;
 
         public Mission(string name, string briefing, MissionMode mode, Player[] players, Map map)
         {

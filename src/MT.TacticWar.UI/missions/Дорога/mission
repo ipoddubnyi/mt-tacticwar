@@ -22,7 +22,7 @@
     </info>
     
     <players>
-        <player id="0" name="Игрок 1" rank="0" money="50000" ai="false">
+        <player id="0" name="Игрок 1" team="1" color="1" rank="0" money="50000" ai="false">
             <divisions>
                 <division id="0" name="Взвод пехоты" type="0">
                     <position x="3" y="19" />
@@ -98,7 +98,7 @@
             </gates>
         </player>
 
-        <player id="1" name="Игрок 2" rank="0" money="50000" ai="true">
+        <player id="1" name="Игрок 2" team="1" color="1" rank="0" money="50000" ai="true">
             <divisions>
                 <division id="0" name="Взвод пехоты 1" type="0">
                     <position x="3" y="5" />

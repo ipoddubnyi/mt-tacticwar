@@ -3,80 +3,49 @@ namespace MT.TacticWar.Core.Objects
 {
     public class Building : IObject
     {
+        public Player Player { get; protected set; }
         public int Id { get; protected set; }
-
-        public Coordinates Position { get; set; }
-
-        public string Name;            //имя
-        public BuildingType Type;    //тип строения
-        public Player Player { get; set; }            // игрок
-        public int Health;             //здоровье
-
-        public int RadiusActive;             //радиус действия
-        public int RadiusView;              //радиус обзора
-
-        public Division SecurityDivision { get; set; }   //подразделение на охранении
+        public BuildingType Type { get; protected set; }
+        public string Name { get; protected set; }
+        public Coordinates Position { get; protected set; }
+        public int Health { get; protected set; }
+        public int RadiusActive { get; protected set; }     // радиус действия
+        public int RadiusView { get; protected set; }       // радиус обзора
+        public Division SecurityDivision { get; protected set; }      // подразделение на охранении
         public bool IsSecured => null != SecurityDivision;
 
-        private Building()
+        public Building(Player player, int id, int type, string name, int x, int y, int health, int radius, int view, Division security)
         {
-        }
-
-        public Building(Player player, int id, int type, string name, int i, int j, int health, int radius, int obzor, Division elemOhr)
-        {
+            Player = player;
+            Id = id;
             Type = (BuildingType)type;
-
-            //координаты на зоне БД
-            Position = new Coordinates(i, j);
-
-            Id = id; //номер здания
-            Name = name; //имя
-            Player = player; //ид игрока
-            Health = health; //здоровье
-
-            RadiusActive = radius; //радиус действия
-            RadiusView = obzor; //радиус обзора
-
+            Name = name;
+            Position = new Coordinates(x, y);
+            Health = health;
+            RadiusActive = radius;
+            RadiusView = view;
             SecurityDivision = null;
 
-            if (null != elemOhr)
-                AddSecurity(elemOhr);
+            if (null != security)
+                AddSecurity(security);
         }
 
-        public Building Copy()
-        {
-            var newBuilding = new Building();
-
-            newBuilding.Type = Type; //тип строения
-
-            newBuilding.Position.X = Position.X; //координаты на зоне БД
-            newBuilding.Position.Y = Position.Y;
-
-            newBuilding.Id = Id; ; //номер
-            newBuilding.Name = Name; //имя
-            newBuilding.Player = Player; //ид игрока
-            newBuilding.Health = Health; //здоровье
-
-            newBuilding.RadiusActive = RadiusActive; //радиус действия
-            newBuilding.RadiusView = RadiusView; //радиус обзора
-
-            newBuilding.SecurityDivision = SecurityDivision; //подразделение на охранении
-            // TODO: поменять охранение???
-
-            return newBuilding;
-        }
-
-        //Добавить охранение в здание
-        //Возвращает false при ошибке
+        /// <summary>Добавить охранение в здание</summary>
+        /// <returns>Возвращает false, если охранение уже есть</returns>
         public bool AddSecurity(Division security)
         {
-            //если уже есть охранение - ошибка
             if (IsSecured) return false;
-
             SecurityDivision = security;
             security.SecuredBuilding = this;
-
             return true;
+        }
+
+        public void RemoveSecurity()
+        {
+            if (null != SecurityDivision)
+                SecurityDivision.SecuredBuilding = null;
+
+            SecurityDivision = null;
         }
 
         public void Capture(Division enemy)
@@ -86,14 +55,6 @@ namespace MT.TacticWar.Core.Objects
             Player.Buildings.Add(this);
 
             AddSecurity(enemy);
-        }
-
-        public void RemoveSecurity()
-        {
-            if (null != SecurityDivision)
-                SecurityDivision.SecuredBuilding = null;
-
-            SecurityDivision = null;
         }
     }
 }

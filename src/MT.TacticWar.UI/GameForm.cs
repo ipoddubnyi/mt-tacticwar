@@ -7,9 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MT.TacticWar.Core;
-using MT.TacticWar.Core.Battle;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Serialization;
+using MT.TacticWar.Gameplay;
+using MT.TacticWar.Gameplay.Battles;
 using MT.TacticWar.UI.Dialogs;
 
 namespace MT.TacticWar.UI
@@ -21,7 +22,7 @@ namespace MT.TacticWar.UI
             InitializeComponent();
         }        
 
-        private Simulator SIMUL;
+        private Game GAME;
         private const int CellSize = 21;
 
         private void button3_Click(object sender, EventArgs e)
@@ -49,14 +50,14 @@ namespace MT.TacticWar.UI
         {
             try
             {
-                SIMUL = new Simulator(mission, plr0Name, plr1Name, plr0AI, plr1AI);
+                GAME = new Game(mission, plr0Name, plr1Name, plr0AI, plr1AI);
 
                 // размеры поля боя и окна
                 int oldHei = gameMap.Height; //старые координаты для центровки окна
                 int oldWid = gameMap.Width;
 
-                gameMap.Height = SIMUL.Game.Map.Height * CellSize + 2;
-                gameMap.Width = SIMUL.Game.Map.Width * CellSize + 2;
+                gameMap.Height = GAME.Mission.Map.Height * CellSize + 2;
+                gameMap.Width = GAME.Mission.Map.Width * CellSize + 2;
 
                 Height = gameMap.Height + 80;
                 Width = gameMap.Width + propertyGrid1.Width + 50;
@@ -69,13 +70,14 @@ namespace MT.TacticWar.UI
 
                 // рисование карты
 
-                SIMUL.InitGraphics(gameMap.CreateGraphics(), CellSize);
+                var graphics = new GameGraphics(gameMap.CreateGraphics(), CellSize);
+                GAME.InitGraphics(graphics);
 
                 // TODO: исправить двойное обновление картинки при первой загрузке
-                SIMUL.DrawAll();
+                GAME.DrawAll();
 
                 // TODO: показ брифинга
-                //MessageBox.Show(SIMUL.Mission.mBriefing, "Брифинг");
+                //MessageBox.Show(GAME.Mission.mBriefing, "Брифинг");
             }
             catch (Exception ex)
             {
@@ -88,22 +90,22 @@ namespace MT.TacticWar.UI
             //если нажатие не левой кнопкой
             if (e.Button != MouseButtons.Left)
             {
-                SIMUL.DeselectAll();
+                GAME.DeselectAll();
                 ClearSelectedObjectInfo();
             }
             else
             {
-                Signals signal;
+                Signal signal;
 
-                signal = SIMUL.ZonaClick(e.X, e.Y);
+                signal = GAME.ZonaClick(e.X, e.Y);
 
                 //если собрана информация о юните
                 switch (signal)
                 {
-                    case Signals.READY_UNIT_INFO:
+                    case Signal.READY_UNIT_INFO:
                         ShowSelectedObjectInfo();
                         break;
-                    case Signals.ATTACK:
+                    case Signal.ATTACK:
                         BattleDivisionVsDivision();
                         break;
                 }
@@ -114,18 +116,18 @@ namespace MT.TacticWar.UI
         {
             ClearSelectedObjectInfo();
 
-            if (null != SIMUL.SelectedDivision)
+            if (null != GAME.SelectedDivision)
             {
-                propertyGrid1.SelectedObject = new DivisionInfo(SIMUL.SelectedDivision);
+                propertyGrid1.SelectedObject = new DivisionInfo(GAME.SelectedDivision);
 
-                foreach (var unit in SIMUL.SelectedDivision.Units)
+                foreach (var unit in GAME.SelectedDivision.Units)
                 {
                     listInfoUnits.Items.Add($"{unit.Name} ({unit.Health}%)");
                 }
             }
-            else if (null != SIMUL.SelectedBuilding)
+            else if (null != GAME.SelectedBuilding)
             {
-                propertyGrid1.SelectedObject = new BuildingInfo(SIMUL.SelectedBuilding);
+                propertyGrid1.SelectedObject = new BuildingInfo(GAME.SelectedBuilding);
             }
         }
 
@@ -140,33 +142,33 @@ namespace MT.TacticWar.UI
             using (var dialog = new DialogBattle())
             {
                 dialog.SetDivisions(
-                    SIMUL.AttackInfo.DivisionAttacker,
-                    SIMUL.AttackInfo.DivisionDefender
+                    GAME.AttackInfo.DivisionAttacker,
+                    GAME.AttackInfo.DivisionDefender
                 );
 
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
                     // TODO: реализовать поддержку
-                    var result = SIMUL.BattleBegin(
-                        SIMUL.AttackInfo.DivisionAttacker,
-                        SIMUL.AttackInfo.DivisionDefender,
+                    var result = GAME.BattleBegin(
+                        GAME.AttackInfo.DivisionAttacker,
+                        GAME.AttackInfo.DivisionDefender,
                         new List<Division>(),
                         new List<Division>(),
-                        SIMUL.AttackInfo.BuildingToCapture
+                        GAME.AttackInfo.BuildingToCapture
                     );
 
                     switch (result)
                     {
                         case BattleResult.Win:
-                            dialog.SetResultWin(SIMUL.AttackInfo.DivisionAttacker);
+                            dialog.SetResultWin(GAME.AttackInfo.DivisionAttacker);
                             ShowSelectedObjectInfo();
                             break;
                         case BattleResult.Lose:
-                            dialog.SetResultLose(SIMUL.AttackInfo.DivisionDefender);
+                            dialog.SetResultLose(GAME.AttackInfo.DivisionDefender);
                             ClearSelectedObjectInfo();
                             break;
                         case BattleResult.Draw:
-                            dialog.SetResultDraw(SIMUL.AttackInfo.DivisionAttacker, SIMUL.AttackInfo.DivisionDefender);
+                            dialog.SetResultDraw(GAME.AttackInfo.DivisionAttacker, GAME.AttackInfo.DivisionDefender);
                             ShowSelectedObjectInfo();
                             break;
                     }
@@ -176,7 +178,7 @@ namespace MT.TacticWar.UI
                 }
                 else
                 {
-                    SIMUL.BattleRecede(SIMUL.AttackInfo.DivisionAttacker);
+                    GAME.BattleRecede(GAME.AttackInfo.DivisionAttacker);
 
                     // TODO: показываем диалог с результатами битвы
                     //dialog.ShowDialog();
@@ -184,13 +186,13 @@ namespace MT.TacticWar.UI
             }
 
             //перерисовываем поле боя
-            SIMUL.DrawAll();
+            GAME.DrawAll();
         }
 
         private void gameMap_Paint(object sender, PaintEventArgs e)
         {
-            if(SIMUL != null)
-                SIMUL.DrawAll();
+            if(GAME != null)
+                GAME.DrawAll();
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -223,10 +225,10 @@ namespace MT.TacticWar.UI
             if (ans == DialogResult.Yes)
             {
                 gameMap.Visible = false;
-                SIMUL.PassStep();
+                GAME.PassStep();
 
                 MessageBox.Show(
-                    $"Ход игрока {SIMUL.PlayerCurrent}",
+                    $"Ход игрока {GAME.PlayerCurrent}",
                     "Начало хода",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);

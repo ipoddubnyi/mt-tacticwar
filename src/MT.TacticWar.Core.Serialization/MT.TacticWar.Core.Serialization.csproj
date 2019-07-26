@@ -44,21 +44,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Browser.cs" />
     <Compile Include="Source\MissionLoader.cs" />
-    <Compile Include="Source\Serialization\InfoFile.cs" />
-    <Compile Include="Source\Serialization\InfoRoot.cs" />
-    <Compile Include="Source\Serialization\Map\MapCell.cs" />
-    <Compile Include="Source\Serialization\Map\MapInfo.cs" />
-    <Compile Include="Source\Serialization\Map\MapRoot.cs" />
-    <Compile Include="Source\Serialization\Map\MapSize.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionBuilding.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionDivision.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionGate.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionInfo.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionPlayer.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionPosition.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionRoot.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionTypes.cs" />
-    <Compile Include="Source\Serialization\Mission\MissionUnit.cs" />
+    <Compile Include="Source\Serialization\SerialFileInfoType.cs" />
+    <Compile Include="Source\Serialization\SerialFileInfo.cs" />
+    <Compile Include="Source\Serialization\Map\SerialCell.cs" />
+    <Compile Include="Source\Serialization\Map\SerialMapInfo.cs" />
+    <Compile Include="Source\Serialization\Map\SerialMap.cs" />
+    <Compile Include="Source\Serialization\Common\SerialSize.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialBuilding.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialDivision.cs" />
+    <Compile Include="Source\Serialization\Common\SerialZone.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialMissionInfo.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialPlayer.cs" />
+    <Compile Include="Source\Serialization\Common\SerialPosition.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialMission.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialMissionTypes.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialUnit.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MT.TacticWar.Core\MT.TacticWar.Core.csproj">

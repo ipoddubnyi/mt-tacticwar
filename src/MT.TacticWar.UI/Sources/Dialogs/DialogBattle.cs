@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using MT.TacticWar.Core.Battle;
 using MT.TacticWar.Core.Objects;
+using MT.TacticWar.Gameplay.Battles;
 
 namespace MT.TacticWar.UI.Dialogs
 {

@@ -42,12 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sources\Algorithm\Bellman.cs" />
-    <Compile Include="Sources\Algorithm\BellmanParam.cs" />
-    <Compile Include="Sources\Algorithm\BellmanCell.cs" />
-    <Compile Include="Sources\Algorithm\BellmanDirections.cs" />
-    <Compile Include="Sources\Battle\Battle.cs" />
-    <Compile Include="Sources\Battle\BattleResult.cs" />
     <Compile Include="Sources\Common\Coordinates.cs" />
     <Compile Include="Sources\Fog.cs" />
     <Compile Include="Sources\Extensions.cs" />
@@ -64,8 +58,8 @@
     <Compile Include="Sources\Objects\BuildingType.cs" />
     <Compile Include="Sources\Objects\DivisionType.cs" />
     <Compile Include="Sources\Objects\UnitLevel.cs" />
-    <Compile Include="Sources\Players\ForceSide.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\Players\PlayerColor.cs" />
     <Compile Include="Sources\Players\PlayerIntelligence.cs" />
     <Compile Include="Sources\Players\PlayerRank.cs" />
     <Compile Include="Sources\Objects\Building.cs" />

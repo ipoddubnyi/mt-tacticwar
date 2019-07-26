@@ -6,9 +6,24 @@ namespace MT.TacticWar.Core
     /// </summary>
     public enum MissionStatus
     {
-        InProgress,         // игра ещё не окончена
-        MissionComplete,    // победа игрока 1, поражение игрока 2
-        MissionFailed,      // поражение игрока 1, победа игрока 2
-        MissionDraw         // ничья
+        /// <summary>
+        /// Игра ещё не окончена
+        /// </summary>
+        InProgress,
+
+        /// <summary>
+        /// Победа игрока 1, поражение игрока 2
+        /// </summary>
+        MissionComplete,
+
+        /// <summary>
+        /// Поражение игрока 1, победа игрока 2
+        /// </summary>
+        MissionFailed,
+
+        /// <summary>
+        /// Ничья
+        /// </summary>
+        MissionDraw
     }
 }

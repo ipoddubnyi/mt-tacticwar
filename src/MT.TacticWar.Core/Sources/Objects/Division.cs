@@ -7,65 +7,52 @@ namespace MT.TacticWar.Core.Objects
 {
     public class Division : IObject
     {
+        public Player Player { get; protected set; }
         public int Id { get; protected set; }
-
+        public DivisionType Type { get; protected set; }
+        public string Name { get; protected set; }
         public Coordinates Position { get; set; }
+        public List<Unit> Units { get; protected set; }
 
-        public Coordinates Target { get; set; }   //координаты места назначения
-
-        public string Name;        //имя
-        public DivisionType Type; //тип подразделения
-        public Player Player { get; set; }        // игрок
-
-        public int PowerAntiInf;   //общая мощь против пехоты и артиллерии
-        public int PowerAntiTank;  //общая мощь против бронетехники и кораблей
-        public int PowerAntiAir;   //общая мощь против воздуха
-
-        public int ArmourFromInf;  //общая защита от пехоты
-        public int ArmourFromTank; //общая защита от любой техники
-
-        public int Supply;        //число патронов и снарядов
-
-        public int RadiusAttack;         //радиус действия (для артиллерии)
-        public int RadiusView;          //радиус обзора
-
-        public int Experience;      //опыт
-
-        public int Steps;          //число шагов (равно числу шагов самого медленного юнита)
-        public bool CanStepLand;      //ходит ли по земле
-        public bool CanStepAqua;      //ходит ли по воде
-
-        public List<Unit> Units;    //список юнитов
-
+        public Coordinates Target { get; set; }
         public Building SecuredBuilding { get; set; } //охраняемое здание
         public bool IsSecuring => null != SecuredBuilding;
 
+        public int PowerAntiInf;        //общая мощь против пехоты и артиллерии
+        public int PowerAntiTank;       //общая мощь против бронетехники и кораблей
+        public int PowerAntiAir;        //общая мощь против воздуха
+
+        public int ArmourFromInf;       //общая защита от пехоты
+        public int ArmourFromTank;      //общая защита от любой техники
+
+        public int Supply;              //число патронов и снарядов
+
+        public int RadiusAttack;        //радиус действия (для артиллерии)
+        public int RadiusView;          //радиус обзора
+
+        public int Experience;          //опыт
+
+        public int Steps;               //число шагов (равно числу шагов самого медленного юнита)
+        public bool CanStepLand;        //ходит ли по земле
+        public bool CanStepAqua;        //ходит ли по воде
+
         public Division(Player player, int id, int type, string name, int x, int y, List<Unit> units)
         {
-            //тип подразделения
+            Player = player;
+            Id = id;
             Type = (DivisionType)type;
-
-            //координаты на зоне БД
+            Name = name;
             Position = new Coordinates(x, y);
+            Units = units;
 
-            //координаты места назначения
             Target = Coordinates.Empty;
-
-            Id = id;             //номер подразделения
-            Name = name;        //имя
-            Player = player;        //ид игрока
-
-            //список юнитов
-            Units = units; //new List<StructUnits>();
-
             SecuredBuilding = null;
 
-            //пересчитать показатели
-            ResetParams();
+            ResetParams(); // пересчитать показатели
         }
 
-        //Продвинуть подразделение к цели на этот день
-        //!!!!!!!!!! Возврат: true - достигли цели
+        /// <summary>Продвинуть подразделение к цели на этот день</summary>
+        /// <param name="way">Путь, по которому продвигать</param>
         public void Move(List<Cell> way)
         {
             //просчитать путь для юнита на один день (для рисования на карте)
@@ -84,11 +71,11 @@ namespace MT.TacticWar.Core.Objects
                 //    k = put.Count; //иначе - завершаем цикл
             }
 
-            var dayTarget = oneday.Last().Coordinates.Clone();
-            Position = dayTarget.Clone();
+            var dayTarget = oneday.Last().Coordinates.Copy();
+            Position = dayTarget.Copy();
         }
 
-        //Просчитать часть пути, которую юнит пройдёт за один день
+        // Получить часть пути, которую юнит пройдёт за один день
         private List<Cell> GetOneDayWay(List<Cell> wayall)
         {
             int index = GetOneDayIndex(wayall);
@@ -120,7 +107,7 @@ namespace MT.TacticWar.Core.Objects
 
         public void SetTarget(Coordinates target)
         {
-            Target = target.Clone();
+            Target = target.Copy();
         }
 
         public void RemoveTarget()
