@@ -33,12 +33,9 @@ namespace MT.TacticWar.UI
             }
         }
 
-        public void DrawArea(Map map, Coordinates[] area, Fog fog)
+        public void DrawArea(Mission mission, Coordinates area, Fog fog)
         {
-            foreach (var pt in area)
-            {
-                DrawCellOne(map[pt], fog);
-            }
+            DrawArea(mission, new[] { area }, fog);
         }
 
         public void DrawArea(Mission mission, Coordinates[] area, Fog fog)
@@ -49,14 +46,32 @@ namespace MT.TacticWar.UI
 
                 if (!fog[pt])
                 {
-                    var division = mission.GetDivisionAt(pt);
+                    var obj = mission.Map[pt].Object;
+                    if (null != obj)
+                    {
+                        if (obj is Division)
+                        {
+                            var division = obj as Division;
+                            if (division.IsSecuring)
+                                DrawBuilding(division.SecuredBuilding, false);
+                            else
+                                DrawDivision(division, false);
+                        }
+                        else if (obj is Building)
+                        {
+                            var building = obj as Building;
+                            DrawBuilding(building, false);
+                        }
+                    }
+
+                    /*var division = mission.GetDivisionAt(pt);
                     if (null != division)
                         if (!division.IsSecuring)
                             DrawDivision(division, false);
 
                     var building = mission.GetBuildingAt(pt);
                     if (null != building)
-                        DrawBuilding(building, false);
+                        DrawBuilding(building, false);*/
                 }
             }
         }
@@ -393,14 +408,14 @@ namespace MT.TacticWar.UI
         public void DrawFog(Fog fog)
         {
             var color = GetFogColor();
-            using (Brush myBrsh = new SolidBrush(color))
+            using (Brush brush = new SolidBrush(color))
             {
                 for (int y = 0; y < fog.Height; y++)
                 {
                     for (int x = 0; x < fog.Width; x++)
                     {
                         if (fog[x, y])
-                            grf.FillRectangle(myBrsh, x * CellSize, y * CellSize, CellSize, CellSize);
+                            grf.FillRectangle(brush, x * CellSize, y * CellSize, CellSize, CellSize);
                     }
                 }
             }

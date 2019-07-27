@@ -49,15 +49,5 @@ namespace MT.TacticWar.Core
             hashCode = hashCode * -1521134295 + Y.GetHashCode();
             return hashCode;
         }
-
-        public static bool operator ==(Coordinates pt1, Coordinates pt2)
-        {
-            return pt1.Equals(pt2);
-        }
-
-        public static bool operator !=(Coordinates pt1, Coordinates pt2)
-        {
-            return !pt1.Equals(pt2);
-        }
     }
 }

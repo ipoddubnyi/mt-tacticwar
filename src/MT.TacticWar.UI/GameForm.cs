@@ -52,37 +52,53 @@ namespace MT.TacticWar.UI
             {
                 GAME = new Game(mission, plr0Name, plr1Name, plr0AI, plr1AI);
 
-                // размеры поля боя и окна
-                int oldHei = gameMap.Height; //старые координаты для центровки окна
-                int oldWid = gameMap.Width;
-
-                gameMap.Height = GAME.Mission.Map.Height * CellSize + 2;
-                gameMap.Width = GAME.Mission.Map.Width * CellSize + 2;
-
-                Height = gameMap.Height + 80;
-                Width = gameMap.Width + propertyGrid1.Width + 50;
-
-                if (oldHei != gameMap.Height)
-                    Top -= Math.Abs(oldHei - gameMap.Height + 80) / 2;
-
-                if (oldWid != gameMap.Width)
-                    Left -= Math.Abs(oldWid - gameMap.Width + 50) / 2;
-
-                // рисование карты
+                var resize = ResizeControls(GAME.Mission.Map.Width, GAME.Mission.Map.Height);
 
                 var graphics = new GameGraphics(gameMap.CreateGraphics(), CellSize);
                 GAME.InitGraphics(graphics);
 
-                // TODO: исправить двойное обновление картинки при первой загрузке
-                GAME.DrawAll();
+                if (!resize)
+                {
+                    // TODO: исправить двойное обновление картинки при первой загрузке
+                    GAME.DrawAll();
 
-                // TODO: показ брифинга
-                //MessageBox.Show(GAME.Mission.mBriefing, "Брифинг");
+                    // TODO: показ брифинга
+                    //MessageBox.Show(GAME.Mission.mBriefing, "Брифинг");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private bool ResizeControls(int mapWidth, int mapHeight)
+        {
+            int widthOld = gameMap.Width;
+            int heightOld = gameMap.Height;
+            int widthNew = mapWidth * CellSize + 2;
+            int heightNew = mapHeight * CellSize + 2;
+
+            gameMap.Width = widthNew;
+            gameMap.Height = heightNew;
+
+            bool resize = false;
+            int formWidth = gameMap.Width + propertyGrid1.Width + 50;
+            int formHeight = gameMap.Height + 80;
+            if (Width != formWidth || Height != formHeight)
+            {
+                Width = formWidth;
+                Height = formHeight;
+                resize = true;
+            }
+
+            if (heightOld != gameMap.Height)
+                Top -= Math.Abs(heightOld - gameMap.Height + 80) / 2;
+
+            if (widthOld != gameMap.Width)
+                Left -= Math.Abs(widthOld - gameMap.Width + 50) / 2;
+
+            return resize;
         }
 
         private void gameMap_MouseClick(object sender, MouseEventArgs e)
@@ -191,7 +207,7 @@ namespace MT.TacticWar.UI
 
         private void gameMap_Paint(object sender, PaintEventArgs e)
         {
-            if(GAME != null)
+            if (GAME != null)
                 GAME.DrawAll();
         }
 

@@ -246,6 +246,11 @@ namespace MT.TacticWar.Core.Serialization
                     return new CuvZRK(0);
                 case "motorized":
                     return new CuvMotopehota(0);
+
+                //
+
+                case "катер":
+                    return new Катер(0);
             }
 
             return null;

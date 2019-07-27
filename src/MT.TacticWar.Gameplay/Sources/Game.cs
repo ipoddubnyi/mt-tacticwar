@@ -30,7 +30,7 @@ namespace MT.TacticWar.Gameplay
         public IGraphics Graphics { get; private set; }
 
         //!!!! временная переменная (пока не знаю, как сделать иначе)
-        public Coordinates KrestCoords; //координаты установленного креста
+        public Coordinates cross; //координаты установленного креста
 
         public Division SelectedDivision { get; set; }
         public Building SelectedBuilding { get; set; }
@@ -43,7 +43,7 @@ namespace MT.TacticWar.Gameplay
             PlayerCurrent = 0;
 
             BestWay = new List<Cell>();
-            KrestCoords = Coordinates.Empty;
+            cross = Coordinates.Empty;
 
             SelectedDivision = null;
             SelectedBuilding = null;
@@ -55,7 +55,7 @@ namespace MT.TacticWar.Gameplay
             PlayerCurrent = 0;
 
             BestWay = new List<Cell>();
-            KrestCoords = Coordinates.Empty;
+            cross = Coordinates.Empty;
 
             SelectedDivision = null;
             SelectedBuilding = null;
@@ -116,8 +116,8 @@ namespace MT.TacticWar.Gameplay
             Graphics.DrawPlayersObjects(Mission.Players, PlayerCurrent, SelectedDivision, SelectedBuilding, fog);
 
             //нарисовать крест, если он есть
-            if (KrestCoords.X != -1)
-                Graphics.DrawCross(KrestCoords);
+            if (cross.X != -1)
+                Graphics.DrawCross(cross);
 
             /*//нарисовать путь
             if (Mission.Players[0].SelectedDivisionId != -1)
@@ -139,43 +139,19 @@ namespace MT.TacticWar.Gameplay
             int x, y;
 
             // стереть крест
-            if (KrestCoords.X != -1)
-                Graphics.DrawCellOne(Mission.Map[KrestCoords.X, KrestCoords.Y], fog);
+            if (cross.X != -1)
+            {
+                Graphics.DrawArea(Mission, cross, fog);
+            }
 
-            KrestCoords = Coordinates.Empty;
+            cross = Coordinates.Empty;
 
             // стереть проложенный путь
             if (BestWay.Count > 0)
             {
-                for (int k = 0; k < BestWay.Count; k++)
+                for (int i = 0; i < BestWay.Count; i++)
                 {
-                    x = BestWay[k].Coordinates.X;
-                    y = BestWay[k].Coordinates.Y;
-                    Graphics.DrawCellOne(Mission.Map[x, y], fog);
-                }
-
-                // перерисовать целевую клетку, включая объект
-                var target = BestWay[BestWay.Count - 1];
-                if (null != target.Object)
-                {
-                    if (target.Object is Division)
-                    {
-                        var division = target.Object as Division;
-                        x = division.Position.X;
-                        y = division.Position.Y;
-                        Graphics.DrawCellOne(Mission.Map.Field[x, y], fog);
-                        if (!fog[x, y])
-                            Graphics.DrawDivision(division, false);
-                    }
-                    else if (target.Object is Building)
-                    {
-                        var building = target.Object as Building;
-                        x = building.Position.X;
-                        y = building.Position.Y;
-                        Graphics.DrawCellOne(Mission.Map.Field[x, y], fog);
-                        if (!fog[x, y])
-                            Graphics.DrawBuilding(building, false);
-                    }
+                    Graphics.DrawArea(Mission, BestWay[i].Coordinates, fog);
                 }
 
                 BestWay.Clear();
@@ -184,14 +160,7 @@ namespace MT.TacticWar.Gameplay
             // перерисовать выделенное подразделение
             if (null != SelectedDivision)
             {
-                x = SelectedDivision.Position.X;
-                y = SelectedDivision.Position.Y;
-                Graphics.DrawCell(Mission.Map.Field[x, y]);
-
-                if (SelectedDivision.IsSecuring)
-                    Graphics.DrawBuilding(SelectedDivision.SecuredBuilding, false);
-                else
-                    Graphics.DrawDivision(SelectedDivision, false);
+                Graphics.DrawArea(Mission, SelectedDivision.Position, fog);
 
                 // TODO: сделать сохранение цели
                 // чтобы при повторном выделении юнита,
@@ -214,7 +183,7 @@ namespace MT.TacticWar.Gameplay
 
         private List<Cell> GetBestWay(Division division, Coordinates target)
         {
-            return new Bellman(Mission.Map, fog).BellmanPoiskPuti(division, target);
+            return new Bellman(Mission.Map, fog).FindPath(division, target);
         }
 
         #endregion
@@ -259,24 +228,24 @@ namespace MT.TacticWar.Gameplay
             else
             {
                 //нарисовать крест
-                KrestCoords = target.Copy();
-                Graphics.DrawCross(KrestCoords);
+                cross = target.Copy();
+                Graphics.DrawCross(cross);
             }
         }
 
         private void MoveAndDrawDivision(MoveType moveType, Coordinates target)
         {
-            //запомнить координаты выделенного юнита
+            // запомнить координаты выделенного юнита
             var positionOld = SelectedDivision.Position.Copy();
 
-            //если путь был найден
+            // если путь был найден
             if (BestWay.Count <= 1)
                 return;
 
-            //сдвинуть юнит
+            // сдвинуть юнит
             SelectedDivision.Move(BestWay);
 
-            //если юнит сместился (!)
+            // если юнит сместился (!)
             if (positionOld.Equals(SelectedDivision.Position))
                 return;
 
@@ -284,7 +253,7 @@ namespace MT.TacticWar.Gameplay
             var areaOld = fog.UpdateArea(positionOld, SelectedDivision.RadiusView, false);
             var areaNew = fog.UpdateArea(SelectedDivision.Position, SelectedDivision.RadiusView, true);
 
-            //если на старом месте нет здания - освободить старую ячейку
+            // если на старом месте нет здания - освободить старую ячейку
             var building = SelectedDivision.SecuredBuilding;
             if (null == building)
                 Mission.Map[positionOld].Object = null;

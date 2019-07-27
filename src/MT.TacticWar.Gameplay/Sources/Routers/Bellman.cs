@@ -29,14 +29,13 @@ namespace MT.TacticWar.Gameplay.Routers
             cells = new BellmanCell[map.Width, map.Height];
         }
 
-        /// <summary>[ГЛАВНАЯ] Поиск кратчайшего пути методом Беллмана
-        /// </summary>
+        /// <summary>[ГЛАВНАЯ] Поиск кратчайшего пути методом Беллмана</summary>
         /// <param name="div">подразделение, для которого ищем путь</param>
         /// <param name="flag">координаты флага (до куда ищем путь)</param>
-        public List<Cell> BellmanPoiskPuti(Division div, Coordinates flag)
+        public List<Cell> FindPath(Division div, Coordinates flag)
         {
             // инициализация
-            BellmanInitPoiskPuti(div, flag);
+            Initialize(div, flag);
 
             // если ячейка не проходима
             if (!cells[flag.X, flag.Y].Passable)
@@ -47,18 +46,16 @@ namespace MT.TacticWar.Gameplay.Routers
                 return NotFound;
 
             //стартуем с флага
-            BellmanLetsStep(flag.X, flag.Y);
+            LetsStep(flag.X, flag.Y);
 
             //выбор пути, если он найден
-            return BellmanVyborPuti();
+            return ChooseTheWay();
         }
 
-        /// <summary>Инициализация переменных перед поиском кратчайшего пути
-        /// </summary>
+        /// <summary>Инициализация переменных перед поиском кратчайшего пути</summary>
         /// <param name="div">юнит, для которого ищем путь</param>
         /// <param name="flag">координаты флага (до куда вести поиск)</param>
-        /// <returns></returns>
-        private void BellmanInitPoiskPuti(Division div, Coordinates flag)
+        private void Initialize(Division div, Coordinates flag)
         {
             this.div = div;
 
@@ -73,7 +70,7 @@ namespace MT.TacticWar.Gameplay.Routers
                     var cell = new BellmanCell(map.Field[i, j]);
 
                     //обнуляем цену у флага
-                    if (BellmanIsFlagHere(i, j))
+                    if (IsTargetHere(i, j))
                         cell.Cost = 0;
 
                     cells[i, j] = cell;
@@ -81,10 +78,8 @@ namespace MT.TacticWar.Gameplay.Routers
             }
         }
 
-        /// <summary>Обнуление направлений
-        /// </summary>
-        /// <returns></returns>
-        private void BellmanNapravlNulling()
+        /// <summary>Обнуление направлений</summary>
+        private void NullDirections()
         {
             for (int i = 0; i < map.Height; i++)
             {
@@ -95,22 +90,22 @@ namespace MT.TacticWar.Gameplay.Routers
             }
         }
 
-        private bool BellmanCanStep(int i, int j)
+        private bool CanStep(int x, int y)
         {
             //если координаты за пределами поля
-            if (i < 0 || i >= map.Width)
+            if (x < 0 || x >= map.Width)
                 return false;
 
-            if (j < 0 || j >= map.Height)
+            if (y < 0 || y >= map.Height)
                 return false;
 
-            var cell = cells[i, j];
+            var cell = cells[x, y];
 
-            //если ячейка (НЕ проходима) ИЛИ (видна И занята)
-            if (!cell.Passable || (!fog[i, j] && cell.Occupied))
+            //если ячейка (НЕ проходима) ИЛИ (занята И видна)
+            if (!cell.Passable || (cell.Occupied && !fog[x, y]))
             {
                 //если координаты не совпадают с координатами юнита
-                if (!from.Equals(i, j))
+                if (!from.Equals(x, y))
                     return false;
             }
 
@@ -121,22 +116,22 @@ namespace MT.TacticWar.Gameplay.Routers
             return true;
         }
 
-        // Есть ли смысл идти в эту ячейку?
-        private bool BellmanIsSmyslToStep(BellmanCell cell)
+        /// <summary>Есть ли смысл идти в эту ячейку?</summary>
+        private bool IsBenefitToStepTo(BellmanCell cell)
         {
             //если в эту ячейку попасть дороже, чем вообще в целом до флага,
             //  то эту ячейку можно и не рассматривать
             return cell.Cost <= cells[div.Position.X, div.Position.Y].Cost;
         }
 
-        // Проверка, есть ли флаг в этой клетке
-        private bool BellmanIsFlagHere(int x, int y)
+        /// <summary>Достигли ли цели</summary>
+        private bool IsTargetHere(int x, int y)
         {
             return to.Equals(x, y);
         }
 
-        // Рекурсивная функция, выполняющая шаги
-        private void BellmanLetsStep(int x, int y)
+        /// <summary>Рекурсивная функция, выполняющая шаги</summary>
+        private void LetsStep(int x, int y)
         {
             var cell = cells[x, y];
 
@@ -145,7 +140,7 @@ namespace MT.TacticWar.Gameplay.Routers
             int dy = y - 1;
 
             //если слева ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Left && !BellmanIsFlagHere(x, dy) && BellmanCanStep(x, dy))
+            if (!cell.Directions.Left && CanStep(x, dy) && !IsTargetHere(x, dy))
             {
                 var cellLeft = cells[x, dy];
 
@@ -164,13 +159,13 @@ namespace MT.TacticWar.Gameplay.Routers
                     cellLeft.Cost = cellLeft.PassCost + cell.Cost;
 
                     //если есть смысл шагать дальше
-                    if (BellmanIsSmyslToStep(cellLeft))
+                    if (IsBenefitToStepTo(cellLeft))
                     {
                         //меняем приоритетное направление левой ячейки на правое
                         cellLeft.Directions.Priority = 3;
 
                         //переходим к рассмотрению клетки слева
-                        BellmanLetsStep(x, dy);
+                        LetsStep(x, dy);
                     }
                 }
             }
@@ -180,7 +175,7 @@ namespace MT.TacticWar.Gameplay.Routers
             int dx = x - 1;
 
             //если сверху ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Top && !BellmanIsFlagHere(dx, y) && BellmanCanStep(dx, y))
+            if (!cell.Directions.Top && CanStep(dx, y) && !IsTargetHere(dx, y))
             {
                 var cellTop = cells[dx, y];
 
@@ -199,13 +194,13 @@ namespace MT.TacticWar.Gameplay.Routers
                     cellTop.Cost = cellTop.PassCost + cell.Cost;
 
                     //если есть смысл шагать дальше
-                    if (BellmanIsSmyslToStep(cellTop))
+                    if (IsBenefitToStepTo(cellTop))
                     {
                         //меняем приоритетное направление верхней ячейки на нижнее
                         cellTop.Directions.Priority = 4;
 
                         //переходим к рассмотрению клетки сверху
-                        BellmanLetsStep(dx, y);
+                        LetsStep(dx, y);
                     }
                 }
             }
@@ -215,7 +210,7 @@ namespace MT.TacticWar.Gameplay.Routers
             dy = y + 1;
 
             //если справа ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Right && !BellmanIsFlagHere(x, dy) && BellmanCanStep(x, dy))
+            if (!cell.Directions.Right && CanStep(x, dy) && !IsTargetHere(x, dy))
             {
                 var cellRight = cells[x, dy];
 
@@ -234,13 +229,13 @@ namespace MT.TacticWar.Gameplay.Routers
                     cellRight.Cost = cellRight.PassCost + cell.Cost;
 
                     //если есть смысл шагать дальше
-                    if (BellmanIsSmyslToStep(cellRight))
+                    if (IsBenefitToStepTo(cellRight))
                     {
                         //меняем приоритетное направление правой ячейки на левое
                         cellRight.Directions.Priority = 1;
 
                         //переходим к рассмотрению клетки справа
-                        BellmanLetsStep(x, dy);
+                        LetsStep(x, dy);
                     }
                 }
             }
@@ -250,7 +245,7 @@ namespace MT.TacticWar.Gameplay.Routers
             dx = x + 1;
 
             //если снизу ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Bottom && !BellmanIsFlagHere(dx, y) && BellmanCanStep(dx, y))
+            if (!cell.Directions.Bottom && CanStep(dx, y) && !IsTargetHere(dx, y))
             {
                 var cellBottom = cells[dx, y];
 
@@ -269,63 +264,62 @@ namespace MT.TacticWar.Gameplay.Routers
                     cellBottom.Cost = cellBottom.PassCost + cell.Cost;
 
                     //если есть смысл шагать дальше
-                    if (BellmanIsSmyslToStep(cellBottom))
+                    if (IsBenefitToStepTo(cellBottom))
                     {
                         //меняем приоритетное направление нижней ячейки на верхнее
                         cellBottom.Directions.Priority = 2;
 
                         //переходим к рассмотрению клетки снизу
-                        BellmanLetsStep(dx, y);
+                        LetsStep(dx, y);
                     }
                 }
             }
 
             //---------------------------------------------
 
-            BellmanNapravlNulling(); //обнуляем направления
+            NullDirections(); //обнуляем направления
         }
 
-        /// <summary>Выбор пути, если он есть (сохранение координат в список)
-        /// </summary>
-        /// <returns>Возвращает, есть ли путь</returns>
-        private List<Cell> BellmanVyborPuti()
+        /// <summary>Выбор пути, если он есть (сохранение координат в список)</summary>
+        private List<Cell> ChooseTheWay()
         {
             var bestWay = new List<Cell>();
             int maxCost = map.Height * map.Width;
 
-            //текущие координаты
-            var curCoords = from.Copy();
+            // текущие координаты
+            int x = from.X;
+            int y = from.Y;
 
-            //если цена в ячейке юнита = (int.MaxValue), значит, путь не найден
-            if (cells[curCoords.X, curCoords.Y].Cost >= maxCost)
+            //если цена в ячейке юнита = maxCost, значит, путь не найден
+            if (cells[x, y].Cost >= maxCost)
                 return NotFound;
 
             //запоминаем цену всего пути
-            cost = cells[curCoords.X, curCoords.Y].Cost;
+            cost = cells[x, y].Cost;
 
             //счётчик для того, чтобы не было зацикливания
             int counter = 0;
 
             //сохраняем первую координату - положение юнита
-            bestWay.Add(map.Field[curCoords.X, curCoords.Y]);
+            bestWay.Add(map.Field[x, y]);
 
             //пока не наткнёмся на флаг
-            while (!BellmanIsFlagHere(curCoords.X, curCoords.Y))
+            while (!IsTargetHere(x, y))
             {
                 //перебираем приоритетные направления
-                switch (cells[curCoords.X, curCoords.Y].Directions.Priority)
+                switch (cells[x, y].Directions.Priority)
                 {
                     case 1: //левое
-                        curCoords.Y -= 1;
+                        y -= 1;
                         break;
                     case 2: //верхнее
-                        curCoords.X -= 1;
+                        x -= 1;
                         break;
                     case 3: //правое
-                        curCoords.Y += 1;
+                        y += 1;
                         break;
                     case 4: //нижнее
-                        curCoords.X += 1;
+                        x += 1;
                         break;
                     default: //иначе - путь не найден
                         return NotFound;
@@ -333,7 +327,7 @@ namespace MT.TacticWar.Gameplay.Routers
                 }
 
                 //сохраняем следующую координату
-                bestWay.Add(map.Field[curCoords.X, curCoords.Y]);
+                bestWay.Add(map.Field[x, y]);
 
                 //если счётчик итераций больше возможного числа ходов, то пути нет
                 if (++counter > maxCost) return NotFound;

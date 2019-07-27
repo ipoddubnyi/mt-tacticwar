@@ -11,7 +11,7 @@ namespace MT.TacticWar.Gameplay
 
         void DrawMap(Map map);
 
-        void DrawArea(Map map, Coordinates[] area, Fog fog);
+        void DrawArea(Mission mission, Coordinates area, Fog fog);
 
         void DrawArea(Mission mission, Coordinates[] area, Fog fog);
 

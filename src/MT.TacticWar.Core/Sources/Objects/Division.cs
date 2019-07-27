@@ -55,28 +55,25 @@ namespace MT.TacticWar.Core.Objects
         /// <param name="way">Путь, по которому продвигать</param>
         public void Move(List<Cell> way)
         {
-            //просчитать путь для юнита на один день (для рисования на карте)
-            //Cell[] tmpArr = new Cell[put.Count];
-            //put.CopyTo(tmpArr);
-            var tmpArr = new List<Cell>(way);
-            var oneday = GetOneDayWay(tmpArr);
-
-            //бежим по точкам пути
-            for (int k = 0; k < (oneday.Count - 1); k++)
+            Coordinates last = null;
+            foreach (var cell in way)
             {
-                Steps -= oneday[k].PassCost;
+                last = cell.Coordinates;
+                Steps -= cell.PassCost;
 
-                //если юниту хватает шагов, чтобы пройти по данной ячейке
-                //if (Steps < 0)
-                //    k = put.Count; //иначе - завершаем цикл
+                if (cell.Occupied && !cell.Coordinates.Equals(Position))
+                    break;
+
+                if (Steps < 0)
+                    break;
             }
 
-            var dayTarget = oneday.Last().Coordinates.Copy();
-            Position = dayTarget.Copy();
+            if (null != last)
+                Position = last.Copy();
         }
 
         // Получить часть пути, которую юнит пройдёт за один день
-        private List<Cell> GetOneDayWay(List<Cell> wayall)
+        public List<Cell> GetOneDayWay(List<Cell> wayall)
         {
             int index = GetOneDayIndex(wayall);
             return wayall.GetRange(0, index + 1);
@@ -84,16 +81,16 @@ namespace MT.TacticWar.Core.Objects
 
         public int GetOneDayIndex(List<Cell> wayall)
         {
-            int curSteps = Steps; //шаги в текущем ходе
+            int curSteps = Steps; // шаги в текущем ходе
             int index = 0;
 
             for (int i = 0; i < wayall.Count; i++)
             {
-                //если юниту не хватает шагов, чтобы пройти по данной ячейке
+                // если юниту не хватает шагов, чтобы пройти по данной ячейке
                 if (curSteps < 0)
                     break;
 
-                index = i; //запоминаем ячейку по списку
+                index = i; // запоминаем ячейку по списку
                 curSteps -= wayall[i].PassCost;
             }
 
