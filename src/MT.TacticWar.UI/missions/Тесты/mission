@@ -290,4 +290,43 @@
             </unit>
         </units>
     </types>
+    
+    <scripts>
+        <!--script>
+            <condition subjtype="player" subj="0" v="unitcount" value="0" />
+            <action type="gameover" c="win" value="1" />
+        </script>
+        <script>
+            <condition subjtype="unit" subj="10" v="in" c="zone" value="20" />
+            <action type="gameover" c="win" value="1" />
+        </script-->
+
+        <!--script desc="Сообщение">
+            <condition type="unitcount">
+                <argument comment="player">0</argument>
+                <argument comment="count">0</argument>
+            </condition>
+            <statement type="message">
+                <argument comment="text">Победа!</argument>
+            </statement>
+        </script-->
+        <script desc="Победа игрока 1">
+            <condition type="unitcount">
+                <argument comment="player">0</argument>
+                <argument comment="count">0</argument>
+            </condition>
+            <statement type="gameover">
+                <argument comment="winner">1</argument>
+            </statement>
+        </script>
+        <!--script desc="Игрок 0 достиг зоны 10">
+            <condition type="playerinzone">
+                <argument comment="player">0</argument>
+                <argument comment="zone">10</argument>
+            </condition>
+            <statement type="gameover">
+                <argument comment="winner">0</argument>
+            </statement>
+        </script-->
+    </scripts>
 </mission>

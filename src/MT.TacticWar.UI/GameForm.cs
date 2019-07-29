@@ -17,13 +17,56 @@ namespace MT.TacticWar.UI
 {
     public partial class GameForm : Form
     {
+        private Game GAME;
+        private const int CellSize = 21;
+        private bool gameloaded = false;
+
         public GameForm()
         {
             InitializeComponent();
         }        
 
-        private Game GAME;
-        private const int CellSize = 21;
+        private void RunStateFormLoaded()
+        {
+            gameMap.Enabled = false;
+            btnEndStep.Enabled = false;
+            gameloaded = false;
+            DrawString(gameMap.CreateGraphics(), "Игра окончена", gameMap.Width / 2, gameMap.Height / 2);
+        }
+
+        private void RunStateMissionLoaded()
+        {
+            gameMap.Enabled = true;
+            btnEndStep.Enabled = true;
+        }
+
+        private void DrawString(Graphics grf, string text, float x, float y)
+        {
+            using (var drawFont = new Font("Consolas", 10))
+            {
+                var stringSize = grf.MeasureString(text, drawFont);
+                var width = stringSize.Width;
+                var height = stringSize.Height;
+                x -= width / 2;
+                y -= height / 2;
+
+                var rect = new RectangleF(x, y, width, height);
+                using (var brush = new SolidBrush(Color.LightGray))
+                {
+                    grf.FillRectangle(brush, rect);
+                }
+                using (var brush = new SolidBrush(Color.Black))
+                {
+                    grf.DrawString(text, drawFont, brush, rect);
+                }
+            }
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            //button3_Click(null, null);
+            RunStateFormLoaded();
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -42,6 +85,7 @@ namespace MT.TacticWar.UI
                     listInfoUnits.Items.Clear();
                     //StartSimulator(mission, dialog.Player1Name, dialog.Player2Name, dialog.Player1AI, dialog.Player2AI);
                     StartSimulator(mission, "", "", false, false);
+                    RunStateMissionLoaded();
                 }
             }
         }
@@ -56,14 +100,14 @@ namespace MT.TacticWar.UI
 
                 var graphics = new GameGraphics(gameMap.CreateGraphics(), CellSize);
                 GAME.InitGraphics(graphics);
+                var interaction = new GameInteration();
+                GAME.InitInteraction(interaction);
 
-                if (!resize)
+                //if (!resize)
                 {
                     // TODO: исправить двойное обновление картинки при первой загрузке
-                    GAME.DrawAll();
-
-                    // TODO: показ брифинга
-                    //MessageBox.Show(GAME.Mission.mBriefing, "Брифинг");
+                    GAME.Start();
+                    gameloaded = true;
                 }
             }
             catch (Exception ex)
@@ -111,20 +155,8 @@ namespace MT.TacticWar.UI
             }
             else
             {
-                Signal signal;
-
-                signal = GAME.ZonaClick(e.X, e.Y);
-
-                //если собрана информация о юните
-                switch (signal)
-                {
-                    case Signal.READY_UNIT_INFO:
-                        ShowSelectedObjectInfo();
-                        break;
-                    case Signal.ATTACK:
-                        BattleDivisionVsDivision();
-                        break;
-                }
+                var signal = GAME.ZonaClick(e.X, e.Y);
+                AnalizeSignals(signal);
             }
         }
 
@@ -207,13 +239,8 @@ namespace MT.TacticWar.UI
 
         private void gameMap_Paint(object sender, PaintEventArgs e)
         {
-            if (GAME != null)
+            if (gameloaded)
                 GAME.DrawAll();
-        }
-
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            //button3_Click(null, null);
         }
 
         //Меню - Миссия - Загрузить
@@ -240,17 +267,40 @@ namespace MT.TacticWar.UI
 
             if (ans == DialogResult.Yes)
             {
-                gameMap.Visible = false;
-                GAME.PassStep();
+                var signal = GAME.AnalizeSituation();
+                if (!AnalizeSignals(signal))
+                {
+                    gameMap.Visible = false;
+                    GAME.EndStep();
 
-                MessageBox.Show(
-                    $"Ход игрока {GAME.PlayerCurrent}",
-                    "Начало хода",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        $"Ход игрока {GAME.PlayerCurrent}",
+                        "Начало хода",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
-                gameMap.Visible = true;
+                    gameMap.Visible = true;
+                }
             }
+        }
+
+        private bool AnalizeSignals(Signal signal)
+        {
+            bool gamestop = false;
+            switch (signal)
+            {
+                case Signal.READY_UNIT_INFO:
+                    ShowSelectedObjectInfo();
+                    break;
+                case Signal.ATTACK:
+                    BattleDivisionVsDivision();
+                    break;
+                case Signal.GAMEOVER:
+                    RunStateFormLoaded();
+                    gamestop = true;
+                    break;
+            }
+            return gamestop;
         }
     }
 }

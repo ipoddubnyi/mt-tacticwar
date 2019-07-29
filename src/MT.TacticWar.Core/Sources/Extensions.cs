@@ -46,25 +46,6 @@ namespace MT.TacticWar.Core
             throw new Exception("Неизвестный тип строения.");
         }
 
-        public static string AsString(this UnitLevel level)
-        {
-            switch (level)
-            {
-                case UnitLevel.None:
-                    return "";
-                case UnitLevel.Recruit:
-                    return "Новобранец";
-                case UnitLevel.Warrior:
-                    return "Воин";
-                case UnitLevel.Veteran:
-                    return "Ветеран";
-                case UnitLevel.Hero:
-                    return "Герой";
-            }
-
-            throw new Exception("Неизвестный уровень.");
-        }
-
         public static string AsString(this MissionMode mode)
         {
             switch (mode)

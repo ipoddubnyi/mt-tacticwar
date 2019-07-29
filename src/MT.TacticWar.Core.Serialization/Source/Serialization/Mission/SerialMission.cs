@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
 {
+    [Serializable]
     [XmlRoot("mission")]
     public class SerialMission
     {
@@ -15,6 +17,15 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlElement("types")]
         public SerialMissionTypes Types { get; set; }
+
+        [XmlArray("scripts")]
+        [XmlArrayItem("script")]
+        public SerialScript[] Scripts { get; set; }
+
+        public SerialMission()
+        {
+            Scripts = new SerialScript[0];
+        }
 
         public static void Serialize(string filePath, SerialMission mission)
         {

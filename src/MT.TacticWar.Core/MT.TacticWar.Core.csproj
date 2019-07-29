@@ -48,6 +48,7 @@
     <Compile Include="Sources\Common\MoveType.cs" />
     <Compile Include="Sources\Common\Gate.cs" />
     <Compile Include="Sources\Missions\MissionManage.cs" />
+    <Compile Include="Sources\Scripts\ISituation.cs" />
     <Compile Include="Sources\Missions\MissionStatus.cs" />
     <Compile Include="Sources\Landscape\Cell.cs" />
     <Compile Include="Sources\Landscape\Map.cs" />
@@ -57,7 +58,6 @@
     <Compile Include="Sources\Missions\MissionMode.cs" />
     <Compile Include="Sources\Objects\BuildingType.cs" />
     <Compile Include="Sources\Objects\DivisionType.cs" />
-    <Compile Include="Sources\Objects\UnitLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\Players\PlayerColor.cs" />
     <Compile Include="Sources\Players\PlayerIntelligence.cs" />
@@ -67,7 +67,9 @@
     <Compile Include="Sources\Player.cs" />
     <Compile Include="Sources\Objects\IObject.cs" />
     <Compile Include="Sources\Objects\Unit.cs" />
-    <Compile Include="Sources\Objects\UnitCollection.cs" />
+    <Compile Include="Sources\Scripts\IStatement.cs" />
+    <Compile Include="Sources\Scripts\ICondition.cs" />
+    <Compile Include="Sources\Scripts\Script.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

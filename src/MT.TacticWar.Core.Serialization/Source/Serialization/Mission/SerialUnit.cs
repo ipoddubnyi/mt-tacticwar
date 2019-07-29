@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Serialization
 {
+    [Serializable]
     public class SerialUnit
     {
         [XmlAttribute("id")]

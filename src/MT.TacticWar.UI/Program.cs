@@ -23,7 +23,7 @@ namespace MT.TacticWar.UI
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Произошла критическая ошибка.",
+                    "Произошла критическая ошибка. " + ex.Message,
                     "Ошибка",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);

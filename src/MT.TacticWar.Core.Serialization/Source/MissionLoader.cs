@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MT.TacticWar.Core.Base.Scripts;
+using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Players;
+using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Serialization
 {
@@ -109,11 +112,13 @@ namespace MT.TacticWar.Core.Serialization
             var mis = SerialMission.Deserialize(filePath);
 
             var players = LoadMissionPlayers(mis);
+            var scripts = LoadMissionScripts(mis);
             return new Mission(
                 mis.Info.Name,
                 MissionTextTrim(mis.Info.Description),
                 (MissionMode)mis.Info.Mode,
                 players,
+                scripts,
                 map
             );
         }
@@ -157,7 +162,7 @@ namespace MT.TacticWar.Core.Serialization
                 var units = new List<Unit>();
                 foreach (var un in div.Units)
                 {
-                    units.Add(CreateUnit(un, types));
+                    units.Add(CreateUnit(div.Type, un, types));
                 }
 
                 divisions.Add(new Division(
@@ -210,61 +215,43 @@ namespace MT.TacticWar.Core.Serialization
             return gates;
         }
 
-        private static Unit CreateUnit(SerialUnit u, SerialMissionTypes types)
+        private static Unit CreateUnit(int divisionType, SerialUnit u, SerialMissionTypes types)
         {
-            var unit = CreateUnitByBaseType(u.Type);
+            var unit = UnitFactory.CreateUnit((DivisionType)divisionType, u.Type);
             if (null != unit)
                 return u.Update(unit);
 
-            unit = CreateUnitByCustomType(u.Type, types);
+            unit = CreateUnitByCustomType(divisionType, u.Type, types);
             if (null != unit)
                 return u.Update(unit);
 
             throw new Exception($"Неизвестный тип юнита {u.Type}");
         }
 
-        private static Unit CreateUnitByBaseType(string type)
+        private static Unit CreateUnitByCustomType(int divisionType, string type, SerialMissionTypes types)
         {
-            switch (type)
+            foreach (var unittype in types.Units)
             {
-                case "soldier":
-                    return new CuiSoldiers(0);
-                case "saboteur":
-                    return new CuiDiversionGroup(0);
-                case "igor":
-                    return new CuiPoddubnyy(0);
-                case "partizan":
-                    return new CuiPartizans(0);
-
-                //
-
-                case "tank":
-                    return new CuvTankMiddle(0);
-                case "tankheavy":
-                    return new CuvTankHeavy(0);
-                case "antiair":
-                    return new CuvZRK(0);
-                case "motorized":
-                    return new CuvMotopehota(0);
-
-                //
-
-                case "катер":
-                    return new Катер(0);
+                if (unittype.DivisionType.Equals(divisionType) && unittype.Type.Equals(type))
+                    return unittype.Create();
             }
 
             return null;
         }
 
-        private static Unit CreateUnitByCustomType(string type, SerialMissionTypes types)
+        private static Script[] LoadMissionScripts(SerialMission mis)
         {
-            foreach (var unittype in types.Units)
+            var scripts = new List<Script>();
+            foreach (var sc in mis.Scripts)
             {
-                if (unittype.Type.Equals(type))
-                    return unittype.Create();
+                var script = new Script(
+                    ScriptFactory.CreateCondition(sc.Condition.Type, sc.Condition.GetArguments()),
+                    ScriptFactory.CreateStatement(sc.Statement.Type, sc.Statement.GetArguments())
+                );
+                scripts.Add(script);
             }
 
-            return null;
+            return scripts.ToArray();
         }
     }
 }

@@ -31,7 +31,6 @@
             this.gameMap = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMission = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMisLoad = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,6 +38,7 @@
             this.listInfoUnits = new System.Windows.Forms.ListBox();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.btnEndStep = new System.Windows.Forms.Button();
+            this.menuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,8 +69,8 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuFile,
             this.menuMission,
+            this.menuOptions,
             this.menuHelp});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -79,24 +79,18 @@
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "Помощь";
             // 
-            // menuFile
-            // 
-            this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(57, 24);
-            this.menuFile.Text = "Файл";
-            // 
             // menuMission
             // 
             this.menuMission.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuMisLoad});
             this.menuMission.Name = "menuMission";
-            this.menuMission.Size = new System.Drawing.Size(74, 24);
+            this.menuMission.Size = new System.Drawing.Size(76, 24);
             this.menuMission.Text = "Миссия";
             // 
             // menuMisLoad
             // 
             this.menuMisLoad.Name = "menuMisLoad";
-            this.menuMisLoad.Size = new System.Drawing.Size(152, 26);
+            this.menuMisLoad.Size = new System.Drawing.Size(160, 26);
             this.menuMisLoad.Text = "Загрузить";
             this.menuMisLoad.Click += new System.EventHandler(this.menuMisLoad_Click);
             // 
@@ -106,12 +100,12 @@
             this.menuHlpAbout});
             this.menuHelp.Name = "menuHelp";
             this.menuHelp.Size = new System.Drawing.Size(81, 24);
-            this.menuHelp.Text = "Помощь";
+            this.menuHelp.Text = "Справка";
             // 
             // menuHlpAbout
             // 
             this.menuHlpAbout.Name = "menuHlpAbout";
-            this.menuHlpAbout.Size = new System.Drawing.Size(140, 26);
+            this.menuHlpAbout.Size = new System.Drawing.Size(148, 26);
             this.menuHlpAbout.Text = "Об игре";
             // 
             // listInfoUnits
@@ -146,6 +140,12 @@
             this.btnEndStep.UseVisualStyleBackColor = true;
             this.btnEndStep.Click += new System.EventHandler(this.BtnEndStep_Click);
             // 
+            // menuOptions
+            // 
+            this.menuOptions.Name = "menuOptions";
+            this.menuOptions.Size = new System.Drawing.Size(98, 24);
+            this.menuOptions.Text = "Настройки";
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -177,7 +177,6 @@
         private System.Windows.Forms.Panel gameMap;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem menuFile;
         private System.Windows.Forms.ListBox listInfoUnits;
         private System.Windows.Forms.ToolStripMenuItem menuMission;
         private System.Windows.Forms.ToolStripMenuItem menuMisLoad;
@@ -185,6 +184,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuHlpAbout;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.Button btnEndStep;
+        private System.Windows.Forms.ToolStripMenuItem menuOptions;
     }
 }
 

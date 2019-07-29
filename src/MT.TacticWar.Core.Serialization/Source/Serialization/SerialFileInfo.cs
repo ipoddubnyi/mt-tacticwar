@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
 {
+    [Serializable]
     [XmlRoot("info")]
     public class SerialFileInfo
     {

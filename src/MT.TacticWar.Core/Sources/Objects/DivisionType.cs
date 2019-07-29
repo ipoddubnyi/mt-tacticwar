@@ -4,7 +4,7 @@ namespace MT.TacticWar.Core.Objects
     public enum DivisionType
     {
         /// <summary>
-        /// Отделение пехоты.
+        /// Пехота.
         /// </summary>
         Infantry,
 

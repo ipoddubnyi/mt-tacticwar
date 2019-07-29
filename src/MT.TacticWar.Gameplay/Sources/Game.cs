@@ -4,6 +4,7 @@ using MT.TacticWar.Core;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Serialization;
+using MT.TacticWar.Core.Base.Scripts;
 using MT.TacticWar.Gameplay.Routers;
 using MT.TacticWar.Gameplay.Battles;
 
@@ -28,6 +29,7 @@ namespace MT.TacticWar.Gameplay
         public BattleInfo AttackInfo;
         // - графика (где рисуется поле боя)
         public IGraphics Graphics { get; private set; }
+        public IInteraction Interaction { get; private set; }
 
         //!!!! временная переменная (пока не знаю, как сделать иначе)
         public Coordinates cross; //координаты установленного креста
@@ -66,7 +68,41 @@ namespace MT.TacticWar.Gameplay
             Graphics = graphics;
         }
 
-        public void PassStep()
+        public void InitInteraction(IInteraction interaction)
+        {
+            Interaction = interaction;
+        }
+
+        public void Start()
+        {
+            DrawAll();
+
+            // TODO: показ брифинга
+            //Interaction.ShowMessage(Mission.Briefing, "Брифинг");
+        }
+
+        public Signal AnalizeSituation()
+        {
+            Mission.RunScripts();
+            foreach (var situation in Mission.Situations)
+            {
+                if (situation is GameOverSituation)
+                {
+                    var winner = (situation as GameOverSituation).Winner;
+                    Interaction.ShowMessage($"Игра окончена. Победил игрок {winner.Name}");
+                    return Signal.GAMEOVER;
+                }
+                else if (situation is MessageSituation)
+                {
+                    var text = (situation as MessageSituation).Text;
+                    Interaction.ShowMessage(text);
+                }
+            }
+
+            return Signal.SUCCESS;
+        }
+
+        public void EndStep()
         {
             DeselectAll();
             PlayerCurrent = (PlayerCurrent + 1) % Mission.Players.Length;

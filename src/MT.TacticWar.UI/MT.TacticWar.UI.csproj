@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="Sources\DivisionInfo.cs" />
     <Compile Include="Sources\GameGraphics.cs" />
+    <Compile Include="Sources\GameInteration.cs" />
     <EmbeddedResource Include="GameForm.resx">
       <DependentUpon>GameForm.cs</DependentUpon>
     </EmbeddedResource>

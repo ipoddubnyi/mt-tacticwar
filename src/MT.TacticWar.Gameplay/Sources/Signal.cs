@@ -34,6 +34,8 @@ namespace MT.TacticWar.Gameplay
         /// <summary>
         /// Индексы вне границ массива.
         /// </summary>
-        OUT_OF_RANGE = 5
+        OUT_OF_RANGE = 5,
+
+        GAMEOVER = 100
     }
 }

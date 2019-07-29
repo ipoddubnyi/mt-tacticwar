@@ -1,5 +1,7 @@
-﻿using MT.TacticWar.Core.Landscape;
+﻿using System.Collections.Generic;
+using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
+using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core
 {
@@ -8,18 +10,22 @@ namespace MT.TacticWar.Core
         public string Name { get; private set; }
         public string Briefing { get; private set; }
         public MissionMode Mode { get; private set; }
-        public Map Map { get; private set; }
         public Player[] Players { get; private set; }
+        public Script[] Scripts { get; private set; }
+        public Map Map { get; private set; }
+        public List<ISituation> Situations { get; private set; }
 
         //private MissionManage manage;
 
-        public Mission(string name, string briefing, MissionMode mode, Player[] players, Map map)
+        public Mission(string name, string briefing, MissionMode mode, Player[] players, Script[] scripts, Map map)
         {
             Name = name;
             Briefing = briefing;
             Mode = mode;
             Players = players;
+            Scripts = scripts;
             Map = map;
+            Situations = new List<ISituation>();
 
             Map.OccupateCells(Players);
         }
@@ -77,6 +83,27 @@ namespace MT.TacticWar.Core
             }
 
             return null;
+        }
+
+        public void ClearSituation()
+        {
+            Situations.Clear();
+        }
+
+        public void AddSituation(ISituation situation)
+        {
+            Situations.Add(situation);
+        }
+
+        public void RunScripts()
+        {
+            ClearSituation();
+
+            foreach (var script in Scripts)
+            {
+                if (script.Condition.Check(this))
+                    script.Statement.Run(this);
+            }
         }
     }
 }
