@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Scripts;
 using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Landscape;
@@ -159,21 +160,23 @@ namespace MT.TacticWar.Core.Serialization
             var divisions = new List<Division>();
             foreach (var div in pl.Divisions)
             {
+                var division = ObjectFactory.CreateDivision(
+                    div.Type,
+                    player,
+                    div.Id,
+                    div.Name,
+                    div.Position.X,
+                    div.Position.Y
+                );
+
                 var units = new List<Unit>();
                 foreach (var un in div.Units)
                 {
-                    units.Add(CreateUnit(div.Type, un, types));
+                    units.Add(CreateUnit(division, un, types));
                 }
 
-                divisions.Add(new Division(
-                    player,
-                    div.Id,
-                    div.Type,
-                    div.Name,
-                    div.Position.X,
-                    div.Position.Y,
-                    units
-                ));
+                division.AddUnits(units);
+                divisions.Add(division);
             }
 
             return divisions;
@@ -188,10 +191,10 @@ namespace MT.TacticWar.Core.Serialization
                     player.Divisions.GetById(bld.Security.Value) :
                     null;
 
-                buildings.Add(new Building(
+                buildings.Add(ObjectFactory.CreateBuilding(
+                    bld.Type,
                     player,
                     bld.Id,
-                    bld.Type,
                     bld.Name,
                     bld.Position.X,
                     bld.Position.Y,
@@ -215,25 +218,25 @@ namespace MT.TacticWar.Core.Serialization
             return gates;
         }
 
-        private static Unit CreateUnit(int divisionType, SerialUnit u, SerialMissionTypes types)
+        private static Unit CreateUnit(Division division, SerialUnit u, SerialMissionTypes types)
         {
-            var unit = UnitFactory.CreateUnit((DivisionType)divisionType, u.Type);
+            var unit = UnitFactory.CreateUnit(division, u.Type);
             if (null != unit)
                 return u.Update(unit);
 
-            unit = CreateUnitByCustomType(divisionType, u.Type, types);
+            unit = CreateUnitByCustomType(division, u.Type, types);
             if (null != unit)
                 return u.Update(unit);
 
             throw new Exception($"Неизвестный тип юнита {u.Type}");
         }
 
-        private static Unit CreateUnitByCustomType(int divisionType, string type, SerialMissionTypes types)
+        private static Unit CreateUnitByCustomType(Division division, string type, SerialMissionTypes types)
         {
             foreach (var unittype in types.Units)
             {
-                if (unittype.DivisionType.Equals(divisionType) && unittype.Type.Equals(type))
-                    return unittype.Create();
+                if (unittype.CompareDivisionType(division) && unittype.Type.Equals(type))
+                    return unittype.Create(division);
             }
 
             return null;

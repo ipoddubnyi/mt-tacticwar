@@ -21,13 +21,16 @@ namespace MT.TacticWar.Gameplay.Battles
 
         public BattleResult Run(Division div1, Division div2, List<Division> support1, List<Division> support2)
         {
-            var rand = new Random(Guid.NewGuid().GetHashCode());
+            //var rand = new Random(Guid.NewGuid().GetHashCode());
 
             int elem;
             int indUnit1, indUnit2;
 
             Unit sui1, sui2;
             bool elem1_none_supl = false; //если у нападающего кончатся патроны
+
+            var cell1 = map[div1.Position];
+            var cell2 = map[div2.Position];
 
             //пока есть юниты в обоих подразделениях
             while ((div1.Units.Count > 0) && (div2.Units.Count > 0))
@@ -49,7 +52,7 @@ namespace MT.TacticWar.Gameplay.Battles
                     //атакуем
                     sui1 = div1.Units[indUnit1];
                     sui2 = div2.Units[indUnit2];
-                    UnitVsUnit(ref sui1, ref sui2);
+                    UnitVsUnit(sui1, sui2, cell1, cell2);
                     div1.Units[indUnit1] = sui1;
                     div2.Units[indUnit2] = sui2;
                 }
@@ -64,7 +67,7 @@ namespace MT.TacticWar.Gameplay.Battles
                     //атакуем
                     sui1 = support1[elem - 1].Units[indUnit1];
                     sui2 = div2.Units[indUnit2];
-                    UnitVsUnit(ref sui1, ref sui2);
+                    UnitVsUnit(sui1, sui2, cell1, cell2);
                     support1[elem - 1].Units[indUnit1] = sui1;
                     div2.Units[indUnit2] = sui2;
                 }
@@ -94,7 +97,7 @@ namespace MT.TacticWar.Gameplay.Battles
                     //атакуем
                     sui1 = div2.Units[indUnit2];
                     sui2 = div1.Units[indUnit1];
-                    UnitVsUnit(ref sui1, ref sui2);
+                    UnitVsUnit(sui1, sui2, cell1, cell2);
                     div2.Units[indUnit2] = sui1;
                     div1.Units[indUnit1] = sui2;
                 }
@@ -109,7 +112,7 @@ namespace MT.TacticWar.Gameplay.Battles
                     //атакуем
                     sui1 = support2[elem - 1].Units[indUnit2];
                     sui2 = div1.Units[indUnit1];
-                    UnitVsUnit(ref sui1, ref sui2);
+                    UnitVsUnit(sui1, sui2, cell1, cell2);
                     support2[elem - 1].Units[indUnit2] = sui1;
                     div1.Units[indUnit1] = sui2;
                 }
@@ -180,14 +183,14 @@ namespace MT.TacticWar.Gameplay.Battles
         }
 
         // Считаем защиту юнита
-        private void UnitVsUnit(ref Unit unit1, ref Unit unit2)
+        private void UnitVsUnit(Unit unit1, Unit unit2, Cell cell1, Cell cell2)
         {
             // power = power * (rand * (1 - exp) + exp)
             // если опыт 1, power будет максимальным
             // если опыт 0, power будет полностью зависеть от rand
 
-            var power = GetUnitPower(unit1, unit2.DivisionType);
-            var armour = GetUnitArmour(unit2, unit1.DivisionType);
+            var power = GetUnitPower(unit1, unit2.Division, cell1);
+            var armour = GetUnitArmour(unit2, unit1.Division, cell2);
 
             // подсчёт повреждения
             var wound = power - armour;
@@ -201,10 +204,10 @@ namespace MT.TacticWar.Gameplay.Battles
             if (unit2.Health < 0) unit2.Health = 0;
         }
 
-        private double GetUnitPower(Unit unit, DivisionType enemyType)
+        private double GetUnitPower(Unit unit, Division enemy, Cell cell)
         {
             // мощь атаки в зависимости от типа противника
-            var power = (double)unit.GetPowerAnti(enemyType);
+            var power = (double)(unit.GetPowerAnti(enemy) + unit.GetPowerBonus(cell));
 
             // коэффициент опыта
             var exp = unit.Experience / 100.0;
@@ -219,10 +222,10 @@ namespace MT.TacticWar.Gameplay.Battles
             return power;
         }
 
-        private double GetUnitArmour(Unit unit, DivisionType enemyType)
+        private double GetUnitArmour(Unit unit, Division enemy, Cell cell)
         {
             // защита юнита в зависимости от типа противника
-            var armour = (double)unit.GetArmourFrom(enemyType);
+            var armour = (double)(unit.GetArmourFrom(enemy) + unit.GetArmourBonus(cell));
 
             // коэффициент опыта
             var exp = unit.Experience / 100.0;

@@ -4,13 +4,13 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class AntiAir : Unit
     {
-        public AntiAir()
+        public AntiAir(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Vehicle;
+            //подразделение
+            Division = division;
             //имя
             Name = "ЗРК";
             //цена юнита
@@ -30,6 +30,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 30;
             //общая защита от любой техники
             ArmourFromTank = 15;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 1000;
             //число патронов и снарядов
             Supply = 1000;
 

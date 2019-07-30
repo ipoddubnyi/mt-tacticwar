@@ -4,13 +4,13 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Igor : Unit
     {
-        public Igor()
+        public Igor(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Infantry;
+            //подразделение
+            Division = division;
             //имя
             Name = "Лейтенант";
             //цена юнита
@@ -30,6 +30,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 80;
             //общая защита от любой техники
             ArmourFromTank = 80;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 1500;
             //число патронов и снарядов
             Supply = 1500;
 

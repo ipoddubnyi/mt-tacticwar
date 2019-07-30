@@ -4,13 +4,13 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class TankMiddle : Unit
     {
-        public TankMiddle()
+        public TankMiddle(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Vehicle;
+            //подразделение
+            Division = division;
             //имя
             Name = "Средний танк";
             //цена юнита
@@ -30,6 +30,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 80;
             //общая защита от любой техники
             ArmourFromTank = 50;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 1500;
             //число патронов и снарядов
             Supply = 1500;
 

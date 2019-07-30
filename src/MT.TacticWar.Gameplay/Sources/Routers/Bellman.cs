@@ -42,7 +42,7 @@ namespace MT.TacticWar.Gameplay.Routers
                 return NotFound;
 
             // если юнит не может пройти по ячейке
-            if (!div.CanStep(cells[flag.X, flag.Y].Type))
+            if (!div.CanStop(cells[flag.X, flag.Y].Base))
                 return NotFound;
 
             //стартуем с флага
@@ -110,7 +110,7 @@ namespace MT.TacticWar.Gameplay.Routers
             }
 
             // если юнит не может пройти по ячейке
-            if (!div.CanStep(cell.Type))
+            if (!div.CanStep(cell.Base))
                 return false;
 
             return true;

@@ -24,35 +24,35 @@
     <players>
         <player id="0" name="Игрок 1" team="1" color="1" rank="0" money="50000" ai="false">
             <divisions>
-                <division id="0" name="Взвод пехоты" type="0">
+                <division id="0" type="infantry" name="Взвод пехоты">
                     <position x="3" y="19" />
                     <units>
                         <unit type="soldier" />
                     </units>
                 </division>
 
-                <division id="1" name="Ударная танковая группа" type="1">
+                <division id="1" type="vehicle" name="Ударная танковая группа">
                     <position x="8" y="20" />
                     <units>
                         <unit type="tank" />
                     </units>
                 </division>
 
-                <division id="2" name="Штурмовая танковая группа" type="1">
+                <division id="2" type="vehicle" name="Штурмовая танковая группа">
                     <position x="8" y="22" />
                     <units>
                         <unit type="tank" />
                     </units>
                 </division>
 
-                <division id="3" name="Штурмовая танковая группа" type="1">
+                <division id="3" type="vehicle" name="Штурмовая танковая группа">
                     <position x="14" y="19" />
                     <units>
                         <unit type="tank" />
                     </units>
                 </division>
                 
-                <division id="4" name="Взвод пехоты 2" type="0">
+                <division id="4" type="infantry" name="Взвод пехоты 2">
                     <position x="15" y="19" />
                     <units>
                         <unit type="soldier" />
@@ -61,14 +61,14 @@
             </divisions>
 
             <buildings>
-                <building id="0" name="Склад 1" type="2">
+                <building id="0" type="storehouse" name="Склад 1">
                     <position x="13" y="19" />
                     <health>100</health>
                     <radius>0</radius>
                     <view>1</view>
                 </building>
 
-                <building id="1" name="Завод 1" type="0">
+                <building id="1" type="factory" name="Завод 1">
                     <position x="14" y="19" />
                     <health>100</health>
                     <radius>0</radius>
@@ -76,7 +76,7 @@
                     <security>3</security>
                 </building>
                 
-                <building id="2" name="Казармы 1" type="1">
+                <building id="2" type="barracks" name="Казармы 1">
                     <position x="15" y="19" />
                     <health>100</health>
                     <radius>0</radius>
@@ -84,7 +84,7 @@
                     <security>4</security>
                 </building>
 
-                <building id="3" name="Склад 2" type="2">
+                <building id="3" type="storehouse" name="Склад 2">
                     <position x="3" y="19" />
                     <health>100</health>
                     <radius>0</radius>
@@ -100,28 +100,28 @@
 
         <player id="1" name="Игрок 2" team="1" color="1" rank="0" money="50000" ai="true">
             <divisions>
-                <division id="0" name="Взвод пехоты 1" type="0">
+                <division id="0" type="infantry" name="Взвод пехоты 1">
                     <position x="3" y="5" />
                     <units>
                         <unit type="soldier" />
                     </units>
                 </division>
 
-                <division id="1" name="Разведгруппа" type="0">
+                <division id="1" type="infantry" name="Разведгруппа">
                     <position x="15" y="2" />
                     <units>
                         <unit type="saboteur" />
                     </units>
                 </division>
 
-                <division id="2" name="Взвод мотопехоты 2" type="0">
+                <division id="2" type="vehicle" name="Взвод мотопехоты 2">
                     <position x="23" y="5" />
                     <units>
                         <unit type="motorized" />
                     </units>
                 </division>
 
-                <division id="3" name="Танковая группа 1" type="1">
+                <division id="3" type="vehicle" name="Танковая группа 1">
                     <position x="8" y="5" />
                     <units>
                         <unit type="tank" />
@@ -129,7 +129,7 @@
                     </units>
                 </division>
 
-                <division id="4" name="Танковая группа 2" type="1">
+                <division id="4" type="vehicle" name="Танковая группа 2">
                     <position x="3" y="1" />
                     <units>
                         <unit type="tank" />
@@ -139,7 +139,7 @@
             </divisions>
 
             <buildings>
-                <building id="0" name="Завод" type="0">
+                <building id="0" type="factory" name="Завод">
                     <position x="3" y="5" />
                     <health>100</health>
                     <radius>2</radius>
@@ -147,14 +147,14 @@
                     <security>0</security>
                 </building>
 
-                <building id="1" name="Склад" type="2">
+                <building id="1" type="storehouse" name="Склад">
                     <position x="19" y="1" />
                     <health>100</health>
                     <radius>0</radius>
                     <view>1</view>
                 </building>
 
-                <building id="2" name="Штаб" type="1">
+                <building id="2" type="barracks" name="Штаб">
                     <position x="20" y="1" />
                     <health>100</health>
                     <radius>2</radius>

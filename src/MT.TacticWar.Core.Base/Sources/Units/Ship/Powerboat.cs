@@ -4,13 +4,13 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Powerboat : Unit
     {
-        public Powerboat()
+        public Powerboat(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Ship;
+            //подразделение
+            Division = division;
             //имя
             Name = "Катер";
             //цена юнита
@@ -30,6 +30,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 80;
             //общая защита от любой техники
             ArmourFromTank = 50;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 1500;
             //число патронов и снарядов
             Supply = 1500;
 

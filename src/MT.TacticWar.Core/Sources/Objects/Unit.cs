@@ -1,16 +1,19 @@
-﻿using System;
+﻿using MT.TacticWar.Core.Landscape;
+using System;
 
 namespace MT.TacticWar.Core.Objects
 {
     public class Unit
     {
+        public const int HealthMax = 100;
+
         public const int ExperienceRecruit = 0;
         public const int ExperienceWarrior = 25;
         public const int ExperienceVeteran = 75;
         public const int ExperienceHero = 100;
 
         public int Id;                 //номер юнита в подразделении
-        public DivisionType DivisionType;     //тип подразделения
+        public Division Division;     //подразделение
 
         public string Name;            //имя
         public int Health;         //здоровье
@@ -24,6 +27,7 @@ namespace MT.TacticWar.Core.Objects
         public int ArmourFromInf;      //общая защита от пехоты
         public int ArmourFromTank;     //общая защита от любой техники
 
+        public int SupplyMax;            //максимальное число патронов и снарядов
         public int Supply;            //число патронов и снарядов
 
         public int RadiusAttack;             //радиус действия (для артиллерии)
@@ -33,32 +37,44 @@ namespace MT.TacticWar.Core.Objects
         public bool StepLand;          //ходит ли по земле
         public bool StepAqua;          //ходит ли по воде
 
-        /*//Конструктор
-        public Unit(int id, int type, string name, int health,
+        /*public Unit(int id, int type, string name, int health,
             int powI, int powB, int powA,
             int armI, int armB, int suplies, int radius, int obzor, int level,
             int steps, bool stepL, bool stepA, int costs)
         {
-
-        }
-
-        //Конструктор
-        public Unit(int id)
-        {
-
         }*/
 
         public void Repair()
         {
-            Health = 100;
+            Health = HealthMax;
         }
 
-        public void Kill()
+        public void Equip()
         {
-            Health = 0;
+            Supply = SupplyMax;
         }
 
-        public int GetPowerAnti(DivisionType enemyType)
+        public virtual int GetPowerAnti(Division enemy)
+        {
+            if (enemy is IInfantry)
+                return PowerAntiInf;
+            else if (enemy is IArmored)
+                return PowerAntiTank;
+            else if (enemy is IAviation)
+                return PowerAntiAir;
+
+            return PowerAntiInf;
+        }
+
+        public virtual int GetArmourFrom(Division enemy)
+        {
+            if (enemy is IInfantry)
+                return ArmourFromInf;
+
+            return ArmourFromTank;
+        }
+
+        /*public virtual int GetPowerAnti(DivisionType enemyType)
         {
             switch (enemyType)
             {
@@ -75,7 +91,7 @@ namespace MT.TacticWar.Core.Objects
             throw new Exception("Неизвестный тип юнита.");
         }
 
-        public int GetArmourFrom(DivisionType enemyType)
+        public virtual int GetArmourFrom(DivisionType enemyType)
         {
             switch (enemyType)
             {
@@ -89,6 +105,16 @@ namespace MT.TacticWar.Core.Objects
             }
 
             throw new Exception("Неизвестный тип юнита.");
+        }*/
+
+        public virtual int GetPowerBonus(Cell cell)
+        {
+            return 0;
+        }
+
+        public virtual int GetArmourBonus(Cell cell)
+        {
+            return 0;
         }
     }
 }

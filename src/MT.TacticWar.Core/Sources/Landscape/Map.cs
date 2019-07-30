@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace MT.TacticWar.Core.Landscape
 {
     public class Map
@@ -62,6 +64,27 @@ namespace MT.TacticWar.Core.Landscape
                     Field[x, y].Object = building;
                 }
             }
+        }
+
+        public Coordinates[] GetArea(Coordinates center, int radius)
+        {
+            var area = new List<Coordinates>();
+
+            int mixX = Math.Max(0, center.X - radius);
+            int maxX = Math.Min(Width - 1, center.X + radius);
+
+            int mixY = Math.Max(0, center.Y - radius);
+            int maxY = Math.Min(Height - 1, center.Y + radius);
+
+            for (int y = mixY; y <= maxY; ++y)
+            {
+                for (int x = mixX; x <= maxX; ++x)
+                {
+                    area.Add(new Coordinates(x, y));
+                }
+            }
+
+            return area.ToArray();
         }
     }
 }

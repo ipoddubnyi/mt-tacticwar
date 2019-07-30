@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Serialization
@@ -14,7 +15,7 @@ namespace MT.TacticWar.Core.Serialization
         public string Type { get; set; }
 
         [XmlAttribute("divtype")]
-        public int DivisionType { get; set; }
+        public string DivType { get; set; }
 
         //
 
@@ -51,6 +52,9 @@ namespace MT.TacticWar.Core.Serialization
 
         //
 
+        [XmlElement("supplymax")]
+        public int? SupplyMax { get; set; }
+
         [XmlElement("supply")]
         public int? Supply { get; set; }
 
@@ -73,11 +77,30 @@ namespace MT.TacticWar.Core.Serialization
         [XmlElement("stepaqua")]
         public bool? StepAqua { get; set; }
 
-        public Unit Create()
+        public Unit Create(Division division)
         {
             return Update(new Unit() {
-                DivisionType = (DivisionType)DivisionType
+                Division = division
             });
+        }
+
+        public bool CompareDivisionType(Division division)
+        {
+            switch (DivType)
+            {
+                case "infantry":
+                    return division is Infantry;
+                case "vehicle":
+                    return division is Vehicle;
+                case "ship":
+                    return division is Ship;
+                case "artillery":
+                    return division is Artillery;
+                case "aviation":
+                    return division is Aviation;
+            }
+
+            throw new Exception("Неизвестный тип подразделения.");
         }
 
         public Unit Update(Unit unit)
@@ -103,6 +126,8 @@ namespace MT.TacticWar.Core.Serialization
             if (ArmourFromTank.HasValue)
                 unit.ArmourFromTank = ArmourFromTank.Value;
 
+            if (SupplyMax.HasValue)
+                unit.SupplyMax = SupplyMax.Value;
             if (Supply.HasValue)
                 unit.Supply = Supply.Value;
 

@@ -21,7 +21,7 @@
     <players>
         <player id="0" name="Игрок 1" team="1" color="1" rank="0" money="50000" ai="false">
             <divisions>
-                <division id="1011" type="4" name="Охранные катера">
+                <division id="1011" type="ship" name="Охранные катера">
                     <position x="9" y="20" />
                     <units>
                         <unit type="катер" />
@@ -30,7 +30,7 @@
                     </units>
                 </division>
                 
-                <division id="1012" type="4" name="Охранные катера">
+                <division id="1012" type="ship" name="Охранные катера">
                     <position x="2" y="20" />
                     <units>
                         <unit type="катер" />
@@ -40,7 +40,7 @@
             </divisions>
 
             <buildings>
-                <building id="1121" type="5" name="Порт">
+                <building id="1121" type="port" name="Порт">
                     <position x="2" y="20" />
                     <health>100</health>
                     <radius>0</radius>
@@ -48,7 +48,14 @@
                     <security>1012</security>
                 </building>
                 
-                <building id="1124" type="3" name="Радар">
+                <building id="1122" type="shipyard" name="Верфь">
+                    <position x="5" y="23" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                </building>
+                
+                <building id="1124" type="radar" name="Радар">
                     <position x="13" y="18" />
                     <health>100</health>
                     <radius>0</radius>
@@ -63,7 +70,7 @@
 
         <player id="1" name="Игрок 2" team="2" color="2" rank="0" money="50000" ai="true">
             <divisions>
-                <division id="2011" type="4" name="Охранные катера">
+                <division id="2011" type="ship" name="Охранные катера">
                     <position x="9" y="2" />
                     <units>
                         <unit type="катер" />
@@ -72,7 +79,7 @@
                     </units>
                 </division>
 
-                <division id="2012" type="4" name="Охранные катера">
+                <division id="2012" type="ship" name="Охранные катера">
                     <position x="2" y="2" />
                     <units>
                         <unit type="катер" />
@@ -82,7 +89,7 @@
             </divisions>
 
             <buildings>
-                <building id="2121" type="5" name="Порт">
+                <building id="2121" type="port" name="Порт">
                     <position x="2" y="2" />
                     <health>100</health>
                     <radius>0</radius>
@@ -90,7 +97,14 @@
                     <security>2012</security>
                 </building>
 
-                <building id="2124" type="3" name="Радар">
+                <building id="2122" type="shipyard" name="Верфь">
+                    <position x="5" y="2" />
+                    <health>100</health>
+                    <radius>0</radius>
+                    <view>1</view>
+                </building>
+                
+                <building id="2124" type="radar" name="Радар">
                     <position x="20" y="12" />
                     <health>100</health>
                     <radius>0</radius>

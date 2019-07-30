@@ -4,13 +4,13 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Saboteur : Unit
     {
-        public Saboteur()
+        public Saboteur(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Infantry;
+            //подразделение
+            Division = division;
             //имя
             Name = "Диверсанты";
             //цена юнита
@@ -30,6 +30,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 80;
             //общая защита от любой техники
             ArmourFromTank = 30;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 3000;
             //число патронов и снарядов
             Supply = 3000;
 

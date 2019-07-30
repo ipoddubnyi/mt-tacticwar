@@ -13,12 +13,12 @@ namespace MT.TacticWar.UI
         [Category("Данные")]
         [DisplayName("Игрок")]
         [Description("Номер владельца подразделения")]
-        public string Player => $"Игрок {division.Player.Name}";
+        public string Player => division.Player.Name;
 
         [Category("Данные")]
         [DisplayName("Тип")]
         [Description("Тип подразделения")]
-        public string Type => division.Type.AsString();
+        public string Type => division.Type;
 
         [Category("Данные")]
         [DisplayName("Название")]

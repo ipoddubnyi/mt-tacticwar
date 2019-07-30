@@ -129,6 +129,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MT.TacticWar.Core.Base\MT.TacticWar.Core.Base.csproj">
+      <Project>{f15497c6-6aa2-41f8-8280-77c8b5f70c6a}</Project>
+      <Name>MT.TacticWar.Core.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MT.TacticWar.Core.Serialization\MT.TacticWar.Core.Serialization.csproj">
       <Project>{a9af49cf-708f-4aa7-a4cf-323f8bfa27f4}</Project>
       <Name>MT.TacticWar.Core.Serialization</Name>
@@ -149,10 +153,19 @@
     <Content Include="images\buildings\barracks.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\buildings\cityhouse.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\buildings\shipyard.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\buildings\port.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\buildings\radar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\buildings\villagehut.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\buildings\storehouse.png">

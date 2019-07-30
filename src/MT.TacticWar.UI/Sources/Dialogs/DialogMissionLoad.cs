@@ -67,9 +67,9 @@ namespace MT.TacticWar.UI.Dialogs
                 // TODO: при первой загрузке дважды вызывается Paint()
                 DrawMapSketch();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Миссия повреждена", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Миссия повреждена. " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ResetInfo();
             }
         }

@@ -42,12 +42,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\Objects\Buildings\Barracks.cs" />
+    <Compile Include="Sources\Objects\Buildings\Airfield.cs" />
+    <Compile Include="Sources\Objects\Buildings\CityHouse.cs" />
+    <Compile Include="Sources\Objects\Buildings\VillageHut.cs" />
+    <Compile Include="Sources\Objects\Buildings\Shipyard.cs" />
+    <Compile Include="Sources\Objects\Buildings\Port.cs" />
+    <Compile Include="Sources\Objects\Buildings\Radar.cs" />
+    <Compile Include="Sources\Objects\Buildings\Factory.cs" />
+    <Compile Include="Sources\Objects\Buildings\Storehouse.cs" />
+    <Compile Include="Sources\Objects\Divisions\Aviation.cs" />
+    <Compile Include="Sources\Objects\Divisions\Ship.cs" />
+    <Compile Include="Sources\Objects\Divisions\Artillery.cs" />
+    <Compile Include="Sources\Objects\Divisions\Vehicle.cs" />
+    <Compile Include="Sources\Objects\Divisions\Infantry.cs" />
+    <Compile Include="Sources\Objects\ObjectFactory.cs" />
     <Compile Include="Sources\Scripts\Conditions\UnitCountCondition.cs" />
     <Compile Include="Sources\Scripts\Statements\MessageStatement.cs" />
     <Compile Include="Sources\Scripts\Situations\MessageSituation.cs" />
     <Compile Include="Sources\Scripts\Situations\GameOverSituation.cs" />
     <Compile Include="Sources\Scripts\Statements\GameOverStatement.cs" />
     <Compile Include="Sources\Scripts\ScriptFactory.cs" />
+    <Compile Include="Sources\Units\Aviation\Aircraft.cs" />
     <Compile Include="Sources\Units\Infantry\Igor.cs" />
     <Compile Include="Sources\Units\Infantry\Partizan.cs" />
     <Compile Include="Sources\Units\Infantry\Saboteur.cs" />
@@ -67,9 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Sources\Units\Artillery\" />
-    <Folder Include="Sources\Units\Aviation\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Sources\Objects\README.md" />
     <None Include="Sources\Units\README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

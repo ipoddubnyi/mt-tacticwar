@@ -1,16 +1,17 @@
-﻿using MT.TacticWar.Core.Objects;
+﻿using MT.TacticWar.Core.Landscape;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
     public class Partizan : Unit
     {
-        public Partizan()
+        public Partizan(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Infantry;
+            //подразделение
+            Division = division;
             //имя
             Name = "Партизаны";
             //цена юнита
@@ -30,6 +31,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 20;
             //общая защита от любой техники
             ArmourFromTank = 30;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 1500;
             //число патронов и снарядов
             Supply = 1500;
 
@@ -46,6 +50,22 @@ namespace MT.TacticWar.Core.Base.Units
             StepLand = true;
             //ходит ли по воде
             StepAqua = false;
+        }
+
+        public override int GetPowerBonus(Cell cell)
+        {
+            if (CellType.Forest == cell.Type)
+                return 2;
+
+            return 0;
+        }
+
+        public override int GetArmourBonus(Cell cell)
+        {
+            if (CellType.Forest == cell.Type)
+                return 2;
+
+            return 0;
         }
     }
 }

@@ -7,6 +7,7 @@ using MT.TacticWar.Core;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Players;
+using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Gameplay;
 
 namespace MT.TacticWar.UI
@@ -149,7 +150,7 @@ namespace MT.TacticWar.UI
             int x = pt.X;
             int y = pt.Y;
 
-            string src = GetFlagImagePath(moveType, isOneday);
+            string src = GetFlagImagePath(moveType);
             using (var image = Image.FromFile(src))
             {
                 var attr = GetFlagColorReplacement(isOneday);
@@ -158,7 +159,7 @@ namespace MT.TacticWar.UI
             }
         }
 
-        private string GetFlagImagePath(MoveType moveType, bool isOneday)
+        private string GetFlagImagePath(MoveType moveType)
         {
             var path = @"images\flags\";
             switch (moveType)
@@ -184,7 +185,7 @@ namespace MT.TacticWar.UI
             colorMap.Add(new ColorMap
             {
                 OldColor = Color.Silver,
-                NewColor = isOneday ? Color.Red : Color.Blue
+                NewColor = isOneday ? Color.Red : Color.RoyalBlue
             });
             var attr = new ImageAttributes();
             attr.SetRemapTable(colorMap.ToArray());
@@ -203,12 +204,12 @@ namespace MT.TacticWar.UI
                 int x1, y1, x2, y2;
 
                 //рисуем путь на один день
-                for (int k = 0; k < (oneday.Count - 1); k++)
+                for (int i = 0; i < (oneday.Count - 1); i++)
                 {
-                    x1 = oneday[k].Coordinates.X * CellSize + CellSize / 2 + 1;
-                    y1 = oneday[k].Coordinates.Y * CellSize + CellSize / 2 + 1;
-                    x2 = oneday[k + 1].Coordinates.X * CellSize + CellSize / 2 + 1;
-                    y2 = oneday[k + 1].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                    x1 = oneday[i].Coordinates.X * CellSize + CellSize / 2 + 1;
+                    y1 = oneday[i].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                    x2 = oneday[i + 1].Coordinates.X * CellSize + CellSize / 2 + 1;
+                    y2 = oneday[i + 1].Coordinates.Y * CellSize + CellSize / 2 + 1;
                     grf.DrawLine(pen, x1, y1, x2, y2);
                 }
             }
@@ -216,17 +217,17 @@ namespace MT.TacticWar.UI
             //если однодневный путь не меньше полного, рисуем красный флаг
             if (oneday.Count < wayall.Count)
             {
-                using (var pen = new Pen(Color.Blue))
+                using (var pen = new Pen(Color.RoyalBlue))
                 {
                     int x1, y1, x2, y2;
 
                     //рисуем оставшийся путь
-                    for (int k = (oneday.Count - 1); k < (wayall.Count - 1); k++)
+                    for (int i = (oneday.Count - 1); i < (wayall.Count - 1); i++)
                     {
-                        x1 = wayall[k].Coordinates.X * CellSize + CellSize / 2 + 1;
-                        y1 = wayall[k].Coordinates.Y * CellSize + CellSize / 2 + 1;
-                        x2 = wayall[k + 1].Coordinates.X * CellSize + CellSize / 2 + 1;
-                        y2 = wayall[k + 1].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                        x1 = wayall[i].Coordinates.X * CellSize + CellSize / 2 + 1;
+                        y1 = wayall[i].Coordinates.Y * CellSize + CellSize / 2 + 1;
+                        x2 = wayall[i + 1].Coordinates.X * CellSize + CellSize / 2 + 1;
+                        y2 = wayall[i + 1].Coordinates.Y * CellSize + CellSize / 2 + 1;
                         grf.DrawLine(pen, x1, y1, x2, y2);
                     }
                 }
@@ -326,19 +327,16 @@ namespace MT.TacticWar.UI
         private string GetDivisionImagePath(Division division)
         {
             var path = @"images\divisions\";
-            switch (division.Type)
-            {
-                case DivisionType.Infantry:
-                    return $"{path}human.png";
-                case DivisionType.Ship:
-                    return $"{path}ship.png";
-                case DivisionType.Aviation:
-                    return $"{path}plane.png";
-                case DivisionType.Artillery:
-                    return $"{path}artillery.png";
-                case DivisionType.Vehicle:
-                    return $"{path}tank.png";
-            }
+            if (division is Infantry)
+                return $"{path}human.png";
+            else if (division is Vehicle)
+                return $"{path}tank.png";
+            else if (division is Ship)
+                return $"{path}ship.png";
+            else if (division is Artillery)
+                return $"{path}artillery.png";
+            else if (division is Aviation)
+                return $"{path}plane.png";
 
             throw new Exception("Неизвестный тип подразделения.");
         }
@@ -346,21 +344,24 @@ namespace MT.TacticWar.UI
         private string GetBuildingImagePath(Building building)
         {
             var path = @"images\buildings\";
-            switch (building.Type)
-            {
-                case BuildingType.Barracks:
-                    return $"{path}barracks.png";
-                case BuildingType.Storehouse:
-                    return $"{path}storehouse.png";
-                case BuildingType.Radar:
-                    return $"{path}radar.png";
-                case BuildingType.Airfield:
-                    return $"{path}airfield.png";
-                case BuildingType.Port:
-                    return $"{path}port.png";
-                case BuildingType.Factory:
-                    return $"{path}factory.png";
-            }
+            if (building is Barracks)
+                return $"{path}barracks.png";
+            else if (building is Storehouse)
+                return $"{path}storehouse.png";
+            else if (building is Factory)
+                return $"{path}factory.png";
+            else if (building is Radar)
+                return $"{path}radar.png";
+            else if (building is Airfield)
+                return $"{path}airfield.png";
+            else if (building is Port)
+                return $"{path}port.png";
+            else if (building is Shipyard)
+                return $"{path}shipyard.png";
+            else if (building is CityHouse)
+                return $"{path}cityhouse.png";
+            else if (building is VillageHut)
+                return $"{path}villagehut.png";
 
             throw new Exception("Неизвестный тип строения.");
         }

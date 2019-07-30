@@ -15,8 +15,6 @@ namespace MT.TacticWar.Core
         public Map Map { get; private set; }
         public List<ISituation> Situations { get; private set; }
 
-        //private MissionManage manage;
-
         public Mission(string name, string briefing, MissionMode mode, Player[] players, Script[] scripts, Map map)
         {
             Name = name;
@@ -85,24 +83,22 @@ namespace MT.TacticWar.Core
             return null;
         }
 
-        public void ClearSituation()
+        public void ActivateBuildings(int playerId)
+        {
+            foreach (var building in Players[playerId].Buildings)
+            {
+                building.Activate(this);
+            }
+        }
+
+        public void ExecuteScripts()
         {
             Situations.Clear();
-        }
-
-        public void AddSituation(ISituation situation)
-        {
-            Situations.Add(situation);
-        }
-
-        public void RunScripts()
-        {
-            ClearSituation();
 
             foreach (var script in Scripts)
             {
                 if (script.Condition.Check(this))
-                    script.Statement.Run(this);
+                    Situations.Add(script.Statement.Execute(this));
             }
         }
     }

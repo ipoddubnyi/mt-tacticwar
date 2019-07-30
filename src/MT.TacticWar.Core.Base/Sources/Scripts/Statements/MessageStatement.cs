@@ -15,9 +15,9 @@ namespace MT.TacticWar.Core.Base.Scripts
             text = args[0];
         }
 
-        public void Run(Mission mission)
+        public ISituation Execute(Mission mission)
         {
-            mission.AddSituation(new MessageSituation(text));
+            return new MessageSituation(text);
         }
     }
 }

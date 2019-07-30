@@ -6,7 +6,7 @@ namespace MT.TacticWar.Core
 {
     public static class Extensions
     {
-        public static string AsString(this DivisionType type)
+        /*public static string AsString(this DivisionType type)
         {
             switch (type)
             {
@@ -23,28 +23,7 @@ namespace MT.TacticWar.Core
             }
 
             throw new Exception("Неизвестный тип дивизии.");
-        }
-
-        public static string AsString(this BuildingType type)
-        {
-            switch (type)
-            {
-                case BuildingType.Factory:
-                    return "Завод";
-                case BuildingType.Barracks:
-                    return "Казарма";
-                case BuildingType.Storehouse:
-                    return "Склад";
-                case BuildingType.Radar:
-                    return "Радар";
-                case BuildingType.Airfield:
-                    return "Аэропорт";
-                case BuildingType.Port:
-                    return "Порт";
-            }
-
-            throw new Exception("Неизвестный тип строения.");
-        }
+        }*/
 
         public static string AsString(this MissionMode mode)
         {

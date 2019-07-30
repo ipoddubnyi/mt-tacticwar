@@ -1,24 +1,23 @@
 ﻿
 namespace MT.TacticWar.Core.Objects
 {
-    public class Building : IObject
+    public abstract class Building : IObject
     {
         public Player Player { get; protected set; }
         public int Id { get; protected set; }
-        public BuildingType Type { get; protected set; }
+        public virtual string Type => "Строение";
         public string Name { get; protected set; }
         public Coordinates Position { get; protected set; }
         public int Health { get; protected set; }
-        public int RadiusActive { get; protected set; }     // радиус действия
-        public int RadiusView { get; protected set; }       // радиус обзора
-        public Division SecurityDivision { get; protected set; }      // подразделение на охранении
+        public int RadiusActive { get; protected set; }             // радиус действия
+        public int RadiusView { get; protected set; }               // радиус обзора
+        public Division SecurityDivision { get; protected set; }    // подразделение на охранении
         public bool IsSecured => null != SecurityDivision;
 
-        public Building(Player player, int id, int type, string name, int x, int y, int health, int radius, int view, Division security)
+        public Building(Player player, int id, string name, int x, int y, int health, int radius, int view, Division security)
         {
             Player = player;
             Id = id;
-            Type = (BuildingType)type;
             Name = name;
             Position = new Coordinates(x, y);
             Health = health;
@@ -55,6 +54,11 @@ namespace MT.TacticWar.Core.Objects
             Player.Buildings.Add(this);
 
             AddSecurity(enemy);
+        }
+
+        /// <summary>Активировать функцию строения. Например, ремонт техники в радиусе действия.</summary>
+        public virtual void Activate(Mission mission)
+        {
         }
     }
 }

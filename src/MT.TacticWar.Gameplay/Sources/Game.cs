@@ -83,7 +83,7 @@ namespace MT.TacticWar.Gameplay
 
         public Signal AnalizeSituation()
         {
-            Mission.RunScripts();
+            Mission.ExecuteScripts();
             foreach (var situation in Mission.Situations)
             {
                 if (situation is GameOverSituation)
@@ -106,6 +106,7 @@ namespace MT.TacticWar.Gameplay
         {
             DeselectAll();
             PlayerCurrent = (PlayerCurrent + 1) % Mission.Players.Length;
+            Mission.ActivateBuildings(PlayerCurrent);
             Mission.Players[PlayerCurrent].ResetDivisionsParams();
         }
 
@@ -296,10 +297,11 @@ namespace MT.TacticWar.Gameplay
             else //иначе - освободить здание
                 building.RemoveSecurity();
 
-            //занять новую ячейку
-            Mission.Map[SelectedDivision.Position].Object = SelectedDivision;
+            // занять новую ячейку
+            if (null == Mission.Map[SelectedDivision.Position].Object)
+                Mission.Map[SelectedDivision.Position].Object = SelectedDivision;
 
-            //убрать из путь часть, которую уже прошли
+            // убрать из путь часть, которую уже прошли
             var tmpPut = CutWayPart(BestWay, SelectedDivision.Position);
 
             //выделить юнит заново и собрать информацию о нём
@@ -485,8 +487,8 @@ namespace MT.TacticWar.Gameplay
             // если целевое подразделение - того же игрока
             if (divisionThis.Player == divisionTag.Player)
             {
-                // если типы подразделений совпадают
-                if (divisionThis.Type != divisionTag.Type)
+                // если типы подразделений не совпадают
+                if (!divisionThis.CompareTypes(divisionTag))
                     return Signal.FAILURE;
 
                 // войти в его состав
@@ -523,8 +525,8 @@ namespace MT.TacticWar.Gameplay
                 {
                     var divisionTag = buildingTag.SecurityDivision;
 
-                    // если типы подразделений совпадают
-                    if (divisionThis.Type != divisionTag.Type)
+                    // если типы подразделений не совпадают
+                    if (!divisionThis.CompareTypes(divisionTag))
                         return Signal.FAILURE;
 
                     // войти в его состав
@@ -535,8 +537,11 @@ namespace MT.TacticWar.Gameplay
                 }
                 else
                 {
-                    // поставить на охрану
-                    buildingTag.AddSecurity(divisionThis);
+                    // если можно поставить на охрану
+                    if (divisionThis.CanSecure(buildingTag))
+                    {
+                        buildingTag.AddSecurity(divisionThis);
+                    }
 
                     // встать на охранение здания - отнимает все шаги
                     divisionThis.Steps = 0;
@@ -564,9 +569,13 @@ namespace MT.TacticWar.Gameplay
                 }
                 else
                 {
-                    // захват постройки
-                    buildingTag.Capture(divisionThis);
-                    SelectAndDrawBuilding(buildingTag);
+                    // если можно захватить постройку
+                    if (divisionThis.CanCapture(buildingTag))
+                    {
+                        // захват постройки
+                        buildingTag.Capture(divisionThis);
+                        SelectAndDrawBuilding(buildingTag);
+                    }
                 }
             }
 
@@ -637,11 +646,15 @@ namespace MT.TacticWar.Gameplay
 
             if (BattleResult.Win == result)
             {
-                // если был захват постройки - занять её
+                // если был захват постройки
                 if (null != bldToCapture)
                 {
-                    bldToCapture.Capture(div1);
-                    SelectAndDrawBuilding(bldToCapture);
+                    // если её можно занять
+                    if (div1.CanCapture(bldToCapture))
+                    {
+                        bldToCapture.Capture(div1);
+                        SelectAndDrawBuilding(bldToCapture);
+                    }
                 }
             }
 
@@ -678,7 +691,7 @@ namespace MT.TacticWar.Gameplay
             }
 
             //если типы юнитов не совпадают - выделить нового юнита
-            if (SelectedDivision.Type != division.Type)
+            if (!SelectedDivision.CompareTypes(division))
                 return ClickResult.Select;
 
             //поставить флаг, просчитать путь
@@ -728,7 +741,7 @@ namespace MT.TacticWar.Gameplay
             if (building.IsSecured)
             {
                 // если типы юнита и охранения не совпадают - выделить здание и его охранение
-                if (SelectedDivision.Type != building.SecurityDivision.Type)
+                if (!SelectedDivision.CompareTypes(building.SecurityDivision))
                     return ClickResult.Select;
             }
 

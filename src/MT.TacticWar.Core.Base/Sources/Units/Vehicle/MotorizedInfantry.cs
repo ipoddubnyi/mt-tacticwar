@@ -4,13 +4,13 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class MotorizedInfantry : Unit
     {
-        public MotorizedInfantry()
+        public MotorizedInfantry(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
 
-            //тип подразделения
-            DivisionType = DivisionType.Vehicle;
+            //подразделение
+            Division = division;
             //имя
             Name = "Мотопехота";
             //цена юнита
@@ -30,6 +30,9 @@ namespace MT.TacticWar.Core.Base.Units
             ArmourFromInf = 30;
             //общая защита от любой техники
             ArmourFromTank = 30;
+
+            //максимальное число патронов и снарядов
+            SupplyMax = 5000;
             //число патронов и снарядов
             Supply = 5000;
 

@@ -9,7 +9,7 @@ namespace MT.TacticWar.Core.Objects
     {
         public Player Player { get; protected set; }
         public int Id { get; protected set; }
-        public DivisionType Type { get; protected set; }
+        public virtual string Type => "Подразделение";
         public string Name { get; protected set; }
         public Coordinates Position { get; set; }
         public List<Unit> Units { get; protected set; }
@@ -33,39 +33,63 @@ namespace MT.TacticWar.Core.Objects
         public int Experience;          //опыт
 
         public int Steps;               //число шагов (равно числу шагов самого медленного юнита)
-        public bool CanStepLand;        //ходит ли по земле
+        public bool CanStepLand { get; private set; }        //ходит ли по земле
         public bool CanStepAqua;        //ходит ли по воде
 
-        public Division(Player player, int id, int type, string name, int x, int y, List<Unit> units)
+        public Division(Player player, int id, string name, int x, int y)
         {
             Player = player;
             Id = id;
-            Type = (DivisionType)type;
             Name = name;
             Position = new Coordinates(x, y);
-            Units = units;
+            Units = new List<Unit>();
 
             Target = Coordinates.Empty;
             SecuredBuilding = null;
 
-            ResetParams(); // пересчитать показатели
+            //if (Units.Count > 0)
+            //    ResetParams(); // пересчитать показатели
+        }
+
+        public void AddUnits(List<Unit> units)
+        {
+            Units = units;
+            if (Units.Count > 0)
+                ResetParams(); // пересчитать показатели
+        }
+
+        public bool CompareTypes(Division division)
+        {
+            return GetType() == division.GetType();
         }
 
         /// <summary>Продвинуть подразделение к цели на этот день</summary>
         /// <param name="way">Путь, по которому продвигать</param>
-        public void Move(List<Cell> way)
+        public virtual void Move(List<Cell> way)
         {
+            if (0 == way.Count)
+                return;
+
             Coordinates last = null;
+            var target = way[way.Count - 1].Coordinates;
+
             foreach (var cell in way)
             {
                 last = cell.Coordinates;
-                Steps -= cell.PassCost;
 
+                // последнюю ячейку не считем
+                if (last.Equals(target))
+                    break;
+
+                // если встретили объект
                 if (cell.Occupied && !cell.Coordinates.Equals(Position))
                     break;
 
-                if (Steps < 0)
+                // если закончились шаги
+                if (Steps < cell.PassCost)
                     break;
+
+                Steps -= cell.PassCost;
             }
 
             if (null != last)
@@ -79,7 +103,7 @@ namespace MT.TacticWar.Core.Objects
             return wayall.GetRange(0, index + 1);
         }
 
-        public int GetOneDayIndex(List<Cell> wayall)
+        public virtual int GetOneDayIndex(List<Cell> wayall)
         {
             int curSteps = Steps; // шаги в текущем ходе
             int index = 0;
@@ -185,7 +209,7 @@ namespace MT.TacticWar.Core.Objects
         public bool AttachDivision(Division guest)
         {
             // если типы подразделений не совпадают
-            if (Type != guest.Type)
+            if (GetType() == guest.GetType())
                 return false;
 
             // добавить все юниты добавляемого подразделения в новый
@@ -211,38 +235,55 @@ namespace MT.TacticWar.Core.Objects
 
         public void Destroy()
         {
+            if (IsSecuring)
+                SecuredBuilding.RemoveSecurity();
+
             Player.Divisions.Remove(this);
         }
 
-        // Чинить войска
-        // Если нет сломанной техники и раненых - false
-        public bool RepairUnits()
+        public void RepairUnits()
         {
-            bool res = false;
-
             foreach (var unit in Units)
             {
-                // если есть раненые
-                if (unit.Health < 100 && unit.Health > 0)
-                {
-                    res = true;
-                    unit.Repair();
-                }
+                unit.Repair();
             }
-
-            return res;
         }
 
-        public bool CanStep(CellType cell)
+        public void EquipUnits()
+        {
+            foreach (var unit in Units)
+            {
+                unit.Equip();
+            }
+        }
+
+        /// <summary>Может ли пройти по ячейке</summary>
+        public virtual bool CanStep(Cell cell)
         {
             // если в ячейке вода, а юнит земной
-            if (CellType.Water == cell && !CanStepAqua)
+            if (CellType.Water == cell.Type && !CanStepAqua)
                 return false;
 
             // если в ячейке НЕ вода, а юнит водный
-            if (CellType.Water != cell && !CanStepLand)
+            if (CellType.Water != cell.Type && !CanStepLand)
                 return false;
 
+            return true;
+        }
+
+        /// <summary>Может ли остановиться в ячейке</summary>
+        public virtual bool CanStop(Cell cell)
+        {
+            return CanStep(cell);
+        }
+
+        public virtual bool CanSecure(Building building)
+        {
+            return true;
+        }
+
+        public virtual bool CanCapture(Building building)
+        {
             return true;
         }
     }

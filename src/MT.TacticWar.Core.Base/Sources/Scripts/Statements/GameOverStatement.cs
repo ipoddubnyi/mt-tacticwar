@@ -15,10 +15,10 @@ namespace MT.TacticWar.Core.Base.Scripts
             winnerId = int.Parse(args[0]);
         }
 
-        public void Run(Mission mission)
+        public ISituation Execute(Mission mission)
         {
             var player = mission.Players[winnerId];
-            mission.AddSituation(new GameOverSituation(player));
+            return new GameOverSituation(player);
         }
     }
 }

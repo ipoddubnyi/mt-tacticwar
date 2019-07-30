@@ -13,7 +13,7 @@ namespace MT.TacticWar.Core.Serialization
         public string Name { get; set; }
 
         [XmlAttribute("type")]
-        public int Type { get; set; }
+        public string Type { get; set; }
 
         [XmlElement("position")]
         public SerialPosition Position { get; set; }

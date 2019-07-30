@@ -4,18 +4,18 @@ namespace MT.TacticWar.Gameplay.Routers
 {
     internal class BellmanCell
     {
-        private Cell cell;
-        public CellType Type => cell.Type;
-        public bool Passable => cell.Passable;
-        public bool Occupied => cell.Occupied;
-        public int PassCost => cell.PassCost;
+        public Cell Base { get; private set; }
+        public CellType Type => Base.Type;
+        public bool Passable => Base.Passable;
+        public bool Occupied => Base.Occupied;
+        public int PassCost => Base.PassCost;
 
         public BellmanDirections Directions { get; set; }
         public int Cost { get; set; }
 
         public BellmanCell(Cell cell)
         {
-            this.cell = cell;
+            Base = cell;
             Directions = new BellmanDirections();
             Cost = int.MaxValue;
         }

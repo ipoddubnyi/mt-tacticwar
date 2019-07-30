@@ -48,6 +48,11 @@
     <Compile Include="Sources\Common\MoveType.cs" />
     <Compile Include="Sources\Common\Gate.cs" />
     <Compile Include="Sources\Missions\MissionManage.cs" />
+    <Compile Include="Sources\Objects\IAquatic.cs" />
+    <Compile Include="Sources\Objects\IArmored.cs" />
+    <Compile Include="Sources\Objects\IAviation.cs" />
+    <Compile Include="Sources\Objects\IInfantry.cs" />
+    <Compile Include="Sources\Objects\ISupport.cs" />
     <Compile Include="Sources\Scripts\ISituation.cs" />
     <Compile Include="Sources\Missions\MissionStatus.cs" />
     <Compile Include="Sources\Landscape\Cell.cs" />
@@ -56,8 +61,6 @@
     <Compile Include="Sources\Landscape\CellType.cs" />
     <Compile Include="Sources\Missions\Mission.cs" />
     <Compile Include="Sources\Missions\MissionMode.cs" />
-    <Compile Include="Sources\Objects\BuildingType.cs" />
-    <Compile Include="Sources\Objects\DivisionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\Players\PlayerColor.cs" />
     <Compile Include="Sources\Players\PlayerIntelligence.cs" />
