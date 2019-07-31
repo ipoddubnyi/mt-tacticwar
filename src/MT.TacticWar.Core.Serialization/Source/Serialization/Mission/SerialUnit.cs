@@ -51,6 +51,9 @@ namespace MT.TacticWar.Core.Serialization
         [XmlElement("armourarm")]
         public int? ArmourFromTank { get; set; }
 
+        [XmlElement("armourair")]
+        public int? ArmourFromAir { get; set; }
+
         //
 
         [XmlElement("supplymax")]
@@ -124,6 +127,8 @@ namespace MT.TacticWar.Core.Serialization
                 unit.ArmourFromInf = ArmourFromInf.Value;
             if (ArmourFromTank.HasValue)
                 unit.ArmourFromTank = ArmourFromTank.Value;
+            if (ArmourFromAir.HasValue)
+                unit.ArmourFromAir = ArmourFromAir.Value;
 
             if (SupplyMax.HasValue)
                 unit.SupplyMax = SupplyMax.Value;

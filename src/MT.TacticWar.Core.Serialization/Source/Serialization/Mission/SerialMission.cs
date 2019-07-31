@@ -15,6 +15,10 @@ namespace MT.TacticWar.Core.Serialization
         [XmlArrayItem("player")]
         public SerialPlayer[] Players { get; set; }
 
+        [XmlArray("zones")]
+        [XmlArrayItem("zone")]
+        public SerialZone[] Zones { get; set; }
+
         [XmlElement("types")]
         public SerialMissionTypes Types { get; set; }
 
@@ -24,6 +28,7 @@ namespace MT.TacticWar.Core.Serialization
 
         public SerialMission()
         {
+            Zones = new SerialZone[0];
             Scripts = new SerialScript[0];
         }
 

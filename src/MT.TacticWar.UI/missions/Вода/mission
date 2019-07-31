@@ -37,7 +37,15 @@
                     </units>
                 </division>
                 
-                <division id="1013" type="infantry" name="Взвод пехоты">
+                <division id="1013" type="navy" name="Эскадра">
+                    <position x="12" y="22" />
+                    <units>
+                        <unit type="battleship" />
+                        <unit type="cruiser" />
+                    </units>
+                </division>
+                
+                <division id="1021" type="infantry" name="Взвод пехоты">
                     <position x="3" y="24" />
                     <units>
                         <unit type="soldier" />
@@ -90,6 +98,14 @@
                     <units>
                         <unit type="катер" />
                         <unit type="катер" />
+                    </units>
+                </division>
+                
+                <division id="2013" type="navy" name="Эскадра">
+                    <position x="12" y="2" />
+                    <units>
+                        <unit type="battleship" />
+                        <unit type="cruiser" />
                     </units>
                 </division>
             </divisions>

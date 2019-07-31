@@ -17,8 +17,8 @@ namespace MT.TacticWar.UI
 {
     public partial class GameForm : Form
     {
-        private Game GAME;
         private const int CellSize = 21;
+        private Game GAME;
         private bool gameloaded = false;
 
         public GameForm()
@@ -155,7 +155,10 @@ namespace MT.TacticWar.UI
             }
             else
             {
-                var signal = GAME.ZonaClick(e.X, e.Y);
+                int x = e.X / CellSize;
+                int y = e.Y / CellSize;
+
+                var signal = GAME.ZonaClick(x, y);
                 AnalizeSignals(signal);
             }
         }
@@ -191,7 +194,9 @@ namespace MT.TacticWar.UI
             {
                 dialog.SetDivisions(
                     GAME.AttackInfo.DivisionAttacker,
-                    GAME.AttackInfo.DivisionDefender
+                    GAME.AttackInfo.DivisionDefender,
+                    GAME.AttackInfo.SupportDivisionsAttacker,
+                    GAME.AttackInfo.SupportDivisionsDefender
                 );
 
                 if (DialogResult.OK == dialog.ShowDialog())
@@ -200,23 +205,33 @@ namespace MT.TacticWar.UI
                     var result = GAME.BattleBegin(
                         GAME.AttackInfo.DivisionAttacker,
                         GAME.AttackInfo.DivisionDefender,
-                        new List<Division>(),
-                        new List<Division>(),
+                        GAME.AttackInfo.SupportDivisionsAttacker,
+                        GAME.AttackInfo.SupportDivisionsDefender,
                         GAME.AttackInfo.BuildingToCapture
                     );
 
                     switch (result)
                     {
                         case BattleResult.Win:
-                            dialog.SetResultWin(GAME.AttackInfo.DivisionAttacker);
+                            dialog.SetResultWin(
+                                GAME.AttackInfo.DivisionAttacker,
+                                GAME.AttackInfo.SupportDivisionsAttacker,
+                                GAME.AttackInfo.SupportDivisionsDefender);
                             ShowSelectedObjectInfo();
                             break;
                         case BattleResult.Lose:
-                            dialog.SetResultLose(GAME.AttackInfo.DivisionDefender);
+                            dialog.SetResultLose(
+                                GAME.AttackInfo.DivisionDefender,
+                                GAME.AttackInfo.SupportDivisionsAttacker,
+                                GAME.AttackInfo.SupportDivisionsDefender);
                             ClearSelectedObjectInfo();
                             break;
                         case BattleResult.Draw:
-                            dialog.SetResultDraw(GAME.AttackInfo.DivisionAttacker, GAME.AttackInfo.DivisionDefender);
+                            dialog.SetResultDraw(
+                                GAME.AttackInfo.DivisionAttacker,
+                                GAME.AttackInfo.DivisionDefender,
+                                GAME.AttackInfo.SupportDivisionsAttacker,
+                                GAME.AttackInfo.SupportDivisionsDefender);
                             ShowSelectedObjectInfo();
                             break;
                     }

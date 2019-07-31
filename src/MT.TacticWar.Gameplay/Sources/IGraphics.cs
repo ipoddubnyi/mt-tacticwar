@@ -7,8 +7,6 @@ namespace MT.TacticWar.Gameplay
 {
     public interface IGraphics
     {
-        int CellSize { get; }
-
         void DrawMap(Map map);
 
         void DrawArea(Mission mission, Coordinates area, Fog fog);

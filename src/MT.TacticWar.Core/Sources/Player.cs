@@ -30,6 +30,8 @@ namespace MT.TacticWar.Core
             Money = money;
 
             AI = ai ? PlayerIntelligence.AI : PlayerIntelligence.Human;
+            Divisions = new List<Division>();
+            Buildings = new List<Building>();
         }
 
         public Division GetDivisionAt(int x, int y)
@@ -69,6 +71,26 @@ namespace MT.TacticWar.Core
             {
                 building.Activate(mission);
             }
+        }
+
+        public List<Division> GetSupportDivisions(Coordinates pt)
+        {
+            var support = new List<Division>();
+            foreach (var division in Divisions)
+            {
+                if (division is ISupport)
+                {
+                    if (!division.Position.Equals(pt))
+                    {
+                        if (division.IsInActiveRange(pt))
+                        {
+                            if (division.Steps > 0)
+                                support.Add(division);
+                        }
+                    }
+                }
+            }
+            return support;
         }
     }
 }

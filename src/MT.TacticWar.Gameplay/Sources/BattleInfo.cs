@@ -1,4 +1,5 @@
-﻿using MT.TacticWar.Core.Objects;
+﻿using System.Collections.Generic;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Gameplay
 {
@@ -7,6 +8,8 @@ namespace MT.TacticWar.Gameplay
     {
         public Division DivisionAttacker { get; set; }
         public Division DivisionDefender { get; set; }
+        public List<Division> SupportDivisionsAttacker { get; set; }
+        public List<Division> SupportDivisionsDefender { get; set; }
         public Building BuildingToCapture { get; set; }
     }
 }

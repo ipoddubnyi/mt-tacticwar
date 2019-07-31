@@ -28,8 +28,10 @@ namespace MT.TacticWar.Core.Base.Units
 
             //общая защита от пехоты
             ArmourFromInf = 30;
-            //общая защита от любой техники
+            //общая защита от наземной техники
             ArmourFromTank = 15;
+            //общая защита от воздушной атаки
+            ArmourFromAir = 10;
 
             //максимальное число патронов и снарядов
             SupplyMax = 1000;

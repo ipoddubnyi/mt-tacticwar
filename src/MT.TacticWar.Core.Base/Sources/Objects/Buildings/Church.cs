@@ -2,14 +2,14 @@
 
 namespace MT.TacticWar.Core.Base.Objects
 {
-    public class Radar : Building
+    public class Church : Building
     {
         private const int MaxRadiusActive = 0;
-        private const int MaxRadiusView = 5;
+        private const int MaxRadiusView = 2;
 
-        public override string Type => "Радар";
+        public override string Type => "Церковь";
 
-        public Radar(Player player, int id, string name, int x, int y, int health, Division security) :
+        public Church(Player player, int id, string name, int x, int y, int health, Division security) :
             base(player, id, name, x, y, health, MaxRadiusActive, MaxRadiusView, security)
         {
         }

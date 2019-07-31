@@ -19,10 +19,10 @@ namespace MT.TacticWar.UI
         public int CellSize { get; private set; }
         private readonly Graphics grf;
 
-        public GameGraphics(Graphics grf, int cellsize = 21)
+        public GameGraphics(Graphics grf, int cellSize)
         {
             this.grf = grf;
-            CellSize = cellsize;
+            CellSize = cellSize;
         }
 
         public void DrawMap(Map map)
@@ -336,6 +336,8 @@ namespace MT.TacticWar.UI
                 return $"{path}tank.png";
             else if (division is Ship)
                 return $"{path}ship.png";
+            else if (division is Navy)
+                return $"{path}navy.png";
             else if (division is Artillery)
                 return $"{path}artillery.png";
             else if (division is Aviation)
@@ -361,10 +363,13 @@ namespace MT.TacticWar.UI
                 return $"{path}port.png";
             else if (building is Shipyard)
                 return $"{path}shipyard.png";
+
             else if (building is CityHouse)
                 return $"{path}cityhouse.png";
             else if (building is VillageHut)
                 return $"{path}villagehut.png";
+            else if (building is Church)
+                return $"{path}church.png";
 
             throw new Exception("Неизвестный тип строения.");
         }

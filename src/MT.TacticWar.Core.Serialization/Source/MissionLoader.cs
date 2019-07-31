@@ -115,11 +115,13 @@ namespace MT.TacticWar.Core.Serialization
             var mis = SerialMission.Deserialize(filePath);
 
             var players = LoadMissionPlayers(mis);
+            var zones = LoadMissionZones(mis);
             var scripts = LoadMissionScripts(mis);
             return new Mission(
                 mis.Info.Name,
                 MissionTextTrim(mis.Info.Description),
                 players,
+                zones,
                 scripts,
                 map
             );
@@ -241,6 +243,24 @@ namespace MT.TacticWar.Core.Serialization
             }
 
             return null;
+        }
+
+        private static Zone[] LoadMissionZones(SerialMission mis)
+        {
+            var zones = new List<Zone>();
+            foreach (var zn in mis.Zones)
+            {
+                var points = new List<Coordinates>(zn.Points.Length);
+                foreach (var pt in zn.Points)
+                {
+                    points.Add(new Coordinates(pt.X, pt.Y));
+                }
+
+                var zone = new Zone(zn.Id, points.ToArray());
+                zones.Add(zone);
+            }
+
+            return zones.ToArray();
         }
 
         private static Script[] LoadMissionScripts(SerialMission mis)

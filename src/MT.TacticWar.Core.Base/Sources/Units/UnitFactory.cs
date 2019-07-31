@@ -14,10 +14,12 @@ namespace MT.TacticWar.Core.Base.Units
                 return CreateUnitVehicle(division, unitType);
             else if (division is Ship)
                 return CreateUnitShip(division, unitType);
+            else if (division is Navy)
+                return CreateUnitNavy(division, unitType);
             else if (division is Aviation)
                 return CreateUnitAviation(division, unitType);
             else if (division is Artillery)
-                return null;
+                return CreateUnitArtillery(division, unitType);
 
             throw new Exception("Неизвестный тип подразделения.");
         }
@@ -43,8 +45,8 @@ namespace MT.TacticWar.Core.Base.Units
         {
             switch (unitType)
             {
-                case "motorized":
-                    return new MotorizedInfantry(division);
+                case "ifv":
+                    return new IFV(division);
                 case "tank":
                     return new TankMiddle(division);
                 case "tankheavy":
@@ -67,12 +69,36 @@ namespace MT.TacticWar.Core.Base.Units
             return null;
         }
 
+        public static Unit CreateUnitNavy(Division division, string unitType)
+        {
+            switch (unitType)
+            {
+                case "battleship":
+                    return new Battleship(division);
+                case "cruiser":
+                    return new Cruiser(division);
+            }
+
+            return null;
+        }
+
         public static Unit CreateUnitAviation(Division division, string unitType)
         {
             switch (unitType)
             {
                 case "aircraft":
                     return new Aircraft(division);
+            }
+
+            return null;
+        }
+
+        public static Unit CreateUnitArtillery(Division division, string unitType)
+        {
+            switch (unitType)
+            {
+                case "howitzer":
+                    return new Howitzer(division);
             }
 
             return null;

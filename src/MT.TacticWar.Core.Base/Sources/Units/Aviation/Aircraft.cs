@@ -28,8 +28,10 @@ namespace MT.TacticWar.Core.Base.Units
 
             //общая защита от пехоты
             ArmourFromInf = 80;
-            //общая защита от любой техники
-            ArmourFromTank = 50;
+            //общая защита от наземной техники
+            ArmourFromTank = 10;
+            //общая защита от воздушной атаки
+            ArmourFromAir = 20;
 
             //максимальное число патронов и снарядов
             SupplyMax = 1500;
@@ -37,11 +39,11 @@ namespace MT.TacticWar.Core.Base.Units
             Supply = 1500;
 
             //радиус действия (для артиллерии)
-            RadiusAttack = 0;
+            RadiusAttack = 10;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Experience = ExperienceRecruit;
+            Experience = ExperienceWarrior;
 
             //число шагов
             Steps = 15;

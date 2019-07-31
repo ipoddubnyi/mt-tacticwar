@@ -18,7 +18,7 @@ namespace MT.TacticWar.Core
         public Map Map { get; private set; }
         public List<ISituation> Situations { get; private set; }
 
-        public Mission(string name, string briefing, Player[] players, Script[] scripts, Map map)
+        public Mission(string name, string briefing, Player[] players, Zone[] zones, Script[] scripts, Map map)
         {
             if (0 == players.Length)
                 throw new Exception("В миссии должны быть игроки.");
@@ -28,7 +28,7 @@ namespace MT.TacticWar.Core
             Players = players;
             CurrentPlayer = Players[0];
             Cycles = 0;
-            Zones = new Zone[0];
+            Zones = zones;
             Scripts = scripts;
             Map = map;
             Situations = new List<ISituation>();

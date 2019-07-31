@@ -23,7 +23,8 @@ namespace MT.TacticWar.Core.Objects
         public int PowerAntiAir;        //общая мощь против воздуха
 
         public int ArmourFromInf;       //общая защита от пехоты
-        public int ArmourFromTank;      //общая защита от любой техники
+        public int ArmourFromTank;      //общая защита от наземной техники
+        public int ArmourFromAir;      //общая защита от воздушной атаки
 
         public int Supply;              //число патронов и снарядов
 
@@ -165,7 +166,8 @@ namespace MT.TacticWar.Core.Objects
             PowerAntiTank = 0;     //средняя мощь против бронетехники и кораблей
 
             ArmourFromInf = 0;     //средняя защита от пехоты
-            ArmourFromTank = 0;    //средняя защита от любой техники
+            ArmourFromTank = 0;    //средняя защита от наземной техники
+            ArmourFromAir = 0;    //средняя защита от воздушной атаки
 
             Supply = 0;           //число патронов и снарядов
             RadiusAttack = int.MaxValue; //радиус действия (для артиллерии)
@@ -186,6 +188,7 @@ namespace MT.TacticWar.Core.Objects
 
                 ArmourFromInf += unit.ArmourFromInf;
                 ArmourFromTank += unit.ArmourFromTank;
+                ArmourFromAir += unit.ArmourFromAir;
 
                 Experience += unit.Experience;
 
@@ -221,6 +224,7 @@ namespace MT.TacticWar.Core.Objects
 
             ArmourFromInf /= Units.Count;
             ArmourFromTank /= Units.Count;
+            ArmourFromAir /= Units.Count;
 
             Experience /= Units.Count;
             Steps = StepsMax;
@@ -231,7 +235,7 @@ namespace MT.TacticWar.Core.Objects
         public bool AttachDivision(Division guest)
         {
             // если типы подразделений не совпадают
-            if (GetType() == guest.GetType())
+            if (!CompareTypes(guest))
                 return false;
 
             // добавить все юниты добавляемого подразделения в новый
@@ -307,6 +311,16 @@ namespace MT.TacticWar.Core.Objects
         public virtual bool CanCapture(Building building)
         {
             return true;
+        }
+
+        public bool IsInActiveRange(Coordinates pt)
+        {
+            int xMin = Position.X - RadiusAttack;
+            int xMax = Position.X + RadiusAttack;
+            int yMin = Position.Y - RadiusAttack;
+            int yMax = Position.Y + RadiusAttack;
+
+            return pt.X >= xMin && pt.X <= xMax && pt.Y >= yMin && pt.Y <= yMax;
         }
     }
 }

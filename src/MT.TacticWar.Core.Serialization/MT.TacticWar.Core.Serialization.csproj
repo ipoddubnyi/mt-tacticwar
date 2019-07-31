@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Browser.cs" />
     <Compile Include="Source\MissionLoader.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialZone.cs" />
     <Compile Include="Source\Serialization\Scripts\SerialScriptArgument.cs" />
     <Compile Include="Source\Serialization\Scripts\SerialScriptEntry.cs" />
     <Compile Include="Source\Serialization\Scripts\SerialScripts.cs" />
@@ -55,7 +55,7 @@
     <Compile Include="Source\Serialization\Common\SerialSize.cs" />
     <Compile Include="Source\Serialization\Mission\SerialBuilding.cs" />
     <Compile Include="Source\Serialization\Mission\SerialDivision.cs" />
-    <Compile Include="Source\Serialization\Common\SerialZone.cs" />
+    <Compile Include="Source\Serialization\Common\SerialGate.cs" />
     <Compile Include="Source\Serialization\Mission\SerialMissionInfo.cs" />
     <Compile Include="Source\Serialization\Mission\SerialPlayer.cs" />
     <Compile Include="Source\Serialization\Common\SerialPosition.cs" />

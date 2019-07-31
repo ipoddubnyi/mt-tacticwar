@@ -25,7 +25,8 @@ namespace MT.TacticWar.Core.Objects
         public int PowerAntiAir;       //общая мощь против воздуха
 
         public int ArmourFromInf;      //общая защита от пехоты
-        public int ArmourFromTank;     //общая защита от любой техники
+        public int ArmourFromTank;     //общая защита от наземной техники
+        public int ArmourFromAir;      //общая защита от воздушной атаки
 
         public int SupplyMax;            //максимальное число патронов и снарядов
         public int Supply;            //число патронов и снарядов
@@ -70,8 +71,12 @@ namespace MT.TacticWar.Core.Objects
         {
             if (enemy is IInfantry)
                 return ArmourFromInf;
+            else if (enemy is IArmored)
+                return ArmourFromTank;
+            else if (enemy is IAviation)
+                return ArmourFromAir;
 
-            return ArmourFromTank;
+            return ArmourFromInf;
         }
 
         public virtual int GetPowerBonus(Cell cell)

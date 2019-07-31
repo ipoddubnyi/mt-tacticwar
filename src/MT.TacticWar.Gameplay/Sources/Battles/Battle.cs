@@ -19,167 +19,160 @@ namespace MT.TacticWar.Gameplay.Battles
             rand = new Random(Guid.NewGuid().GetHashCode());
         }
 
-        public BattleResult Run(Division div1, Division div2, List<Division> support1, List<Division> support2)
+        public BattleResult Run(Division divisionA, Division divisionD, List<Division> supportA, List<Division> supportD)
         {
-            //var rand = new Random(Guid.NewGuid().GetHashCode());
+            // если у нападающего кончатся патроны
+            bool none_supply = false;
 
-            int elem;
-            int indUnit1, indUnit2;
+            var cellA = map[divisionA.Position];
+            var cellD = map[divisionD.Position];
 
-            Unit sui1, sui2;
-            bool elem1_none_supl = false; //если у нападающего кончатся патроны
-
-            var cell1 = map[div1.Position];
-            var cell2 = map[div2.Position];
-
-            //пока есть юниты в обоих подразделениях
-            while ((div1.Units.Count > 0) && (div2.Units.Count > 0))
+            // пока есть юниты в обоих подразделениях
+            while (divisionA.Units.Count > 0 && divisionD.Units.Count > 0)
             {
-                //- ПРЯМАЯ АТАКА -
-
-                //случайно выбираем подразделение
-                elem = rand.Next(0, support1.Count);
-
-                //если это АТАКУЮЩЕЕ подразделение атакующего игрока
-                if (elem == 0)
-                {
-                    //случайно выбираем юнита из атакующего подразделения
-                    indUnit1 = rand.Next(0, div1.Units.Count);
-
-                    //случайно выбираем юнита из атакуемого подразделения
-                    indUnit2 = rand.Next(0, div2.Units.Count);
-
-                    //атакуем
-                    sui1 = div1.Units[indUnit1];
-                    sui2 = div2.Units[indUnit2];
-                    UnitVsUnit(sui1, sui2, cell1, cell2);
-                    div1.Units[indUnit1] = sui1;
-                    div2.Units[indUnit2] = sui2;
-                }
-                else //если это подразделение ПОДДЕРЖКИ
-                {
-                    //случайно выбираем юнита из выбранного подразделения поддержки
-                    indUnit1 = rand.Next(0, support1[elem - 1].Units.Count);
-
-                    //случайно выбираем юнита из атакуемого подразделения
-                    indUnit2 = rand.Next(0, div2.Units.Count);
-
-                    //атакуем
-                    sui1 = support1[elem - 1].Units[indUnit1];
-                    sui2 = div2.Units[indUnit2];
-                    UnitVsUnit(sui1, sui2, cell1, cell2);
-                    support1[elem - 1].Units[indUnit1] = sui1;
-                    div2.Units[indUnit2] = sui2;
-                }
-
-                //удалить юнита, если его убили
-                if (div2.Units[indUnit2].Health == 0)
-                    div2.Units.RemoveAt(indUnit2);
-
-                //если врага убили - конец цикла
-                if (div2.Units.Count < 1)
+                // прямая атака
+                if (Attack(divisionA, divisionD, supportA, cellA, cellD))
                     break;
 
-                //- ОТВЕТНАЯ АТАКА -
-
-                //случайно выбираем подразделение
-                elem = rand.Next(0, support2.Count);
-
-                //если это АТАКУЮЩЕЕ подразделение защищающегося игрока
-                if (elem == 0)
-                {
-                    //случайно выбираем юнита из атакующего подразделения
-                    indUnit2 = rand.Next(0, div2.Units.Count);
-
-                    //случайно выбираем юнита из атакуемого подразделения
-                    indUnit1 = rand.Next(0, div1.Units.Count);
-
-                    //атакуем
-                    sui1 = div2.Units[indUnit2];
-                    sui2 = div1.Units[indUnit1];
-                    UnitVsUnit(sui1, sui2, cell1, cell2);
-                    div2.Units[indUnit2] = sui1;
-                    div1.Units[indUnit1] = sui2;
-                }
-                else //если это подразделение ПОДДЕРЖКИ
-                {
-                    //случайно выбираем юнита из выбранного подразделения поддержки
-                    indUnit2 = rand.Next(0, support2[elem - 1].Units.Count);
-
-                    //случайно выбираем юнита из атакуемого подразделения
-                    indUnit1 = rand.Next(0, div1.Units.Count);
-
-                    //атакуем
-                    sui1 = support2[elem - 1].Units[indUnit2];
-                    sui2 = div1.Units[indUnit1];
-                    UnitVsUnit(sui1, sui2, cell1, cell2);
-                    support2[elem - 1].Units[indUnit2] = sui1;
-                    div1.Units[indUnit1] = sui2;
-                }
-
-                //удалить юнита, если его убили
-                if (div1.Units[indUnit1].Health == 0)
-                    div1.Units.RemoveAt(indUnit1);
-
-                //если врага убили - конец цикла
-                if (div1.Units.Count < 1)
+                // ответная атака
+                if (Attack(divisionD, divisionA, supportD, cellD, cellA))
                     break;
 
-                //----------
-
-                //если у нападающего кончились патроны - он отступает
-                div1.ResetParams();
-                //if (div1.Units[indUnit1].unit.Supply == 0)
-                if (div1.Supply == 0)
+                // если у нападающего кончились патроны - он отступает
+                divisionA.ResetParams();
+                if (divisionA.Supply == 0)
                 {
-                    elem1_none_supl = true;
-                    RecedeDivision(div1); //отступить
+                    none_supply = true;
+                    RecedeDivision(divisionA); // отступить
                     break;
                 }
-            } //конец цикла
+            }
 
             //----------
 
-            //пересчитать показатели поддержки
-            for (int i = 0; i < support1.Count; i++)
-                support1[i].ResetParams();
+            // пересчитать показатели поддержки
+            for (int i = 0; i < supportA.Count; i++)
+                supportA[i].ResetParams();
 
-            //пересчитать показатели поддержки
-            for (int i = 0; i < support2.Count; i++)
-                support2[i].ResetParams();
+            // пересчитать показатели поддержки
+            for (int i = 0; i < supportD.Count; i++)
+                supportD[i].ResetParams();
 
             var result = BattleResult.Draw;
-            if (0 == div2.Units.Count)
+            if (0 == divisionD.Units.Count)
             {
-                div2.Destroy();
+                divisionD.Destroy();
                 result = BattleResult.Win;
 
                 // обнуляем шаги у вступивших в битву
-                div1.ResetParams();
-                div1.NullSteps();
+                divisionA.ResetParams();
+                divisionA.NullSteps();
             }
-            else if (0 == div1.Units.Count)
+            else if (0 == divisionA.Units.Count)
             {
-                div1.Destroy();
+                divisionA.Destroy();
                 result = BattleResult.Lose;
 
                 // обнуляем шаги у вступивших в битву
-                div2.ResetParams();
-                div2.NullSteps();
+                divisionD.ResetParams();
+                divisionD.NullSteps();
             }
             else
             {
                 // обнуляем шаги у вступивших в битву
-                div1.ResetParams();
-                div1.NullSteps();
-                div2.ResetParams();
-                div2.NullSteps();
+                divisionA.ResetParams();
+                divisionA.NullSteps();
+                divisionD.ResetParams();
+                divisionD.NullSteps();
             }
 
-            //если у нападающего кончились патроны - ничья
-            if (elem1_none_supl) result = 0;
+            // если у нападающего кончились патроны - ничья
+            if (none_supply) result = BattleResult.Draw;
 
             return result;
+        }
+
+        private bool Attack(Division division1, Division division2, List<Division> support1, Cell cell1, Cell cell2)
+        {
+            Unit unit1, unit2;
+            bool supportAttack = false;
+            Division supportDiv = null;
+
+            // случайно выбираем подразделение
+            var indexDiv = rand.Next(0, support1.Count + 1);
+
+            // если это АТАКУЮЩЕЕ подразделение, а не поддержка
+            if (0 == indexDiv)
+            {
+                // случайно выбираем юнита из атакующего подразделения
+                int index1 = rand.Next(0, division1.Units.Count);
+                unit1 = division1.Units[index1];
+
+                // случайно выбираем юнита из атакуемого подразделения
+                int index2 = rand.Next(0, division2.Units.Count);
+                unit2 = division2.Units[index2];
+            }
+            else // если это подразделение ПОДДЕРЖКИ
+            {
+                supportAttack = true;
+                supportDiv = support1[indexDiv - 1];
+
+                // случайно выбираем юнита из выбранного подразделения поддержки
+                int index1 = rand.Next(0, supportDiv.Units.Count);
+                unit1 = supportDiv.Units[index1];
+
+                // случайно выбираем юнита из атакуемого подразделения
+                int index2 = rand.Next(0, division2.Units.Count);
+                unit2 = division2.Units[index2];
+            }
+
+            // атакуем
+            UnitVsUnit(unit1, unit2, cell1, cell2);
+
+            // удалить юнита, если его убили
+            if (unit2.Health <= 0)
+                division2.Units.Remove(unit2);
+
+            // если погиб
+            if (0 == division2.Units.Count)
+                return true;
+
+            if (supportAttack)
+            {
+                // если поддержка не авиа (артиллерия, тяжёлый корабль),
+                // ответить не получится
+                if (!(supportDiv is IAviation))
+                    return false;
+            }
+
+            // ответка
+            UnitVsUnit(unit2, unit1, cell2, cell1);
+
+            if (supportAttack)
+            {
+                // удалить юнита, если его убили
+                if (unit1.Health <= 0)
+                    supportDiv.Units.Remove(unit1);
+
+                // если поддержка уничтожена
+                if (0 == supportDiv.Units.Count)
+                {
+                    support1.Remove(supportDiv);
+                    supportDiv.Destroy();
+                }
+            }
+            else
+            {
+                // удалить юнита, если его убили
+                if (unit1.Health <= 0)
+                    division1.Units.Remove(unit1);
+
+                // если уничтожен
+                if (0 == division1.Units.Count)
+                    return true;
+            }
+
+            return false;
         }
 
         // Считаем защиту юнита

@@ -113,10 +113,10 @@
                     </units>
                 </division>
 
-                <division id="2" type="vehicle" name="Взвод мотопехоты 2">
+                <division id="2" type="vehicle" name="БМП 2">
                     <position x="23" y="5" />
                     <units>
-                        <unit type="motorized" />
+                        <unit type="ifv" />
                     </units>
                 </division>
 
@@ -124,7 +124,7 @@
                     <position x="8" y="5" />
                     <units>
                         <unit type="tank" />
-                        <unit type="motorized" />
+                        <unit type="ifv" />
                     </units>
                 </division>
 
@@ -240,7 +240,7 @@
                 <building id="0" type="house" name="">
                     <position x="3" y="3" />
                 </building>
-                <building id="0" type="house" name="">
+                <building id="0" type="church" name="">
                     <position x="4" y="3" />
                 </building>
                 <building id="0" type="house" name="">

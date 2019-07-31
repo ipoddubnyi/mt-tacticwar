@@ -2,9 +2,9 @@
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    public class TankHeavy : Unit
+    public class IFV : Unit
     {
-        public TankHeavy(Division division)
+        public IFV(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
@@ -12,31 +12,31 @@ namespace MT.TacticWar.Core.Base.Units
             //подразделение
             Division = division;
             //имя
-            Name = "Тяжёлый танк";
+            Name = "БМП";
             //цена юнита
-            Cost = 3000;
+            Cost = 800;
 
             //здоровье
             Health = 100;
 
             //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 15;
+            PowerAntiInf = 20;
             //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 80;
+            PowerAntiTank = 15;
             //общая мощь против воздуха
-            PowerAntiAir = 20;
+            PowerAntiAir = 5;
 
             //общая защита от пехоты
-            ArmourFromInf = 80;
+            ArmourFromInf = 30;
             //общая защита от наземной техники
-            ArmourFromTank = 80;
+            ArmourFromTank = 30;
             //общая защита от воздушной атаки
-            ArmourFromAir = 80;
+            ArmourFromAir = 30;
 
             //максимальное число патронов и снарядов
-            SupplyMax = 1000;
+            SupplyMax = 5000;
             //число патронов и снарядов
-            Supply = 1000;
+            Supply = 5000;
 
             //радиус действия (для артиллерии)
             RadiusAttack = 0;
@@ -46,7 +46,7 @@ namespace MT.TacticWar.Core.Base.Units
             Experience = ExperienceRecruit;
 
             //число шагов
-            Steps = 4;
+            Steps = 8;
             //ходит ли по земле
             StepLand = true;
             //ходит ли по воде

@@ -21,7 +21,7 @@ namespace MT.TacticWar.UI.Dialogs
             InitializeComponent();
         }
 
-        public void SetDivisions(Division attacker, Division defender)
+        public void SetDivisions(Division attacker, Division defender, List<Division> supportAttacker, List<Division> supportDefender)
         {
             DivisionAttackerName = attacker.Name;
             DivisionDefenderName = defender.Name;
@@ -40,25 +40,35 @@ namespace MT.TacticWar.UI.Dialogs
                 DivisionDefenderUnits.Add($"{unit.Name} ({unit.Health}%)");
             }
 
+            foreach (var div in supportAttacker)
+            {
+                SupportAttackerUnits.Add($"{div.Name}");
+            }
+
+            foreach (var div in supportDefender)
+            {
+                SupportDefenderUnits.Add($"{div.Name}");
+            }
+
             BattleResult = BattleResult.Draw;
         }
 
-        public void SetResultWin(Division attacker)
+        public void SetResultWin(Division attacker, List<Division> supportAttacker, List<Division> supportDefender)
         {
-            SetResult(attacker, null, BattleResult.Win);
+            SetResult(attacker, null, supportAttacker, supportDefender, BattleResult.Win);
         }
 
-        public void SetResultLose(Division defender)
+        public void SetResultLose(Division defender, List<Division> supportAttacker, List<Division> supportDefender)
         {
-            SetResult(null, defender, BattleResult.Lose);
+            SetResult(null, defender, supportAttacker, supportDefender, BattleResult.Lose);
         }
 
-        public void SetResultDraw(Division attacker, Division defender)
+        public void SetResultDraw(Division attacker, Division defender, List<Division> supportAttacker, List<Division> supportDefender)
         {
-            SetResult(attacker, defender, BattleResult.Draw);
+            SetResult(attacker, defender, supportAttacker, supportDefender, BattleResult.Draw);
         }
 
-        private void SetResult(Division attacker, Division defender, BattleResult result)
+        private void SetResult(Division attacker, Division defender, List<Division> supportAttacker, List<Division> supportDefender, BattleResult result)
         {
             DivisionAttackerUnits = new List<string>();
             DivisionDefenderUnits = new List<string>();
@@ -79,6 +89,16 @@ namespace MT.TacticWar.UI.Dialogs
                 {
                     DivisionDefenderUnits.Add($"{unit.Name} ({unit.Health}%)");
                 }
+            }
+
+            foreach (var div in supportAttacker)
+            {
+                SupportAttackerUnits.Add($"{div.Name}");
+            }
+
+            foreach (var div in supportDefender)
+            {
+                SupportDefenderUnits.Add($"{div.Name}");
             }
 
             BattleResult = result;

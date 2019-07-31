@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Objects
@@ -16,6 +15,8 @@ namespace MT.TacticWar.Core.Base.Objects
                     return new Vehicle(player, id, name, x, y);
                 case "ship":
                     return new Ship(player, id, name, x, y);
+                case "navy":
+                    return new Navy(player, id, name, x, y);
                 case "artillery":
                     return new Artillery(player, id, name, x, y);
                 case "aviation":
@@ -48,6 +49,8 @@ namespace MT.TacticWar.Core.Base.Objects
                     return new CityHouse(player, id, name, x, y, health, security);
                 case "hut":
                     return new VillageHut(player, id, name, x, y, health, security);
+                case "church":
+                    return new Church(player, id, name, x, y, health, security);
             }
 
             throw new Exception("Неизвестный тип строения.");

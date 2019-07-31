@@ -2,9 +2,9 @@
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    public class MotorizedInfantry : Unit
+    public class Battleship : Unit
     {
-        public MotorizedInfantry(Division division)
+        public Battleship(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
@@ -12,43 +12,45 @@ namespace MT.TacticWar.Core.Base.Units
             //подразделение
             Division = division;
             //имя
-            Name = "Мотопехота";
+            Name = "Линкор";
             //цена юнита
-            Cost = 800;
+            Cost = 3500;
 
             //здоровье
             Health = 100;
 
             //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 20;
+            PowerAntiInf = 90;
             //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 15;
+            PowerAntiTank = 90;
             //общая мощь против воздуха
-            PowerAntiAir = 5;
+            PowerAntiAir = 90;
 
             //общая защита от пехоты
-            ArmourFromInf = 30;
-            //общая защита от любой техники
-            ArmourFromTank = 30;
+            ArmourFromInf = 90;
+            //общая защита от наземной техники
+            ArmourFromTank = 90;
+            //общая защита от воздушной атаки
+            ArmourFromAir = 60;
 
             //максимальное число патронов и снарядов
-            SupplyMax = 5000;
+            SupplyMax = 3000;
             //число патронов и снарядов
-            Supply = 5000;
+            Supply = 3000;
 
             //радиус действия (для артиллерии)
-            RadiusAttack = 0;
+            RadiusAttack = 5;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Experience = ExperienceRecruit;
+            Experience = ExperienceWarrior;
 
             //число шагов
-            Steps = 8;
+            Steps = 6;
             //ходит ли по земле
-            StepLand = true;
+            StepLand = false;
             //ходит ли по воде
-            StepAqua = false;
+            StepAqua = true;
         }
     }
 }

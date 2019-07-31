@@ -497,6 +497,8 @@ namespace MT.TacticWar.Gameplay
                 // заполняем структуру информации об атаке
                 AttackInfo.DivisionAttacker = divisionThis;
                 AttackInfo.DivisionDefender = divisionTag;
+                AttackInfo.SupportDivisionsAttacker = divisionThis.Player.GetSupportDivisions(divisionThis.Position);
+                AttackInfo.SupportDivisionsDefender = divisionTag.Player.GetSupportDivisions(divisionTag.Position);
                 AttackInfo.BuildingToCapture = null;
 
                 //атака всегда отнимает шаги до минимума
@@ -555,6 +557,8 @@ namespace MT.TacticWar.Gameplay
                     // заполняем структуру информации об атаке
                     AttackInfo.DivisionAttacker = divisionThis;
                     AttackInfo.DivisionDefender = divisionTagEnemy;
+                    AttackInfo.SupportDivisionsAttacker = divisionThis.Player.GetSupportDivisions(divisionThis.Position);
+                    AttackInfo.SupportDivisionsDefender = divisionTagEnemy.Player.GetSupportDivisions(divisionTagEnemy.Position);
                     AttackInfo.BuildingToCapture = buildingTag;
 
                     // атака всегда отнимает шаги до минимума
@@ -583,22 +587,14 @@ namespace MT.TacticWar.Gameplay
         //----------------------
 
         /// <summary>Обработчик нажатия на зону боевых действий</summary>
-        /// <param name="left">координата в пикселях</param>
-        /// <param name="top">координата в пикселях</param>
         /// <returns>Возвращает сигналы обмена с GUI</returns>
-        public Signal ZonaClick(int left, int top)
+        public Signal ZonaClick(int x, int y)
         {
-            int x = left / Graphics.CellSize;
-            int y = top / Graphics.CellSize;
-
             if (x < 0 || x > Mission.Map.Width - 1)
                 return Signal.OUT_OF_RANGE;
 
             if (y < 0 || y > Mission.Map.Height - 1)
                 return Signal.OUT_OF_RANGE;
-
-            // !!!!!!!! дебаг !!!!!!!!
-            // PlayerCurrent = 1;
 
             // TODO: учесть ситуацию,
             // когда из-за тумана войны не видно цели,
@@ -653,6 +649,11 @@ namespace MT.TacticWar.Gameplay
                         bldToCapture.Capture(div1);
                         SelectAndDrawBuilding(bldToCapture);
                     }
+                }
+                else
+                {
+                    // поменять объект в клетке
+                    Mission.Map[div1.Position].Object = div1;
                 }
             }
 

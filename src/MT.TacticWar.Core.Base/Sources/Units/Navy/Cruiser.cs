@@ -2,9 +2,9 @@
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    public class TankHeavy : Unit
+    public class Cruiser : Unit
     {
-        public TankHeavy(Division division)
+        public Cruiser(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
@@ -12,7 +12,7 @@ namespace MT.TacticWar.Core.Base.Units
             //подразделение
             Division = division;
             //имя
-            Name = "Тяжёлый танк";
+            Name = "Крейсер";
             //цена юнита
             Cost = 3000;
 
@@ -20,37 +20,37 @@ namespace MT.TacticWar.Core.Base.Units
             Health = 100;
 
             //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 15;
+            PowerAntiInf = 70;
             //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 80;
+            PowerAntiTank = 70;
             //общая мощь против воздуха
-            PowerAntiAir = 20;
+            PowerAntiAir = 70;
 
             //общая защита от пехоты
-            ArmourFromInf = 80;
+            ArmourFromInf = 70;
             //общая защита от наземной техники
-            ArmourFromTank = 80;
+            ArmourFromTank = 70;
             //общая защита от воздушной атаки
-            ArmourFromAir = 80;
+            ArmourFromAir = 40;
 
             //максимальное число патронов и снарядов
-            SupplyMax = 1000;
+            SupplyMax = 2500;
             //число патронов и снарядов
-            Supply = 1000;
+            Supply = 2500;
 
             //радиус действия (для артиллерии)
-            RadiusAttack = 0;
+            RadiusAttack = 4;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
-            Experience = ExperienceRecruit;
+            Experience = ExperienceWarrior;
 
             //число шагов
-            Steps = 4;
+            Steps = 6;
             //ходит ли по земле
-            StepLand = true;
+            StepLand = false;
             //ходит ли по воде
-            StepAqua = false;
+            StepAqua = true;
         }
     }
 }

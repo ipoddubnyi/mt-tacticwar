@@ -37,6 +37,6 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlArray("gates")]
         [XmlArrayItem("gate")]
-        public SerialZone[] Gates { get; set; }
+        public SerialGate[] Gates { get; set; }
     }
 }

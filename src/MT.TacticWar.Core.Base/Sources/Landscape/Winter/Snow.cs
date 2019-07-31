@@ -1,6 +1,6 @@
 ﻿using MT.TacticWar.Core.Landscape;
 
-namespace MT.TacticWar.Core.Base.Landscape.Summer
+namespace MT.TacticWar.Core.Base.Landscape.Winter
 {
     public class Snow : Cell, ILand
     {

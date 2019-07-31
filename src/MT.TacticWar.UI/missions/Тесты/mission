@@ -61,12 +61,12 @@
                 <division id="1012" type="vehicle" name="Дивизия">
                     <position x="13" y="13" />
                     <units>
+                        <unit type="ifv" />
                         <unit type="tank" />
                         <unit type="tankheavy" />
-                        <unit type="motorized" />
+                        <!--unit type="tankheavy" />
                         <unit type="tankheavy" />
-                        <unit type="tankheavy" />
-                        <unit type="tankheavy" />
+                        <unit type="tankheavy" /-->
                     </units>
                 </division>
                 <division id="1013" type="infantry" name="Разведгруппа">
@@ -82,14 +82,29 @@
                     </units>
                 </division>
                 
-                
                 <division id="1023" type="vehicle" name="Штурмовая танковая группа">
                     <position x="10" y="20" />
                     <units>
                         <unit type="tank" />
                     </units>
                 </division>
-                <division id="1025" type="aviation" name="Эскадрилья">
+                <division id="1024" type="artillery" name="Артиллерия">
+                    <position x="13" y="17" />
+                    <units>
+                        <unit type="howitzer" />
+                        <unit type="howitzer" />
+                        <unit type="howitzer" />
+                    </units>
+                </division>
+                <division id="1025" type="artillery" name="Артиллерия">
+                    <position x="15" y="17" />
+                    <units>
+                        <unit type="howitzer" />
+                        <unit type="howitzer" />
+                        <unit type="howitzer" />
+                    </units>
+                </division>
+                <division id="1035" type="aviation" name="Эскадрилья">
                     <position x="17" y="20" />
                     <units>
                         <unit type="aircraft" />
@@ -134,7 +149,7 @@
                     <health>100</health>
                     <radius>0</radius>
                     <view>1</view>
-                    <security>1025</security>
+                    <security>1035</security>
                 </building>
                 <building id="1127" type="airfield" name="Аэродром 2">
                     <position x="15" y="22" />
@@ -198,9 +213,9 @@
                 <division id="2012" type="vehicle" name="Дивизия">
                     <position x="13" y="12" />
                     <units>
+                        <unit type="ifv" />
                         <unit type="tank" />
                         <unit type="tankheavy" />
-                        <unit type="motorized" />
                     </units>
                 </division>
                 <division id="2013" type="infantry" name="Разведгруппа">
@@ -291,6 +306,7 @@
 
                 <armourinf>80</armourinf>
                 <armourarm>20</armourarm>
+                <armourair>10</armourair>
 
                 <supplymax>1500</supplymax>
                 <supply>1500</supply>
@@ -324,7 +340,7 @@
                 <argument comment="text">Победа!</argument>
             </statement>
         </script-->
-        <script desc="Победа игрока 1">
+        <!--script desc="Победа игрока 1">
             <condition type="unitcount">
                 <argument comment="player">0</argument>
                 <argument comment="count">0</argument>
@@ -332,7 +348,7 @@
             <statement type="gameover">
                 <argument comment="winner">1</argument>
             </statement>
-        </script>
+        </script-->
         <!--script desc="Игрок 0 достиг зоны 10">
             <condition type="playerinzone">
                 <argument comment="player">0</argument>

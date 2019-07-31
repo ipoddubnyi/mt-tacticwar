@@ -2,9 +2,9 @@
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    public class TankHeavy : Unit
+    public class Howitzer : Unit
     {
-        public TankHeavy(Division division)
+        public Howitzer(Division division)
         {
             //номер юнита в подразделении
             Id = 0;
@@ -12,34 +12,34 @@ namespace MT.TacticWar.Core.Base.Units
             //подразделение
             Division = division;
             //имя
-            Name = "Тяжёлый танк";
+            Name = "Гаубица";
             //цена юнита
-            Cost = 3000;
+            Cost = 1500;
 
             //здоровье
             Health = 100;
 
             //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 15;
+            PowerAntiInf = 80;
             //общая мощь против бронетехники и кораблей
             PowerAntiTank = 80;
             //общая мощь против воздуха
-            PowerAntiAir = 20;
+            PowerAntiAir = 0;
 
             //общая защита от пехоты
-            ArmourFromInf = 80;
+            ArmourFromInf = 10;
             //общая защита от наземной техники
-            ArmourFromTank = 80;
+            ArmourFromTank = 5;
             //общая защита от воздушной атаки
-            ArmourFromAir = 80;
+            ArmourFromAir = 5;
 
             //максимальное число патронов и снарядов
-            SupplyMax = 1000;
+            SupplyMax = 1500;
             //число патронов и снарядов
-            Supply = 1000;
+            Supply = 1500;
 
             //радиус действия (для артиллерии)
-            RadiusAttack = 0;
+            RadiusAttack = 5;
             //радиус обзора
             RadiusView = 1;
             //уровень повышения
