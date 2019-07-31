@@ -25,7 +25,7 @@ namespace MT.TacticWar.Gameplay
 
         void DrawWay(List<Cell> wayall, int onedayIndex);
 
-        void DrawPlayersObjects(Player[] players, int playerId, Division selectedDivision, Building selectedBuilding, Fog fog);
+        void DrawPlayersObjects(Player[] players, Player currentPlayer, Division selectedDivision, Building selectedBuilding, Fog fog);
 
         void DrawDivision(Division division, bool selected);
 

@@ -5,7 +5,7 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Objects
 {
-    public class Division : IObject
+    public abstract class Division : IObject
     {
         public Player Player { get; protected set; }
         public int Id { get; protected set; }
@@ -32,7 +32,8 @@ namespace MT.TacticWar.Core.Objects
 
         public int Experience;          //опыт
 
-        public int Steps;               //число шагов (равно числу шагов самого медленного юнита)
+        public int Steps { get; protected set; } //число шагов (равно числу шагов самого медленного юнита)
+        public int StepsMax;               //число шагов (равно числу шагов самого медленного юнита)
         public bool CanStepLand { get; private set; }        //ходит ли по земле
         public bool CanStepAqua;        //ходит ли по воде
 
@@ -63,6 +64,11 @@ namespace MT.TacticWar.Core.Objects
             return GetType() == division.GetType();
         }
 
+        public void NullSteps()
+        {
+            Steps = 0;
+        }
+
         /// <summary>Продвинуть подразделение к цели на этот день</summary>
         /// <param name="way">Путь, по которому продвигать</param>
         public virtual void Move(List<Cell> way)
@@ -85,11 +91,13 @@ namespace MT.TacticWar.Core.Objects
                 if (cell.Occupied && !cell.Coordinates.Equals(Position))
                     break;
 
+                int passcost = GetStepCost(cell); //cell.PassCost
+
                 // если закончились шаги
-                if (Steps < cell.PassCost)
+                if (Steps < passcost)
                     break;
 
-                Steps -= cell.PassCost;
+                Steps -= passcost;
             }
 
             if (null != last)
@@ -115,7 +123,7 @@ namespace MT.TacticWar.Core.Objects
                     break;
 
                 index = i; // запоминаем ячейку по списку
-                curSteps -= wayall[i].PassCost;
+                curSteps -= GetStepCost(wayall[i]); //wayall[i].PassCost;
             }
 
             return index;
@@ -136,6 +144,19 @@ namespace MT.TacticWar.Core.Objects
             Target = Coordinates.Empty;
         }
 
+        public virtual int GetStepCost(Cell cell)
+        {
+            int divbonus = int.MaxValue;
+            foreach (var unit in Units)
+            {
+                int bonus = unit.GetStepBonus(cell);
+                if (bonus < divbonus)
+                    divbonus = bonus;
+            }
+
+            return cell.PassCost - divbonus;
+        }
+
         // Пересчитать показатели подразделения
         public void ResetParams()
         {
@@ -152,7 +173,7 @@ namespace MT.TacticWar.Core.Objects
 
             Experience = 0;          //средний опыт
 
-            Steps = int.MaxValue;  //число шагов (равно числу шагов самого медленного юнита)
+            StepsMax = int.MaxValue;  //число шагов (равно числу шагов самого медленного юнита)
             CanStepLand = true;       //ходит ли по земле
             CanStepAqua = true;       //ходит ли по воде
 
@@ -180,8 +201,8 @@ namespace MT.TacticWar.Core.Objects
                     RadiusView = unit.RadiusView;
 
                 //выбираем минимальное число шагов
-                if (unit.Steps < Steps)
-                    Steps = unit.Steps;
+                if (unit.Steps < StepsMax)
+                    StepsMax = unit.Steps;
 
                 //если хоть 1 юнит не ходит по земле - никто не ходит
                 if (!unit.StepLand)
@@ -202,6 +223,7 @@ namespace MT.TacticWar.Core.Objects
             ArmourFromTank /= Units.Count;
 
             Experience /= Units.Count;
+            Steps = StepsMax;
         }
 
         /// <summary>Присоединить подразделение</summary>
@@ -261,14 +283,14 @@ namespace MT.TacticWar.Core.Objects
         public virtual bool CanStep(Cell cell)
         {
             // если в ячейке вода, а юнит земной
-            if (CellType.Water == cell.Type && !CanStepAqua)
-                return false;
+            if (cell is IWater && CanStepAqua)
+                return true;
 
             // если в ячейке НЕ вода, а юнит водный
-            if (CellType.Water != cell.Type && !CanStepLand)
-                return false;
+            if (cell is ILand && CanStepLand)
+                return true;
 
-            return true;
+            return false;
         }
 
         /// <summary>Может ли остановиться в ячейке</summary>

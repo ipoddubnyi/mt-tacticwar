@@ -67,7 +67,7 @@ namespace MT.TacticWar.Gameplay.Routers
             {
                 for (int j = 0; j < map.Width; j++)
                 {
-                    var cell = new BellmanCell(map.Field[i, j]);
+                    var cell = new BellmanCell(map.Field[i, j], div);
 
                     //обнуляем цену у флага
                     if (IsTargetHere(i, j))

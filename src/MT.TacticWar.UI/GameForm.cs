@@ -274,7 +274,7 @@ namespace MT.TacticWar.UI
                     GAME.EndStep();
 
                     MessageBox.Show(
-                        $"Ход игрока {GAME.PlayerCurrent}",
+                        $"Ход игрока {GAME.Mission.CurrentPlayer.Name}",
                         "Начало хода",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);

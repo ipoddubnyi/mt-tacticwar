@@ -12,10 +12,5 @@ namespace MT.TacticWar.Core.Base.Objects
             base(player, id, name, x, y)
         {
         }
-
-        //public override bool CanStep(Cell cell)
-        //{
-        //    return CellType.Water == cell.Type;
-        //}
     }
 }

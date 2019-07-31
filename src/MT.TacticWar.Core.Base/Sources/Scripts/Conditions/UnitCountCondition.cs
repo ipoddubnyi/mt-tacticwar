@@ -5,8 +5,8 @@ namespace MT.TacticWar.Core.Base.Scripts
 {
     public class UnitCountCondition : ICondition
     {
-        private int playerId;
-        private int unitCount;
+        private readonly int playerId;
+        private readonly int unitCount;
 
         public UnitCountCondition(params string[] args)
         {
@@ -20,7 +20,8 @@ namespace MT.TacticWar.Core.Base.Scripts
         public bool Check(Mission mission)
         {
             int count = 0;
-            foreach (var div in mission.Players[playerId].Divisions)
+            var player = mission.Players.GetById(playerId);
+            foreach (var div in player.Divisions)
                 count += div.Units.Count;
 
             return count > unitCount;

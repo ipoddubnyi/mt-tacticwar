@@ -156,7 +156,7 @@ namespace MT.TacticWar.Gameplay.Battles
 
                 // обнуляем шаги у вступивших в битву
                 div1.ResetParams();
-                div1.Steps = 0;
+                div1.NullSteps();
             }
             else if (0 == div1.Units.Count)
             {
@@ -165,15 +165,15 @@ namespace MT.TacticWar.Gameplay.Battles
 
                 // обнуляем шаги у вступивших в битву
                 div2.ResetParams();
-                div2.Steps = 0;
+                div2.NullSteps();
             }
             else
             {
                 // обнуляем шаги у вступивших в битву
                 div1.ResetParams();
-                div1.Steps = 0;
+                div1.NullSteps();
                 div2.ResetParams();
-                div2.Steps = 0;
+                div2.NullSteps();
             }
 
             //если у нападающего кончились патроны - ничья
@@ -269,12 +269,7 @@ namespace MT.TacticWar.Gameplay.Battles
             if (map[x, y].Occupied || !map[x, y].Passable)
                 return false;
 
-            // если вода, а юнит не плавает
-            if (map[x, y].Type.Equals(CellType.Water) && !division.CanStepAqua)
-                return false;
-
-            // если не вода, а юнит только плавает
-            if (!map[x, y].Type.Equals(CellType.Water) && !division.CanStepLand)
+            if (!division.CanStep(map[x, y]))
                 return false;
 
             return true;

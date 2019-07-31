@@ -16,7 +16,7 @@ namespace MT.TacticWar.Core.Serialization
         public int Team { get; set; }
 
         [XmlAttribute("color")]
-        public int Color { get; set; }
+        public string Color { get; set; }
 
         [XmlAttribute("rank")]
         public int Rank { get; set; }

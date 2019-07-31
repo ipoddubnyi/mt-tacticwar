@@ -15,11 +15,10 @@
             3. Тест.
         </desc>
         <version>1.0</version>
-        <mode>0</mode>
     </info>
     
     <players>
-        <player id="0" name="Игрок 1" team="1" color="1" rank="0" money="50000" ai="false">
+        <player id="0" name="Игрок 1" team="1" color="green" rank="0" money="50000" ai="false">
             <divisions>
                 <division id="1011" type="ship" name="Охранные катера">
                     <position x="9" y="20" />
@@ -35,6 +34,13 @@
                     <units>
                         <unit type="катер" />
                         <unit type="катер" />
+                    </units>
+                </division>
+                
+                <division id="1013" type="infantry" name="Взвод пехоты">
+                    <position x="3" y="24" />
+                    <units>
+                        <unit type="soldier" />
                     </units>
                 </division>
             </divisions>
@@ -68,7 +74,7 @@
             </gates>
         </player>
 
-        <player id="1" name="Игрок 2" team="2" color="2" rank="0" money="50000" ai="true">
+        <player id="1" name="Игрок 2" team="2" color="red" rank="0" money="50000" ai="true">
             <divisions>
                 <division id="2011" type="ship" name="Охранные катера">
                     <position x="9" y="2" />

@@ -14,8 +14,5 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlElement("version")]
         public string Version { get; set; }
-
-        [XmlElement("mode")]
-        public int Mode { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using MT.TacticWar.Core.Base.Objects;
+using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Serialization
@@ -79,9 +80,7 @@ namespace MT.TacticWar.Core.Serialization
 
         public Unit Create(Division division)
         {
-            return Update(new Unit() {
-                Division = division
-            });
+            return Update(new CustomUnit(division));
         }
 
         public bool CompareDivisionType(Division division)

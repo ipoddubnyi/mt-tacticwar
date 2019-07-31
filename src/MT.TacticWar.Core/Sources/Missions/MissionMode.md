@@ -42,3 +42,24 @@ namespace MT.TacticWar.Core
         CaptureZones
     };
 }
+
+public static string AsString(this MissionMode mode)
+{
+    switch (mode)
+    {
+        case MissionMode.KillThemAll:
+            return "Убить их всех";
+        case MissionMode.DestroyTheTarget:
+            return "Уничтожение цели";
+        case MissionMode.CaptureTheBuilding:
+            return "Захат здания";
+        case MissionMode.DefendTheTarget:
+            return "Защита здания";
+        case MissionMode.CaptureTheFlag:
+            return "Захват флага";
+        case MissionMode.CaptureZones:
+            return "Захват зон";
+    }
+
+    throw new Exception("Неизвестный режим миссии.");
+}

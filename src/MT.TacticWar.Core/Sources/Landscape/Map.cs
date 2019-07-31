@@ -6,7 +6,6 @@ namespace MT.TacticWar.Core.Landscape
     public class Map
     {
         public string Name { get; private set; }
-        public MapSchema Schema { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
         public Cell[,] Field { get; private set; }
@@ -19,20 +18,19 @@ namespace MT.TacticWar.Core.Landscape
         {
         }
 
-        public Map(string name, int width, int height, MapSchema schema = MapSchema.Summer) :
-            this(name, width, height, null, schema)
+        public Map(string name, int width, int height) :
+            this(name, width, height, null)
         {
             // инициализация пустыми ячейками
             Field = new Cell[height, width];
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    Field[x, y] = new Cell(x, y, schema);
+                    Field[x, y] = null;
         }
 
-        public Map(string name, int width, int height, Cell[,] field, MapSchema schema)
+        public Map(string name, int width, int height, Cell[,] field)
         {
             Name = name;
-            Schema = schema;
             Width = width;
             Height = height;
             Field = field;

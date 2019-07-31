@@ -21,9 +21,6 @@ namespace MT.TacticWar.Gameplay
         // - системные параметры
         //    * ширина ячейки поля ?в переменной Map?
         //
-        // - число сделанных ходов
-        // - кто ходит сейчас
-        public int PlayerCurrent; //-1 - никто, 0 - игрок 0, 1 - игрок 1
         // - набранные очки ?
         // - информация об атаке
         public BattleInfo AttackInfo;
@@ -42,7 +39,6 @@ namespace MT.TacticWar.Gameplay
         public Game(string misPath, string plr0Name, string plr1Name, bool plr0AI, bool plr1AI)
         {
             Mission = MissionLoader.LoadGame(misPath);
-            PlayerCurrent = 0;
 
             BestWay = new List<Cell>();
             cross = Coordinates.Empty;
@@ -54,7 +50,6 @@ namespace MT.TacticWar.Gameplay
         public Game(Mission mission, string plr0Name, string plr1Name, bool plr0AI, bool plr1AI)
         {
             Mission = mission;
-            PlayerCurrent = 0;
 
             BestWay = new List<Cell>();
             cross = Coordinates.Empty;
@@ -105,9 +100,9 @@ namespace MT.TacticWar.Gameplay
         public void EndStep()
         {
             DeselectAll();
-            PlayerCurrent = (PlayerCurrent + 1) % Mission.Players.Length;
-            Mission.ActivateBuildings(PlayerCurrent);
-            Mission.Players[PlayerCurrent].ResetDivisionsParams();
+            Mission.NextPlayer();
+            Mission.CurrentPlayer.ActivateBuildings(Mission);
+            Mission.CurrentPlayer.ResetDivisionsParams();
         }
 
         public void SelectDivision(Division division)
@@ -146,11 +141,11 @@ namespace MT.TacticWar.Gameplay
 
         public void DrawAll()
         {
-            fog = new Fog(Mission.Map.Width, Mission.Map.Height, Mission.Players[PlayerCurrent]);
+            fog = new Fog(Mission.Map.Width, Mission.Map.Height, Mission.CurrentPlayer);
 
             Graphics.DrawMap(Mission.Map);
             //graphics.DrawPlayersObjects(Mission.Players, Mission.Map, SelectedDivision, SelectedBuilding);
-            Graphics.DrawPlayersObjects(Mission.Players, PlayerCurrent, SelectedDivision, SelectedBuilding, fog);
+            Graphics.DrawPlayersObjects(Mission.Players, Mission.CurrentPlayer, SelectedDivision, SelectedBuilding, fog);
 
             //нарисовать крест, если он есть
             if (cross.X != -1)
@@ -304,12 +299,12 @@ namespace MT.TacticWar.Gameplay
             // убрать из путь часть, которую уже прошли
             var tmpPut = CutWayPart(BestWay, SelectedDivision.Position);
 
-            //выделить юнит заново и собрать информацию о нём
-            SelectAndDrawDivision(SelectedDivision);
-
             // перерисовать туман войны
             Graphics.DrawArea(Mission, areaOld, fog);
             Graphics.DrawArea(Mission, areaNew, fog);
+
+            //выделить юнит заново и собрать информацию о нём
+            SelectAndDrawDivision(SelectedDivision);
 
             //загрузить путь из временной памяти
             BestWay = new List<Cell>(tmpPut);
@@ -378,7 +373,7 @@ namespace MT.TacticWar.Gameplay
         /// <summary>Обработчик нажатия на подразделение</summary>
         private Signal ClickOnDivision(Division division)
         {
-            var isEnemy = division.Player.Id != PlayerCurrent;
+            var isEnemy = division.Player != Mission.CurrentPlayer;
             var command = isEnemy ? ClickEnemieDivision(division) : ClickMyDivision(division);
 
             MoveType moveType;
@@ -408,7 +403,7 @@ namespace MT.TacticWar.Gameplay
         /// <summary>Обработчик нажатия на здание</summary>
         private Signal ClickOnBuilding(Building building)
         {
-            var isEnemy = building.Player.Id != PlayerCurrent;
+            var isEnemy = building.Player != Mission.CurrentPlayer;
             var command = isEnemy ? ClickEnemieBuilding(building) : ClickMyBuilding(building);
 
             MoveType moveType;
@@ -447,7 +442,7 @@ namespace MT.TacticWar.Gameplay
             if (null == SelectedDivision)
                 return Signal.SUCCESS;
 
-            if (SelectedDivision.Player.Id != PlayerCurrent)
+            if (SelectedDivision.Player != Mission.CurrentPlayer)
                 return Signal.SUCCESS;
 
             // если эта точка определа как цель выделенного подразделения
@@ -457,7 +452,7 @@ namespace MT.TacticWar.Gameplay
 
                 // TODO: когда подразделение перемещается в тумане войны и натыкается на соперника
                 //если координаты юнита совпадают с координатами целевого юнита
-                var obj = Mission.GetObjectAt(SelectedDivision.Position, PlayerCurrent);
+                var obj = Mission.GetObjectAt(SelectedDivision.Position, Mission.CurrentPlayer);
                 if (null != obj)
                     return ReachTheGoal(SelectedDivision, obj);
 
@@ -505,8 +500,8 @@ namespace MT.TacticWar.Gameplay
                 AttackInfo.BuildingToCapture = null;
 
                 //атака всегда отнимает шаги до минимума
-                divisionThis.Steps = 0;
-                divisionTag.Steps = 0;
+                divisionThis.NullSteps();
+                divisionTag.NullSteps();
 
                 return Signal.ATTACK;
             }
@@ -543,8 +538,9 @@ namespace MT.TacticWar.Gameplay
                         buildingTag.AddSecurity(divisionThis);
                     }
 
+                    // TODO: охранение обнуляет шаги ???
                     // встать на охранение здания - отнимает все шаги
-                    divisionThis.Steps = 0;
+                    divisionThis.NullSteps();
 
                     SelectAndDrawBuilding(buildingTag);
                 }
@@ -562,8 +558,8 @@ namespace MT.TacticWar.Gameplay
                     AttackInfo.BuildingToCapture = buildingTag;
 
                     // атака всегда отнимает шаги до минимума
-                    divisionThis.Steps = 0;
-                    divisionTagEnemy.Steps = 0;
+                    divisionThis.NullSteps();
+                    divisionTagEnemy.NullSteps();
 
                     return Signal.ATTACK;
                 }
@@ -574,6 +570,8 @@ namespace MT.TacticWar.Gameplay
                     {
                         // захват постройки
                         buildingTag.Capture(divisionThis);
+                        var areaNew = fog.UpdateArea(buildingTag.Position, buildingTag.RadiusView, true);
+                        Graphics.DrawArea(Mission, areaNew, fog);
                         SelectAndDrawBuilding(buildingTag);
                     }
                 }
@@ -680,7 +678,7 @@ namespace MT.TacticWar.Gameplay
             if (SelectedDivision == division)
                 return ClickResult.Select;
 
-            if (SelectedDivision.Player.Id != PlayerCurrent)
+            if (SelectedDivision.Player != Mission.CurrentPlayer)
                 return ClickResult.Select;
 
             //если флаг выделенного юнита указывает сюда
@@ -704,7 +702,7 @@ namespace MT.TacticWar.Gameplay
             if (SelectedDivision == null)
                 return ClickResult.Select;
 
-            if (SelectedDivision.Player.Id != PlayerCurrent)
+            if (SelectedDivision.Player != Mission.CurrentPlayer)
                 return ClickResult.Select;
 
             //если флаг выделенного юнита указывает сюда
@@ -727,7 +725,7 @@ namespace MT.TacticWar.Gameplay
             if (SelectedDivision == building.SecurityDivision)
                 return ClickResult.Select;
 
-            if (SelectedDivision.Player.Id != PlayerCurrent)
+            if (SelectedDivision.Player != Mission.CurrentPlayer)
                 return ClickResult.Select;
 
             // если флаг выделенного юнита указывает сюда
@@ -755,7 +753,7 @@ namespace MT.TacticWar.Gameplay
             if (SelectedDivision == null)
                 return ClickResult.Select;
 
-            if (SelectedDivision.Player.Id != PlayerCurrent)
+            if (SelectedDivision.Player != Mission.CurrentPlayer)
                 return ClickResult.Select;
 
             // если флаг выделенного юнита указывает сюда

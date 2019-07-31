@@ -78,7 +78,7 @@ namespace MT.TacticWar.UI
         [Category("Данные")]
         [DisplayName("Шаги")]
         [Description("Число шагов подразделения")]
-        public int Steps => division.Steps;
+        public string Steps => $"{division.Steps}/{division.StepsMax}";
 
         #endregion
 

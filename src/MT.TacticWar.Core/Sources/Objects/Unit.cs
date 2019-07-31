@@ -3,7 +3,7 @@ using System;
 
 namespace MT.TacticWar.Core.Objects
 {
-    public class Unit
+    public abstract class Unit
     {
         public const int HealthMax = 100;
 
@@ -74,45 +74,17 @@ namespace MT.TacticWar.Core.Objects
             return ArmourFromTank;
         }
 
-        /*public virtual int GetPowerAnti(DivisionType enemyType)
-        {
-            switch (enemyType)
-            {
-                case DivisionType.Infantry:
-                    return PowerAntiInf;
-                case DivisionType.Aviation:
-                    return PowerAntiAir;
-                case DivisionType.Vehicle:
-                case DivisionType.Artillery:
-                case DivisionType.Ship:
-                    return PowerAntiTank;
-            }
-
-            throw new Exception("Неизвестный тип юнита.");
-        }
-
-        public virtual int GetArmourFrom(DivisionType enemyType)
-        {
-            switch (enemyType)
-            {
-                case DivisionType.Infantry:
-                    return ArmourFromInf;
-                case DivisionType.Aviation:
-                case DivisionType.Vehicle:
-                case DivisionType.Artillery:
-                case DivisionType.Ship:
-                    return ArmourFromTank;
-            }
-
-            throw new Exception("Неизвестный тип юнита.");
-        }*/
-
         public virtual int GetPowerBonus(Cell cell)
         {
             return 0;
         }
 
         public virtual int GetArmourBonus(Cell cell)
+        {
+            return Division.IsSecuring ? 5 : 0;
+        }
+
+        public virtual int GetStepBonus(Cell cell)
         {
             return 0;
         }

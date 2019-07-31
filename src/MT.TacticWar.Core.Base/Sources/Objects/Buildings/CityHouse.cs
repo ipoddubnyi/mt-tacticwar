@@ -5,7 +5,7 @@ namespace MT.TacticWar.Core.Base.Objects
     public class CityHouse : Building
     {
         private const int MaxRadiusActive = 0;
-        private const int MaxRadiusView = 1;
+        private const int MaxRadiusView = 2;
 
         public override string Type => "Городской дом";
 

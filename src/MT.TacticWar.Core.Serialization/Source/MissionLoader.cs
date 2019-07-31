@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MT.TacticWar.Core.Base.Landscape;
 using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Scripts;
 using MT.TacticWar.Core.Base.Units;
@@ -35,7 +36,7 @@ namespace MT.TacticWar.Core.Serialization
             var name = mp.Info.Name;
             var width = mp.Info.Size.Width;
             var height = mp.Info.Size.Height;
-            var schema = (MapSchema)mp.Info.Schema;
+            var schema = mp.Info.Schema;
 
             var landlines = MapLandscapeSplit(mp.Landscape, width);
             if (landlines.Length != height)
@@ -48,18 +49,19 @@ namespace MT.TacticWar.Core.Serialization
             var field = LoadMapField(width, height, schema, landlines);
             field = LoadMapFieldPassable(width, height, field, impasslines);
 
-            return new Map(name, width, height, field, schema);
+            return new Map(name, width, height, field);
         }
 
-        private static Cell[,] LoadMapField(int width, int height, MapSchema schema, string[] landlines)
+        private static Cell[,] LoadMapField(int width, int height, string schema, string[] landlines)
         {
             var field = new Cell[width, height];
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    var type = (CellType)int.Parse(landlines[y].Substring(x, 1));
-                    field[x, y] = new Cell(x, y, schema, type);
+                    //var type = (CellType)int.Parse(landlines[y].Substring(x, 1));
+                    //field[x, y] = new Cell(x, y, schema, type);
+                    field[x, y] = LandscapeFactory.CreateCell(schema, landlines[y].Substring(x, 1)[0], x, y);
                 }
             }
             return field;
@@ -117,7 +119,6 @@ namespace MT.TacticWar.Core.Serialization
             return new Mission(
                 mis.Info.Name,
                 MissionTextTrim(mis.Info.Description),
-                (MissionMode)mis.Info.Mode,
                 players,
                 scripts,
                 map
@@ -142,7 +143,7 @@ namespace MT.TacticWar.Core.Serialization
                 pl.Id,
                 pl.Name,
                 pl.Team,
-                (PlayerColor)pl.Color,
+                pl.Color,
                 (PlayerRank)pl.Rank,
                 pl.Money,
                 pl.AI

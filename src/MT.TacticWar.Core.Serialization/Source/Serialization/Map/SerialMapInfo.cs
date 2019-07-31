@@ -17,6 +17,6 @@ namespace MT.TacticWar.Core.Serialization
         public SerialSize Size { get; set; }
 
         [XmlElement("schema")]
-        public int Schema { get; set; }
+        public string Schema { get; set; }
     }
 }

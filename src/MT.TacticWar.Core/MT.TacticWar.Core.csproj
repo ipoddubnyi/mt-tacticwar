@@ -47,22 +47,23 @@
     <Compile Include="Sources\Extensions.cs" />
     <Compile Include="Sources\Common\MoveType.cs" />
     <Compile Include="Sources\Common\Gate.cs" />
-    <Compile Include="Sources\Missions\MissionManage.cs" />
+    <Compile Include="Sources\Landscape\IForest.cs" />
+    <Compile Include="Sources\Landscape\ILand.cs" />
+    <Compile Include="Sources\Landscape\IWater.cs" />
+    <None Include="Sources\Missions\MissionManage.md" />
     <Compile Include="Sources\Objects\IAquatic.cs" />
     <Compile Include="Sources\Objects\IArmored.cs" />
     <Compile Include="Sources\Objects\IAviation.cs" />
     <Compile Include="Sources\Objects\IInfantry.cs" />
     <Compile Include="Sources\Objects\ISupport.cs" />
+    <Compile Include="Sources\Objects\ITransporter.cs" />
     <Compile Include="Sources\Scripts\ISituation.cs" />
-    <Compile Include="Sources\Missions\MissionStatus.cs" />
+    <None Include="Sources\Missions\MissionStatus.md" />
     <Compile Include="Sources\Landscape\Cell.cs" />
     <Compile Include="Sources\Landscape\Map.cs" />
-    <Compile Include="Sources\Landscape\MapSchema.cs" />
-    <Compile Include="Sources\Landscape\CellType.cs" />
-    <Compile Include="Sources\Missions\Mission.cs" />
-    <Compile Include="Sources\Missions\MissionMode.cs" />
+    <Compile Include="Sources\Mission.cs" />
+    <None Include="Sources\Missions\MissionMode.md" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sources\Players\PlayerColor.cs" />
     <Compile Include="Sources\Players\PlayerIntelligence.cs" />
     <Compile Include="Sources\Players\PlayerRank.cs" />
     <Compile Include="Sources\Objects\Building.cs" />
@@ -73,6 +74,8 @@
     <Compile Include="Sources\Scripts\IStatement.cs" />
     <Compile Include="Sources\Scripts\ICondition.cs" />
     <Compile Include="Sources\Scripts\Script.cs" />
+    <Compile Include="Sources\Zone.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

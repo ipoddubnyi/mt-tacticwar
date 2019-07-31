@@ -1,4 +1,5 @@
-﻿using MT.TacticWar.Core.Objects;
+﻿using MT.TacticWar.Core.Landscape;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
@@ -49,6 +50,17 @@ namespace MT.TacticWar.Core.Base.Units
             StepLand = true;
             //ходит ли по воде
             StepAqua = true;
+        }
+
+        public override int GetStepBonus(Cell cell)
+        {
+            if (cell is IWater)
+                return -1;
+
+            if (cell is IForest)
+                return 2;
+
+            return 0;
         }
     }
 }

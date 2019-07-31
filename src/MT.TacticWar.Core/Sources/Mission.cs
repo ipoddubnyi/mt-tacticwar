@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Scripts;
@@ -9,23 +10,54 @@ namespace MT.TacticWar.Core
     {
         public string Name { get; private set; }
         public string Briefing { get; private set; }
-        public MissionMode Mode { get; private set; }
         public Player[] Players { get; private set; }
+        public Player CurrentPlayer { get; private set; }
+        public int Cycles { get; private set; }
+        public Zone[] Zones { get; private set; }
         public Script[] Scripts { get; private set; }
         public Map Map { get; private set; }
         public List<ISituation> Situations { get; private set; }
 
-        public Mission(string name, string briefing, MissionMode mode, Player[] players, Script[] scripts, Map map)
+        public Mission(string name, string briefing, Player[] players, Script[] scripts, Map map)
         {
+            if (0 == players.Length)
+                throw new Exception("В миссии должны быть игроки.");
+
             Name = name;
             Briefing = briefing;
-            Mode = mode;
             Players = players;
+            CurrentPlayer = Players[0];
+            Cycles = 0;
+            Zones = new Zone[0];
             Scripts = scripts;
             Map = map;
             Situations = new List<ISituation>();
 
             Map.OccupateCells(Players);
+        }
+
+        public Player NextPlayer()
+        {
+            for (int i = 0; i < Players.Length; ++i)
+            {
+                if (Players[i] == CurrentPlayer)
+                {
+                    if (i == Players.Length - 1)
+                    {
+                        CurrentPlayer = Players[0];
+                        Cycles += 1;
+                    }
+                    else
+                    {
+                        CurrentPlayer = Players[i + 1];
+                    }
+
+                    if (!CurrentPlayer.IsNeutral)
+                        break;
+                }
+            }
+
+            return CurrentPlayer;
         }
 
         public Division GetDivisionAt(Coordinates pt)
@@ -64,11 +96,11 @@ namespace MT.TacticWar.Core
             return null;
         }
 
-        public IObject GetObjectAt(Coordinates pt, int playerExclude)
+        public IObject GetObjectAt(Coordinates pt, Player playerExclude)
         {
             foreach (var player in Players)
             {
-                if (player.Id == playerExclude)
+                if (player == playerExclude)
                     continue;
 
                 var division = player.GetDivisionAt(pt.X, pt.Y);
@@ -81,14 +113,6 @@ namespace MT.TacticWar.Core
             }
 
             return null;
-        }
-
-        public void ActivateBuildings(int playerId)
-        {
-            foreach (var building in Players[playerId].Buildings)
-            {
-                building.Activate(this);
-            }
         }
 
         public void ExecuteScripts()

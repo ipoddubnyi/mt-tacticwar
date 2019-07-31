@@ -60,7 +60,7 @@ namespace MT.TacticWar.UI.Dialogs
 
                 txtMisName.Text = SelectedMission.Name;
                 txtBriefing.Text = SelectedMission.Briefing;
-                txtMisMode.Text = SelectedMission.Mode.AsString();
+                txtMisMode.Text = "-";
 
                 btnLoad.Enabled = true;
 

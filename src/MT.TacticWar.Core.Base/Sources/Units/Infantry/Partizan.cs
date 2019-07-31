@@ -54,15 +54,25 @@ namespace MT.TacticWar.Core.Base.Units
 
         public override int GetPowerBonus(Cell cell)
         {
-            if (CellType.Forest == cell.Type)
-                return 2;
+            if (cell is IForest)
+                return 5;
 
             return 0;
         }
 
         public override int GetArmourBonus(Cell cell)
         {
-            if (CellType.Forest == cell.Type)
+            var bonus = base.GetArmourBonus(cell);
+
+            if (cell is IForest)
+                return bonus + 5;
+
+            return bonus;
+        }
+
+        public override int GetStepBonus(Cell cell)
+        {
+            if (cell is IForest)
                 return 2;
 
             return 0;

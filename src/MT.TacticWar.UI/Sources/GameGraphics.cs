@@ -8,7 +8,9 @@ using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Players;
 using MT.TacticWar.Core.Base.Objects;
+using MT.TacticWar.Core.Base.Landscape.Summer;
 using MT.TacticWar.Gameplay;
+using MT.TacticWar.Core.Base.Landscape.Winter;
 
 namespace MT.TacticWar.UI
 {
@@ -79,8 +81,8 @@ namespace MT.TacticWar.UI
 
         public void DrawCell(Cell cell)
         {
-            var color = GetCellColor(cell.Type, cell.Schema);
-            using (Brush brush = new SolidBrush(color))
+            var color = GetCellColor(cell);
+            using (var brush = new SolidBrush(color))
             {
                 int x = cell.Coordinates.X;
                 int y = cell.Coordinates.Y;
@@ -90,7 +92,7 @@ namespace MT.TacticWar.UI
 
         public void DrawCellOne(Cell cell, Fog fog)
         {
-            var color = GetCellColor(cell.Type, cell.Schema);
+            var color = GetCellColor(cell);
             using (var brush = new SolidBrush(color))
             {
                 int xpx = cell.Coordinates.X * CellSize;
@@ -105,29 +107,30 @@ namespace MT.TacticWar.UI
             }
         }
 
-        private Color GetCellColor(CellType type, MapSchema schema)
+        private Color GetCellColor(Cell cell)
         {
-            switch (type)
-            {
-                case CellType.Grass:
-                    return (MapSchema.Winter == schema) ? Color.White : Color.Green;
-                case CellType.Snow:
-                    return Color.WhiteSmoke;
-                case CellType.Sand:
-                    return (MapSchema.Winter == schema) ? Color.LightYellow : Color.Yellow;
-                case CellType.Water:
-                    return (MapSchema.Winter == schema) ? Color.DarkBlue : Color.Blue;
-                case CellType.Stones:
-                    return (MapSchema.Winter == schema) ? Color.DimGray : Color.Gray;
-                case CellType.Forest:
-                    return (MapSchema.Winter == schema) ? Color.DarkSeaGreen : Color.DarkGreen;
-                case CellType.Road:
-                    return Color.LightGray;
-                case CellType.Buildings:
-                    return Color.DarkGray;
-                case CellType.Ice:
-                    return Color.LightBlue;
-            }
+            if (cell is Field)
+                return /*(MapSchema.Winter == schema) ? Color.White :*/ Color.Green;
+            if (cell is Road)
+                return Color.LightGray;
+            if (cell is Water)
+                return Color.Blue;
+            if (cell is ColdWater)
+                return Color.DarkBlue;
+            if (cell is Forest)
+                return Color.DarkGreen;
+            if (cell is WinterForest)
+                return Color.DarkSeaGreen;
+            if (cell is Snow)
+                return Color.White;
+            if (cell is Sand)
+                return /*(MapSchema.Winter == schema) ? Color.LightYellow :*/ Color.Yellow;
+            if (cell is Stones)
+                return /*(MapSchema.Winter == schema) ? Color.DimGray :*/ Color.Gray;
+            if (cell is Ice)
+                return Color.LightBlue;
+            if (cell is Bridge)
+                return Color.Brown;
 
             return Color.Black;
         }
@@ -241,11 +244,11 @@ namespace MT.TacticWar.UI
             }*/
         }
 
-        public void DrawPlayersObjects(Player[] players, int playerCurrent, Division selectedDivision, Building selectedBuilding, Fog fog)
+        public void DrawPlayersObjects(Player[] players, Player currentPlayer, Division selectedDivision, Building selectedBuilding, Fog fog)
         {
             foreach (var player in players)
             {
-                if (player.Id == playerCurrent)
+                if (player == currentPlayer)
                     DrawPlayerObjects(player, selectedDivision, selectedBuilding);
                 else
                     DrawPlayerObjectsWithFog(player, selectedDivision, selectedBuilding, fog);
@@ -366,7 +369,7 @@ namespace MT.TacticWar.UI
             throw new Exception("Неизвестный тип строения.");
         }
 
-        private ImageAttributes GetObjectColorReplacement(PlayerColor color, bool selected)
+        private ImageAttributes GetObjectColorReplacement(string color, bool selected)
         {
             var colorMap = new List<ColorMap>();
             colorMap.Add(new ColorMap
@@ -387,23 +390,24 @@ namespace MT.TacticWar.UI
             return attr;
         }
 
-        private Color ConvertPlayerColor(PlayerColor color)
+        private Color ConvertPlayerColor(string color)
         {
-            switch (color)
-            {
-                case PlayerColor.White:
-                    return Color.Snow;
-                case PlayerColor.Green:
-                    return Color.MediumSeaGreen;
-                case PlayerColor.Red:
-                    return Color.OrangeRed;
-                case PlayerColor.Yellow:
-                    return Color.Gold;
-                case PlayerColor.Blue:
-                    return Color.SlateBlue;
-            }
+            if (color.Equals("green", StringComparison.InvariantCultureIgnoreCase))
+                return Color.MediumSeaGreen;
 
-            throw new Exception("Неизвестный цвет.");
+            if (color.Equals("red", StringComparison.InvariantCultureIgnoreCase))
+                return Color.OrangeRed;
+
+            if (color.Equals("yellow", StringComparison.InvariantCultureIgnoreCase))
+                return Color.Gold;
+
+            if (color.Equals("blue", StringComparison.InvariantCultureIgnoreCase))
+                return Color.SlateBlue;
+
+            if (color.Equals("white", StringComparison.InvariantCultureIgnoreCase))
+                return Color.Snow;
+
+            return ColorTranslator.FromHtml(color);
         }
 
         public void DrawFog(Fog fog)

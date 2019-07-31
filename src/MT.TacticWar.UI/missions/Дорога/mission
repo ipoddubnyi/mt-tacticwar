@@ -18,11 +18,10 @@
             3. Захватить завод.
         </desc>
         <version>1.0</version>
-        <mode>0</mode>
     </info>
     
     <players>
-        <player id="0" name="Игрок 1" team="1" color="1" rank="0" money="50000" ai="false">
+        <player id="0" name="Игрок 1" team="1" color="green" rank="0" money="50000" ai="false">
             <divisions>
                 <division id="0" type="infantry" name="Взвод пехоты">
                     <position x="3" y="19" />
@@ -98,7 +97,7 @@
             </gates>
         </player>
 
-        <player id="1" name="Игрок 2" team="1" color="1" rank="0" money="50000" ai="true">
+        <player id="1" name="Игрок 2" team="2" color="red" rank="0" money="50000" ai="true">
             <divisions>
                 <division id="0" type="infantry" name="Взвод пехоты 1">
                     <position x="3" y="5" />
@@ -159,6 +158,96 @@
                     <health>100</health>
                     <radius>2</radius>
                     <view>2</view>
+                </building>
+            </buildings>
+
+            <gates>
+                <gate id="1" x="0" y="1" />
+            </gates>
+        </player>
+
+        <player id="9" name="Нейтральный" team="-1" color="white" rank="0" money="50000" play="false" ai="true">
+            <divisions>
+                <division id="9001" type="infantry" name="Взвод пехоты">
+                    <position x="9" y="19" />
+                    <units>
+                        <unit type="soldier" />
+                    </units>
+                </division>
+                
+                <division id="9002" type="ship" name="Охранный катер">
+                    <position x="13" y="17" />
+                    <units>
+                        <unit type="катер" />
+                    </units>
+                </division>
+            </divisions>
+
+            <buildings>
+                <building id="0" type="house" name="">
+                    <position x="0" y="0" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="1" y="0" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="2" y="0" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="3" y="0" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="4" y="0" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="5" y="0" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="6" y="0" />
+                </building>
+
+                <building id="0" type="house" name="">
+                    <position x="0" y="2" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="1" y="2" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="2" y="2" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="3" y="2" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="4" y="2" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="5" y="2" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="6" y="2" />
+                </building>
+
+                <building id="0" type="house" name="">
+                    <position x="0" y="3" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="1" y="3" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="2" y="3" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="3" y="3" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="4" y="3" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="5" y="3" />
+                </building>
+                <building id="0" type="house" name="">
+                    <position x="6" y="3" />
                 </building>
             </buildings>
 

@@ -6,44 +6,15 @@ namespace MT.TacticWar.Core
 {
     public static class Extensions
     {
-        /*public static string AsString(this DivisionType type)
+        public static Player GetById(this IEnumerable<Player> players, int id)
         {
-            switch (type)
+            foreach (var player in players)
             {
-                case DivisionType.Infantry:
-                    return "Пехота";
-                case DivisionType.Vehicle:
-                    return "Бронетехника";
-                case DivisionType.Artillery:
-                    return "Артиллерия";
-                case DivisionType.Aviation:
-                    return "Авиация";
-                case DivisionType.Ship:
-                    return "Флот";
+                if (player.Id == id)
+                    return player;
             }
 
-            throw new Exception("Неизвестный тип дивизии.");
-        }*/
-
-        public static string AsString(this MissionMode mode)
-        {
-            switch (mode)
-            {
-                case MissionMode.KillThemAll:
-                    return "Убить их всех";
-                case MissionMode.DestroyTheTarget:
-                    return "Уничтожение цели";
-                case MissionMode.CaptureTheBuilding:
-                    return "Захат здания";
-                case MissionMode.DefendTheTarget:
-                    return "Защита здания";
-                case MissionMode.CaptureTheFlag:
-                    return "Захват флага";
-                case MissionMode.CaptureZones:
-                    return "Захват зон";
-            }
-
-            throw new Exception("Неизвестный режим миссии.");
+            return null;
         }
 
         public static Division GetById(this IEnumerable<Division> divisions, int id)
@@ -85,6 +56,28 @@ namespace MT.TacticWar.Core
             {
                 if (bld.Position.Equals(position))
                     return bld;
+            }
+
+            return null;
+        }
+
+        public static Unit GetById(this IEnumerable<Unit> units, int id)
+        {
+            foreach (var unit in units)
+            {
+                if (unit.Id == id)
+                    return unit;
+            }
+
+            return null;
+        }
+
+        public static Unit GetAt(this IEnumerable<Unit> units, Coordinates position)
+        {
+            foreach (var unit in units)
+            {
+                if (unit.Division.Position.Equals(position))
+                    return unit;
             }
 
             return null;
