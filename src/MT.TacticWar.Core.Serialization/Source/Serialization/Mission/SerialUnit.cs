@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Serialization;
-using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Objects;
 
@@ -16,137 +15,96 @@ namespace MT.TacticWar.Core.Serialization
         public string Type { get; set; }
 
         [XmlAttribute("divtype")]
-        public string DivType { get; set; }
+        public string DivisionType { get; set; }
 
-        //
+        #region Изменяемые параметры
 
         [XmlElement("name")]
         public string Name { get; set; }
 
-        [XmlElement("health")]
-        public int? Health { get; set; }
-
         [XmlElement("experience")]
         public int? Experience { get; set; }
 
-        [XmlElement("cost")]
-        public int? Cost { get; set; }
-
-        //
-
-        [XmlElement("powerinf")]
-        public int? PowerAntiInf { get; set; }
-
-        [XmlElement("powerarm")]
-        public int? PowerAntiTank { get; set; }
-
-        [XmlElement("powerair")]
-        public int? PowerAntiAir { get; set; }
-
-        //
-
-        [XmlElement("armourinf")]
-        public int? ArmourFromInf { get; set; }
-
-        [XmlElement("armourarm")]
-        public int? ArmourFromTank { get; set; }
-
-        [XmlElement("armourair")]
-        public int? ArmourFromAir { get; set; }
-
-        //
-
-        [XmlElement("supplymax")]
-        public int? SupplyMax { get; set; }
+        [XmlElement("health")]
+        public int? Health { get; set; }
 
         [XmlElement("supply")]
-        public int? Supply { get; set; }
+        public int? SupplyCurrent { get; set; }
 
-        //
+        #endregion
 
-        [XmlElement("radiusattack")]
-        public int? RadiusAttack { get; set; }
-
-        [XmlElement("radiusview")]
-        public int? RadiusView { get; set; }
-
-        //
+        #region Характеристики типа
 
         [XmlElement("steps")]
         public int? Steps { get; set; }
+        [XmlElement("supplymax")]
+        public int? Supply { get; set; }
+        [XmlElement("cost")]
+        public int? Cost { get; set; }
+
+        [XmlElement("radiusattack")]
+        public int? RadiusAttack { get; set; }
+        [XmlElement("radiusview")]
+        public int? RadiusView { get; set; }
+
+        [XmlElement("powerinf")]
+        public int? PowerAntiInf { get; set; }
+        [XmlElement("powerarm")]
+        public int? PowerAntiTank { get; set; }
+        [XmlElement("powerair")]
+        public int? PowerAntiAir { get; set; }
+
+        [XmlElement("armourinf")]
+        public int? ArmourFromInf { get; set; }
+        [XmlElement("armourarm")]
+        public int? ArmourFromTank { get; set; }
+        [XmlElement("armourair")]
+        public int? ArmourFromAir { get; set; }
 
         [XmlElement("stepland")]
         public bool? StepLand { get; set; }
-
         [XmlElement("stepaqua")]
         public bool? StepAqua { get; set; }
 
-        public Unit Create(Division division)
+        #endregion
+
+        public Unit Create(int id, Division division)
         {
-            return Update(new CustomUnit(division));
+            var name = Name;
+            var exp = Experience.HasValue ? Experience.Value : Unit.ExperienceRecruit;
+            var health = Health.HasValue ? Health.Value : Unit.HealthMax;
+            var supply = SupplyCurrent;
+
+            return new CustomUnit(id, division, GetParameters(), name, exp, health, supply);
         }
 
-        public bool CompareDivisionType(Division division)
+        private UnitParameters GetParameters()
         {
-            switch (DivType)
+            return new UnitParameters()
             {
-                case "infantry":
-                    return division is Infantry;
-                case "vehicle":
-                    return division is Vehicle;
-                case "ship":
-                    return division is Ship;
-                case "artillery":
-                    return division is Artillery;
-                case "aviation":
-                    return division is Aviation;
-            }
+                Steps = Steps.Value,
+                Supply = Supply.Value,
+                Cost = Cost.Value,
 
-            throw new Exception("Неизвестный тип подразделения.");
+                RadiusAttack = RadiusAttack.Value,
+                RadiusView = RadiusView.Value,
+
+                PowerAntiInf = PowerAntiInf.Value,
+                PowerAntiTank = PowerAntiTank.Value,
+                PowerAntiAir = PowerAntiAir.Value,
+
+                ArmourFromInf = ArmourFromInf.Value,
+                ArmourFromTank = ArmourFromTank.Value,
+                ArmourFromAir = ArmourFromAir.Value,
+
+                CanStepLand = StepLand.Value,
+                CanStepAqua = StepAqua.Value
+            };
         }
 
         public Unit Update(Unit unit)
         {
-            if (null != Name)
-                unit.Name = Name;
-            if (Health.HasValue)
-                unit.Health = Health.Value;
-            if (Experience.HasValue)
-                unit.Experience = Experience.Value;
-            if (Cost.HasValue)
-                unit.Cost = Cost.Value;
-
-            if (PowerAntiInf.HasValue)
-                unit.PowerAntiInf = PowerAntiInf.Value;
-            if (PowerAntiTank.HasValue)
-                unit.PowerAntiTank = PowerAntiTank.Value;
-            if (PowerAntiAir.HasValue)
-                unit.PowerAntiAir = PowerAntiAir.Value;
-
-            if (ArmourFromInf.HasValue)
-                unit.ArmourFromInf = ArmourFromInf.Value;
-            if (ArmourFromTank.HasValue)
-                unit.ArmourFromTank = ArmourFromTank.Value;
-            if (ArmourFromAir.HasValue)
-                unit.ArmourFromAir = ArmourFromAir.Value;
-
-            if (SupplyMax.HasValue)
-                unit.SupplyMax = SupplyMax.Value;
-            if (Supply.HasValue)
-                unit.Supply = Supply.Value;
-
-            if (RadiusAttack.HasValue)
-                unit.RadiusAttack = RadiusAttack.Value;
-            if (RadiusView.HasValue)
-                unit.RadiusView = RadiusView.Value;
-
-            if (Steps.HasValue)
-                unit.Steps = Steps.Value;
-            if (StepLand.HasValue)
-                unit.StepLand = StepLand.Value;
-            if (StepAqua.HasValue)
-                unit.StepAqua = StepAqua.Value;
-
+            unit.Update(Name, Experience, Health, SupplyCurrent);
             return unit;
         }
     }

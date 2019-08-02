@@ -23,38 +23,21 @@
                 <division id="1010" type="infantry" name="Взвод пехоты">
                     <position x="3" y="13" />
                     <units>
-                        <unit type="partizan" />
+                        <unit id="123" type="partizan" />
                     </units>
                 </division>
                 <division id="1011" type="vehicle" name="Ударная танковая группа">
                     <position x="19" y="5" />
                     <units>
-                        <unit type="tank">
+                        <unit id="234" type="tank">
                             <name>T-34</name>
-                            <health>50</health>
                             <experience>25</experience>
-                            <cost>1000</cost>
-                            
-                            <powerinf>20</powerinf>
-                            <powerarm>50</powerarm>
-                            <powerair>5</powerair>
-
-                            <armourinf>80</armourinf>
-                            <armourarm>20</armourarm>
-
+                            <health>50</health>
                             <supply>1700</supply>
-
-                            <radiusattack>0</radiusattack>
-                            <radiusview>2</radiusview>
-                            
-                            <steps>10</steps>
-                            <stepland>true</stepland>
-                            <stepaqua>false</stepaqua>
                         </unit>
-                        <unit type="t3485">
+                        <unit id="567" type="t3485">
                             <health>80</health>
                             <experience>75</experience>
-                            <steps>10</steps>
                         </unit>
                     </units>
                 </division>
@@ -78,7 +61,7 @@
                 <division id="1014" type="ship" name="Катер">
                     <position x="2" y="6" />
                     <units>
-                        <unit type="катер" />
+                        <unit type="powerboat" />
                     </units>
                 </division>
                 
@@ -296,9 +279,18 @@
         <units>
             <unit type="t3485" divtype="vehicle">
                 <name>T-34/85</name>
-                <health>100</health>
                 <experience>25</experience>
+                <health>100</health>
+                <supply>1500</supply>
+
+                <!-- характеристики -->
+                
+                <steps>5</steps>
+                <supplymax>1500</supplymax>
                 <cost>1200</cost>
+
+                <radiusattack>0</radiusattack>
+                <radiusview>1</radiusview>
 
                 <powerinf>20</powerinf>
                 <powerarm>70</powerarm>
@@ -308,13 +300,6 @@
                 <armourarm>20</armourarm>
                 <armourair>10</armourair>
 
-                <supplymax>1500</supplymax>
-                <supply>1500</supply>
-
-                <radiusattack>0</radiusattack>
-                <radiusview>1</radiusview>
-
-                <steps>5</steps>
                 <stepland>true</stepland>
                 <stepaqua>false</stepaqua>
             </unit>

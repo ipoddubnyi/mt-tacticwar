@@ -26,6 +26,27 @@ namespace MT.TacticWar.Core.Base.Objects
             throw new Exception("Неизвестный тип подразделения.");
         }
 
+        public static bool CompareDivisionType(Division division, string type)
+        {
+            switch (type)
+            {
+                case "infantry":
+                    return division is Infantry;
+                case "vehicle":
+                    return division is Vehicle;
+                case "ship":
+                    return division is Ship;
+                case "navy":
+                    return division is Navy;
+                case "artillery":
+                    return division is Artillery;
+                case "aviation":
+                    return division is Aviation;
+            }
+
+            throw new Exception("Неизвестный тип подразделения.");
+        }
+
         public static Building CreateBuilding(string type, Player player, int id, string name, int x, int y, int health, int radius, int view, Division security)
         {
             switch (type)

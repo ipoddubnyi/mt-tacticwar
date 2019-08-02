@@ -5,53 +5,36 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Saboteur : Unit
     {
-        public Saboteur(Division division)
+        public Saboteur(int id, Division division, string name = null,
+            int experience = ExperienceWarrior, int health = HealthMax, int? supply = null) :
+            base(id, division, name, experience, health, supply)
         {
-            //номер юнита в подразделении
-            Id = 0;
+            Parameters = new UnitParameters()
+            {
+                Steps = 10,
+                Supply = 3000,
+                Cost = 2500,
 
-            //подразделение
-            Division = division;
-            //имя
-            Name = "Диверсанты";
-            //цена юнита
-            Cost = 3000;
+                RadiusAttack = 0,
+                RadiusView = 2,
 
-            //здоровье
-            Health = 100;
+                PowerAntiInf = 35,
+                PowerAntiTank = 20,
+                PowerAntiAir = 5,
 
-            //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 35;
-            //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 20;
-            //общая мощь против воздуха
-            PowerAntiAir = 2;
+                ArmourFromInf = 80,
+                ArmourFromTank = 20,
+                ArmourFromAir = 20,
 
-            //общая защита от пехоты
-            ArmourFromInf = 80;
-            //общая защита от наземной техники
-            ArmourFromTank = 20;
-            //общая защита от воздушной атаки
-            ArmourFromAir = 20;
+                CanStepLand = true,
+                CanStepAqua = true
+            };
 
-            //максимальное число патронов и снарядов
-            SupplyMax = 3000;
-            //число патронов и снарядов
-            Supply = 3000;
+            if (string.IsNullOrEmpty(name))
+                Name = "Диверсант";
 
-            //радиус действия (для артиллерии)
-            RadiusAttack = 0;
-            //радиус обзора
-            RadiusView = 2;
-            //уровень повышения
-            Experience = ExperienceRecruit;
-
-            //число шагов
-            Steps = 10;
-            //ходит ли по земле
-            StepLand = true;
-            //ходит ли по воде
-            StepAqua = true;
+            if (!supply.HasValue)
+                SupplyCurrent = Parameters.Supply;
         }
 
         public override int GetStepBonus(Cell cell)

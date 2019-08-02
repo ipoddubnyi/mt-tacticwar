@@ -4,53 +4,36 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Cruiser : Unit
     {
-        public Cruiser(Division division)
+        public Cruiser(int id, Division division, string name = null,
+            int experience = ExperienceWarrior, int health = HealthMax, int? supply = null) :
+            base(id, division, name, experience, health, supply)
         {
-            //номер юнита в подразделении
-            Id = 0;
+            Parameters = new UnitParameters()
+            {
+                Steps = 6,
+                Supply = 3000,
+                Cost = 5000,
 
-            //подразделение
-            Division = division;
-            //имя
-            Name = "Крейсер";
-            //цена юнита
-            Cost = 3000;
+                RadiusAttack = 4,
+                RadiusView = 2,
 
-            //здоровье
-            Health = 100;
+                PowerAntiInf = 70,
+                PowerAntiTank = 70,
+                PowerAntiAir = 70,
 
-            //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 70;
-            //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 70;
-            //общая мощь против воздуха
-            PowerAntiAir = 70;
+                ArmourFromInf = 70,
+                ArmourFromTank = 70,
+                ArmourFromAir = 40,
 
-            //общая защита от пехоты
-            ArmourFromInf = 70;
-            //общая защита от наземной техники
-            ArmourFromTank = 70;
-            //общая защита от воздушной атаки
-            ArmourFromAir = 40;
+                CanStepLand = false,
+                CanStepAqua = true
+            };
 
-            //максимальное число патронов и снарядов
-            SupplyMax = 2500;
-            //число патронов и снарядов
-            Supply = 2500;
+            if (string.IsNullOrEmpty(name))
+                Name = "Крейсер";
 
-            //радиус действия (для артиллерии)
-            RadiusAttack = 4;
-            //радиус обзора
-            RadiusView = 1;
-            //уровень повышения
-            Experience = ExperienceWarrior;
-
-            //число шагов
-            Steps = 6;
-            //ходит ли по земле
-            StepLand = false;
-            //ходит ли по воде
-            StepAqua = true;
+            if (!supply.HasValue)
+                SupplyCurrent = Parameters.Supply;
         }
     }
 }

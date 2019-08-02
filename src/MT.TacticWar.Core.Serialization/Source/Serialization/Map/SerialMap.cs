@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
@@ -21,10 +22,11 @@ namespace MT.TacticWar.Core.Serialization
 
         public static void Serialize(string filePath, SerialMap map)
         {
-            using (var fs = new FileStream(filePath, FileMode.Create))
+            using (var writer = XmlWriter.Create(filePath,
+                new XmlWriterSettings { Indent = true, IndentChars = "    " }))
             {
                 var serializer = new XmlSerializer(typeof(SerialMap));
-                serializer.Serialize(fs, map);
+                serializer.Serialize(writer, map);
             }
         }
 

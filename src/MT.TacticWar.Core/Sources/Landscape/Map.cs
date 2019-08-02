@@ -36,6 +36,11 @@ namespace MT.TacticWar.Core.Landscape
             Field = field;
         }
 
+        public void SetCell(int x, int y, Cell cell)
+        {
+            Field[x, y] = cell;
+        }
+
         /// <summary>Задать занятость ячеек</summary>
         /// <param name="players">массив игроков (для доступа к их объектам)</param>
         public void OccupateCells(Player[] players)

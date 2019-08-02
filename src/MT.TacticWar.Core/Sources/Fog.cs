@@ -22,7 +22,7 @@ namespace MT.TacticWar.Core
 
             foreach (var division in player.Divisions)
             {
-                SetVisible(division.Position, division.RadiusView);
+                SetVisible(division.Position, division.Parameters.RadiusView);
             }
 
             foreach (var building in player.Buildings)

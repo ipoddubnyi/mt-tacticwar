@@ -178,7 +178,7 @@ namespace MT.TacticWar.Core.Serialization
                     units.Add(CreateUnit(division, un, types));
                 }
 
-                division.AddUnits(units);
+                division.CompleteWithUnits(units);
                 divisions.Add(division);
             }
 
@@ -223,23 +223,23 @@ namespace MT.TacticWar.Core.Serialization
 
         private static Unit CreateUnit(Division division, SerialUnit u, SerialMissionTypes types)
         {
-            var unit = UnitFactory.CreateUnit(division, u.Type);
+            var unit = UnitFactory.CreateUnit(u.Id, division, u.Type);
             if (null != unit)
                 return u.Update(unit);
 
-            unit = CreateUnitByCustomType(division, u.Type, types);
+            unit = CreateUnitByCustomType(u.Id, division, u.Type, types);
             if (null != unit)
                 return u.Update(unit);
 
             throw new Exception($"Неизвестный тип юнита {u.Type}");
         }
 
-        private static Unit CreateUnitByCustomType(Division division, string type, SerialMissionTypes types)
+        private static Unit CreateUnitByCustomType(int id, Division division, string type, SerialMissionTypes types)
         {
             foreach (var unittype in types.Units)
             {
-                if (unittype.CompareDivisionType(division) && unittype.Type.Equals(type))
-                    return unittype.Create(division);
+                if (ObjectFactory.CompareDivisionType(division, unittype.DivisionType) && unittype.Type.Equals(type))
+                    return unittype.Create(id, division);
             }
 
             return null;

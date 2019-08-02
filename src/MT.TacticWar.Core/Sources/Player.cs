@@ -61,7 +61,7 @@ namespace MT.TacticWar.Core
         {
             foreach (var division in Divisions)
             {
-                division.ResetParams();
+                division.ResetParams(true);
             }
         }
 
@@ -84,7 +84,11 @@ namespace MT.TacticWar.Core
                     {
                         if (division.IsInActiveRange(pt))
                         {
-                            if (division.Steps > 0)
+                            // TODO: если у подразделения поддержки нет шагов,
+                            // может ли оно оказать поддержку?
+                            // Актуально для авиации.
+
+                            //if (division.Steps > 0)
                                 support.Add(division);
                         }
                     }

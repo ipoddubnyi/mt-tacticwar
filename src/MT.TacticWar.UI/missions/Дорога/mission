@@ -178,7 +178,7 @@
                 <division id="9002" type="ship" name="Охранный катер">
                     <position x="13" y="17" />
                     <units>
-                        <unit type="катер" />
+                        <unit type="powerboat" />
                     </units>
                 </division>
             </divisions>

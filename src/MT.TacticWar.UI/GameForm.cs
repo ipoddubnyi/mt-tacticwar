@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using GDIGraphics = System.Drawing.Graphics;
 using System.Windows.Forms;
 using MT.TacticWar.Core;
-using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Serialization;
 using MT.TacticWar.Gameplay;
 using MT.TacticWar.Gameplay.Battles;
 using MT.TacticWar.UI.Dialogs;
+using MT.TacticWar.UI.Graphics;
 
 namespace MT.TacticWar.UI
 {
@@ -40,7 +36,7 @@ namespace MT.TacticWar.UI
             btnEndStep.Enabled = true;
         }
 
-        private void DrawString(Graphics grf, string text, float x, float y)
+        private void DrawString(GDIGraphics grf, string text, float x, float y)
         {
             using (var drawFont = new Font("Consolas", 10))
             {
@@ -66,6 +62,7 @@ namespace MT.TacticWar.UI
         {
             //button3_Click(null, null);
             RunStateFormLoaded();
+            menuMisLoad_Click(sender, e);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -286,7 +283,7 @@ namespace MT.TacticWar.UI
                 if (!AnalizeSignals(signal))
                 {
                     gameMap.Visible = false;
-                    GAME.EndStep();
+                    GAME.NextPlayer();
 
                     MessageBox.Show(
                         $"Ход игрока {GAME.Mission.CurrentPlayer.Name}",

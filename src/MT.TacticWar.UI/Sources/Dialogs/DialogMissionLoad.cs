@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Serialization;
+using MT.TacticWar.UI.Graphics;
 
 namespace MT.TacticWar.UI.Dialogs
 {

@@ -97,7 +97,7 @@ namespace MT.TacticWar.Gameplay
             return Signal.SUCCESS;
         }
 
-        public void EndStep()
+        public void NextPlayer()
         {
             DeselectAll();
             Mission.NextPlayer();
@@ -282,8 +282,8 @@ namespace MT.TacticWar.Gameplay
                 return;
 
             // обновляем туман войны
-            var areaOld = fog.UpdateArea(positionOld, SelectedDivision.RadiusView, false);
-            var areaNew = fog.UpdateArea(SelectedDivision.Position, SelectedDivision.RadiusView, true);
+            var areaOld = fog.UpdateArea(positionOld, SelectedDivision.Parameters.RadiusView, false);
+            var areaNew = fog.UpdateArea(SelectedDivision.Position, SelectedDivision.Parameters.RadiusView, true);
 
             // если на старом месте нет здания - освободить старую ячейку
             var building = SelectedDivision.SecuredBuilding;
@@ -630,7 +630,7 @@ namespace MT.TacticWar.Gameplay
         {
             // битва становится главной целью
             BestWay.Clear();
-            div1.Target = Coordinates.Empty;
+            div1.RemoveTarget();
 
             var result = new Battle(Mission).Run(div1, div2, support1, support2);
 
@@ -664,7 +664,7 @@ namespace MT.TacticWar.Gameplay
         {
             // битва становится главной целью
             BestWay.Clear();
-            division.Target = Coordinates.Empty;
+            division.RemoveTarget();
 
             // TODO: добавить штраф за отступление
             new Battle(Mission).RecedeDivision(division);

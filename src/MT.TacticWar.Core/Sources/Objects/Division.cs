@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Objects
@@ -14,29 +13,15 @@ namespace MT.TacticWar.Core.Objects
         public Coordinates Position { get; set; }
         public List<Unit> Units { get; protected set; }
 
-        public Coordinates Target { get; set; }
-        public Building SecuredBuilding { get; set; } //охраняемое здание
+        public Coordinates Target { get; protected set; }
+        public Building SecuredBuilding { get; set; }
         public bool IsSecuring => null != SecuredBuilding;
 
-        public int PowerAntiInf;        //общая мощь против пехоты и артиллерии
-        public int PowerAntiTank;       //общая мощь против бронетехники и кораблей
-        public int PowerAntiAir;        //общая мощь против воздуха
+        public int Experience { get; protected set; }
+        public int SupplyCurrent { get; protected set; }
+        public int StepsCurrent { get; protected set; }
 
-        public int ArmourFromInf;       //общая защита от пехоты
-        public int ArmourFromTank;      //общая защита от наземной техники
-        public int ArmourFromAir;      //общая защита от воздушной атаки
-
-        public int Supply;              //число патронов и снарядов
-
-        public int RadiusAttack;        //радиус действия (для артиллерии)
-        public int RadiusView;          //радиус обзора
-
-        public int Experience;          //опыт
-
-        public int Steps { get; protected set; } //число шагов (равно числу шагов самого медленного юнита)
-        public int StepsMax;               //число шагов (равно числу шагов самого медленного юнита)
-        public bool CanStepLand { get; private set; }        //ходит ли по земле
-        public bool CanStepAqua;        //ходит ли по воде
+        public UnitParameters Parameters { get; protected set; }
 
         public Division(Player player, int id, string name, int x, int y)
         {
@@ -53,11 +38,11 @@ namespace MT.TacticWar.Core.Objects
             //    ResetParams(); // пересчитать показатели
         }
 
-        public void AddUnits(List<Unit> units)
+        public void CompleteWithUnits(List<Unit> units)
         {
             Units = units;
             if (Units.Count > 0)
-                ResetParams(); // пересчитать показатели
+                ResetParams(true);
         }
 
         public bool CompareTypes(Division division)
@@ -67,7 +52,98 @@ namespace MT.TacticWar.Core.Objects
 
         public void NullSteps()
         {
-            Steps = 0;
+            StepsCurrent = 0;
+        }
+
+        // Пересчитать показатели подразделения
+        public void ResetParams(bool resetSteps = false)
+        {
+            int count = Units.Count;
+
+            if (0 == count)
+                return;
+
+            int sumExperience = 0;
+            int sumSupplyCurrent = 0;
+
+            int minSteps = int.MaxValue;
+            int sumSupply = 0;
+            int sumCost = 0;
+
+            int minRadiusAttack = int.MaxValue;
+            int maxRadiusView = 0;
+
+            int sumPowerAntiInf = 0;
+            int sumPowerAntiAir = 0;
+            int sumPowerAntiTank = 0;
+
+            int sumArmourFromInf = 0;
+            int sumArmourFromTank = 0;
+            int sumArmourFromAir = 0;
+
+            bool canStepLand = true;
+            bool canStepAqua = true;
+
+            foreach (var unit in Units)
+            {
+                sumExperience += unit.Experience;
+                sumSupplyCurrent += unit.SupplyCurrent;
+
+                if (unit.Parameters.Steps < minSteps)
+                    minSteps = unit.Parameters.Steps;
+
+                sumSupply += unit.Parameters.Supply;
+                sumCost += unit.Parameters.Cost;
+
+                if (unit.Parameters.RadiusAttack < minRadiusAttack)
+                    minRadiusAttack = unit.Parameters.RadiusAttack;
+
+                if (unit.Parameters.RadiusView > maxRadiusView)
+                    maxRadiusView = unit.Parameters.RadiusView;
+
+                sumPowerAntiInf += unit.Parameters.PowerAntiInf;
+                sumPowerAntiAir += unit.Parameters.PowerAntiAir;
+                sumPowerAntiTank += unit.Parameters.PowerAntiTank;
+
+                sumArmourFromInf += unit.Parameters.ArmourFromInf;
+                sumArmourFromTank += unit.Parameters.ArmourFromTank;
+                sumArmourFromAir += unit.Parameters.ArmourFromAir;
+
+                if (!unit.Parameters.CanStepLand)
+                    canStepLand = false;
+
+                if (!unit.Parameters.CanStepAqua)
+                    canStepAqua = false;
+            }
+
+            // считаем характеристики подразделения
+
+            Experience = sumExperience / count;
+            SupplyCurrent = sumSupplyCurrent;
+
+            Parameters = new UnitParameters()
+            {
+                Steps = minSteps,
+                Supply = sumSupply,
+                Cost = sumCost,
+
+                RadiusAttack = minRadiusAttack,
+                RadiusView = maxRadiusView,
+
+                PowerAntiInf = sumPowerAntiInf / count,
+                PowerAntiTank = sumPowerAntiTank / count,
+                PowerAntiAir = sumPowerAntiAir / count,
+
+                ArmourFromInf = sumArmourFromInf / count,
+                ArmourFromTank = sumArmourFromTank / count,
+                ArmourFromAir = sumArmourFromAir / count,
+
+                CanStepLand = canStepLand,
+                CanStepAqua = canStepAqua
+            };
+
+            if (resetSteps)
+                StepsCurrent = minSteps;
         }
 
         /// <summary>Продвинуть подразделение к цели на этот день</summary>
@@ -95,10 +171,10 @@ namespace MT.TacticWar.Core.Objects
                 int passcost = GetStepCost(cell); //cell.PassCost
 
                 // если закончились шаги
-                if (Steps < passcost)
+                if (StepsCurrent < passcost)
                     break;
 
-                Steps -= passcost;
+                StepsCurrent -= passcost;
             }
 
             if (null != last)
@@ -114,7 +190,7 @@ namespace MT.TacticWar.Core.Objects
 
         public virtual int GetOneDayIndex(List<Cell> wayall)
         {
-            int curSteps = Steps; // шаги в текущем ходе
+            int curSteps = StepsCurrent; // шаги в текущем ходе
             int index = 0;
 
             for (int i = 0; i < wayall.Count; i++)
@@ -128,11 +204,6 @@ namespace MT.TacticWar.Core.Objects
             }
 
             return index;
-        }
-
-        public void SetTarget(int x, int y)
-        {
-            SetTarget(new Coordinates(x, y));
         }
 
         public void SetTarget(Coordinates target)
@@ -158,78 +229,6 @@ namespace MT.TacticWar.Core.Objects
             return cell.PassCost - divbonus;
         }
 
-        // Пересчитать показатели подразделения
-        public void ResetParams()
-        {
-            PowerAntiInf = 0;      //средняя мощь против пехоты и артиллерии
-            PowerAntiAir = 0;      //средняя мощь против воздуха
-            PowerAntiTank = 0;     //средняя мощь против бронетехники и кораблей
-
-            ArmourFromInf = 0;     //средняя защита от пехоты
-            ArmourFromTank = 0;    //средняя защита от наземной техники
-            ArmourFromAir = 0;    //средняя защита от воздушной атаки
-
-            Supply = 0;           //число патронов и снарядов
-            RadiusAttack = int.MaxValue; //радиус действия (для артиллерии)
-            RadiusView = 0;             //радиус обзора
-
-            Experience = 0;          //средний опыт
-
-            StepsMax = int.MaxValue;  //число шагов (равно числу шагов самого медленного юнита)
-            CanStepLand = true;       //ходит ли по земле
-            CanStepAqua = true;       //ходит ли по воде
-
-            foreach (var unit in Units)
-            {
-                //считаем средние следующих величин
-                PowerAntiInf += unit.PowerAntiInf;
-                PowerAntiAir += unit.PowerAntiAir;
-                PowerAntiTank += unit.PowerAntiTank;
-
-                ArmourFromInf += unit.ArmourFromInf;
-                ArmourFromTank += unit.ArmourFromTank;
-                ArmourFromAir += unit.ArmourFromAir;
-
-                Experience += unit.Experience;
-
-                //сумма патронов
-                Supply += unit.Supply;
-
-                //выбираем минимальный радиус атаки
-                if (unit.RadiusAttack < RadiusAttack)
-                    RadiusAttack = unit.RadiusAttack;
-
-                //выбираем максимальный обзор
-                if (unit.RadiusView > RadiusView)
-                    RadiusView = unit.RadiusView;
-
-                //выбираем минимальное число шагов
-                if (unit.Steps < StepsMax)
-                    StepsMax = unit.Steps;
-
-                //если хоть 1 юнит не ходит по земле - никто не ходит
-                if (!unit.StepLand)
-                    CanStepLand = false;
-
-                //если хоть 1 юнит не плавает - никто не плавает
-                if (!unit.StepAqua)
-                    CanStepAqua = false;
-            }
-
-            //
-
-            PowerAntiInf /= Units.Count;
-            PowerAntiAir /= Units.Count;
-            PowerAntiTank /= Units.Count;
-
-            ArmourFromInf /= Units.Count;
-            ArmourFromTank /= Units.Count;
-            ArmourFromAir /= Units.Count;
-
-            Experience /= Units.Count;
-            Steps = StepsMax;
-        }
-
         /// <summary>Присоединить подразделение</summary>
         /// <param name="guest">Подразделение, которое присоединяют</param>
         public bool AttachDivision(Division guest)
@@ -245,7 +244,7 @@ namespace MT.TacticWar.Core.Objects
             }
 
             // число шагов нового подразделения = минимуму из числа шагов составных подразделений
-            int steps = Math.Min(Steps, guest.Steps);
+            int steps = Math.Min(StepsCurrent, guest.StepsCurrent);
 
             // расформировываем добавляемое подразделение
             guest.Destroy();
@@ -254,7 +253,7 @@ namespace MT.TacticWar.Core.Objects
             ResetParams();
 
             // изменяем число шагов
-            Steps = steps;
+            StepsCurrent = steps;
 
             return true;
         }
@@ -287,11 +286,11 @@ namespace MT.TacticWar.Core.Objects
         public virtual bool CanStep(Cell cell)
         {
             // если в ячейке вода, а юнит земной
-            if (cell is IWater && CanStepAqua)
+            if (cell is IWater && Parameters.CanStepAqua)
                 return true;
 
             // если в ячейке НЕ вода, а юнит водный
-            if (cell is ILand && CanStepLand)
+            if (cell is ILand && Parameters.CanStepLand)
                 return true;
 
             return false;
@@ -315,10 +314,10 @@ namespace MT.TacticWar.Core.Objects
 
         public bool IsInActiveRange(Coordinates pt)
         {
-            int xMin = Position.X - RadiusAttack;
-            int xMax = Position.X + RadiusAttack;
-            int yMin = Position.Y - RadiusAttack;
-            int yMax = Position.Y + RadiusAttack;
+            int xMin = Position.X - Parameters.RadiusAttack;
+            int xMax = Position.X + Parameters.RadiusAttack;
+            int yMin = Position.Y - Parameters.RadiusAttack;
+            int yMax = Position.Y + Parameters.RadiusAttack;
 
             return pt.X >= xMin && pt.X <= xMax && pt.Y >= yMin && pt.Y <= yMax;
         }

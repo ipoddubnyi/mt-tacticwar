@@ -5,53 +5,36 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Partizan : Unit
     {
-        public Partizan(Division division)
+        public Partizan(int id, Division division, string name = null,
+            int experience = ExperienceRecruit, int health = HealthMax, int? supply = null) :
+            base(id, division, name, experience, health, supply)
         {
-            //номер юнита в подразделении
-            Id = 0;
+            Parameters = new UnitParameters()
+            {
+                Steps = 10,
+                Supply = 1500,
+                Cost = 400,
 
-            //подразделение
-            Division = division;
-            //имя
-            Name = "Партизаны";
-            //цена юнита
-            Cost = 400;
+                RadiusAttack = 0,
+                RadiusView = 1,
 
-            //здоровье
-            Health = 100;
+                PowerAntiInf = 20,
+                PowerAntiTank = 10,
+                PowerAntiAir = 2,
 
-            //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 20;
-            //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 2;
-            //общая мощь против воздуха
-            PowerAntiAir = 2;
+                ArmourFromInf = 20,
+                ArmourFromTank = 10,
+                ArmourFromAir = 5,
 
-            //общая защита от пехоты
-            ArmourFromInf = 20;
-            //общая защита от наземной техники
-            ArmourFromTank = 10;
-            //общая защита от воздушной атаки
-            ArmourFromAir = 5;
+                CanStepLand = true,
+                CanStepAqua = false
+            };
 
-            //максимальное число патронов и снарядов
-            SupplyMax = 1500;
-            //число патронов и снарядов
-            Supply = 1500;
+            if (string.IsNullOrEmpty(name))
+                Name = "Партизан";
 
-            //радиус действия (для артиллерии)
-            RadiusAttack = 0;
-            //радиус обзора
-            RadiusView = 1;
-            //уровень повышения
-            Experience = ExperienceRecruit;
-
-            //число шагов
-            Steps = 10;
-            //ходит ли по земле
-            StepLand = true;
-            //ходит ли по воде
-            StepAqua = false;
+            if (!supply.HasValue)
+                SupplyCurrent = Parameters.Supply;
         }
 
         public override int GetPowerBonus(Cell cell)

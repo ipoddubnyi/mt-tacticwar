@@ -5,53 +5,36 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class Igor : Unit
     {
-        public Igor(Division division)
+        public Igor(int id, Division division, string name = null,
+            int experience = ExperienceHero, int health = HealthMax, int? supply = null) :
+            base(id, division, name, experience, health, supply)
         {
-            //номер юнита в подразделении
-            Id = 0;
+            Parameters = new UnitParameters()
+            {
+                Steps = 6,
+                Supply = 1500,
+                Cost = 20000,
 
-            //подразделение
-            Division = division;
-            //имя
-            Name = "Лейтенант";
-            //цена юнита
-            Cost = 50000;
+                RadiusAttack = 0,
+                RadiusView = 1,
 
-            //здоровье
-            Health = 100;
+                PowerAntiInf = 80,
+                PowerAntiTank = 80,
+                PowerAntiAir = 80,
 
-            //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 80;
-            //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 80;
-            //общая мощь против воздуха
-            PowerAntiAir = 80;
+                ArmourFromInf = 80,
+                ArmourFromTank = 80,
+                ArmourFromAir = 80,
 
-            //общая защита от пехоты
-            ArmourFromInf = 80;
-            //общая защита от наземной техники
-            ArmourFromTank = 80;
-            //общая защита от воздушной атаки
-            ArmourFromAir = 80;
+                CanStepLand = true,
+                CanStepAqua = true
+            };
 
-            //максимальное число патронов и снарядов
-            SupplyMax = 1500;
-            //число патронов и снарядов
-            Supply = 1500;
+            if (string.IsNullOrEmpty(name))
+                Name = "Лейтенант";
 
-            //радиус действия (для артиллерии)
-            RadiusAttack = 0;
-            //радиус обзора
-            RadiusView = 1;
-            //уровень повышения
-            Experience = ExperienceHero;
-
-            //число шагов
-            Steps = 5;
-            //ходит ли по земле
-            StepLand = true;
-            //ходит ли по воде
-            StepAqua = true;
+            if (!supply.HasValue)
+                SupplyCurrent = Parameters.Supply;
         }
 
         public override int GetStepBonus(Cell cell)

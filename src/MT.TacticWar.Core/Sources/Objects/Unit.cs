@@ -1,5 +1,4 @@
 ﻿using MT.TacticWar.Core.Landscape;
-using System;
 
 namespace MT.TacticWar.Core.Objects
 {
@@ -12,71 +11,90 @@ namespace MT.TacticWar.Core.Objects
         public const int ExperienceVeteran = 75;
         public const int ExperienceHero = 100;
 
-        public int Id;                 //номер юнита в подразделении
-        public Division Division;     //подразделение
+        public int Id { get; protected set; }
+        public Division Division { get; protected set; }
+        public string Name { get; protected set; }
+        public int Experience { get; protected set; }
+        public int Health { get; protected set; }
+        public int SupplyCurrent { get; protected set; }
 
-        public string Name;            //имя
-        public int Health;         //здоровье
-        public int Experience;          //опыт
-        public int Cost;             //цена юнита
+        public UnitParameters Parameters { get; protected set; }
 
-        public int PowerAntiInf;       //общая мощь против пехоты и артиллерии
-        public int PowerAntiTank;      //общая мощь против бронетехники и кораблей
-        public int PowerAntiAir;       //общая мощь против воздуха
-
-        public int ArmourFromInf;      //общая защита от пехоты
-        public int ArmourFromTank;     //общая защита от наземной техники
-        public int ArmourFromAir;      //общая защита от воздушной атаки
-
-        public int SupplyMax;            //максимальное число патронов и снарядов
-        public int Supply;            //число патронов и снарядов
-
-        public int RadiusAttack;             //радиус действия (для артиллерии)
-        public int RadiusView;              //радиус обзора
-
-        public int Steps;              //число шагов
-        public bool StepLand;          //ходит ли по земле
-        public bool StepAqua;          //ходит ли по воде
-
-        /*public Unit(int id, int type, string name, int health,
-            int powI, int powB, int powA,
-            int armI, int armB, int suplies, int radius, int obzor, int level,
-            int steps, bool stepL, bool stepA, int costs)
+        public Unit(Division division) :
+            this(0, division, "Боевая единица")
         {
-        }*/
+        }
+
+        public Unit(int id, Division division, string name,
+            int experience = ExperienceRecruit, int health = HealthMax, int? supply = null)
+        {
+            Id = id;
+            Division = division;
+            Name = name;
+            Experience = experience;
+            Health = health;
+            SupplyCurrent = supply.HasValue ? supply.Value : 1000;
+        }
+
+        public void Update(string name = null, int? experience = null, int? health = null, int? supply = null)
+        {
+            if (null != name)
+                Name = name;
+
+            if (experience.HasValue)
+                Experience = experience.Value;
+
+            if (health.HasValue)
+                Health = health.Value;
+
+            if (supply.HasValue)
+                SupplyCurrent = supply.Value;
+        }
+
+        public void Wound(int wound)
+        {
+            Health -= wound;
+            if (Health < 0) Health = 0;
+        }
 
         public void Repair()
         {
             Health = HealthMax;
         }
 
+        public void Shoot(int supply)
+        {
+            SupplyCurrent -= supply;
+            if (SupplyCurrent < 0) SupplyCurrent = 0;
+        }
+
         public void Equip()
         {
-            Supply = SupplyMax;
+            SupplyCurrent = Parameters.Supply;
         }
 
         public virtual int GetPowerAnti(Division enemy)
         {
             if (enemy is IInfantry)
-                return PowerAntiInf;
+                return Parameters.PowerAntiInf;
             else if (enemy is IArmored)
-                return PowerAntiTank;
+                return Parameters.PowerAntiTank;
             else if (enemy is IAviation)
-                return PowerAntiAir;
+                return Parameters.PowerAntiAir;
 
-            return PowerAntiInf;
+            return Parameters.PowerAntiInf;
         }
 
         public virtual int GetArmourFrom(Division enemy)
         {
             if (enemy is IInfantry)
-                return ArmourFromInf;
+                return Parameters.ArmourFromInf;
             else if (enemy is IArmored)
-                return ArmourFromTank;
+                return Parameters.ArmourFromTank;
             else if (enemy is IAviation)
-                return ArmourFromAir;
+                return Parameters.ArmourFromAir;
 
-            return ArmourFromInf;
+            return Parameters.ArmourFromInf;
         }
 
         public virtual int GetPowerBonus(Cell cell)
@@ -86,7 +104,7 @@ namespace MT.TacticWar.Core.Objects
 
         public virtual int GetArmourBonus(Cell cell)
         {
-            return Division.IsSecuring ? 5 : 0;
+            return Division.IsSecuring ? 10 : 0;
         }
 
         public virtual int GetStepBonus(Cell cell)

@@ -25,12 +25,12 @@ namespace MT.TacticWar.Core.Base.Objects
 
             var last = way[dayIndex].Coordinates;
             Position = last.Copy();
-            Steps -= way.Count - 1;
+            StepsCurrent -= way.Count - 1;
         }
 
         public override int GetOneDayIndex(List<Cell> wayall)
         {
-            int curSteps = Steps; // шаги в текущем ходе
+            int curSteps = StepsCurrent; // шаги в текущем ходе
             int index = 0;
 
             for (int i = 0; i < wayall.Count; i++)

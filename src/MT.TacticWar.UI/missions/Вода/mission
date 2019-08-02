@@ -23,17 +23,17 @@
                 <division id="1011" type="ship" name="Охранные катера">
                     <position x="9" y="20" />
                     <units>
-                        <unit type="катер" />
-                        <unit type="катер" />
-                        <unit type="катер" />
+                        <unit type="powerboat" />
+                        <unit type="powerboat" />
+                        <unit type="powerboat" />
                     </units>
                 </division>
                 
                 <division id="1012" type="ship" name="Охранные катера">
                     <position x="2" y="20" />
                     <units>
-                        <unit type="катер" />
-                        <unit type="катер" />
+                        <unit type="powerboat" />
+                        <unit type="powerboat" />
                     </units>
                 </division>
                 
@@ -87,17 +87,17 @@
                 <division id="2011" type="ship" name="Охранные катера">
                     <position x="9" y="2" />
                     <units>
-                        <unit type="катер" />
-                        <unit type="катер" />
-                        <unit type="катер" />
+                        <unit type="powerboat" />
+                        <unit type="powerboat" />
+                        <unit type="powerboat" />
                     </units>
                 </division>
 
                 <division id="2012" type="ship" name="Охранные катера">
                     <position x="2" y="2" />
                     <units>
-                        <unit type="катер" />
-                        <unit type="катер" />
+                        <unit type="powerboat" />
+                        <unit type="powerboat" />
                     </units>
                 </division>
                 

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -57,6 +57,7 @@
     <Compile Include="Sources\Objects\IInfantry.cs" />
     <Compile Include="Sources\Objects\ISupport.cs" />
     <Compile Include="Sources\Objects\ITransporter.cs" />
+    <Compile Include="Sources\Objects\UnitParameters.cs" />
     <Compile Include="Sources\Scripts\ISituation.cs" />
     <None Include="Sources\Missions\MissionStatus.md" />
     <Compile Include="Sources\Landscape\Cell.cs" />

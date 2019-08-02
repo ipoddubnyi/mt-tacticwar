@@ -40,7 +40,7 @@ namespace MT.TacticWar.Gameplay.Battles
 
                 // если у нападающего кончились патроны - он отступает
                 divisionA.ResetParams();
-                if (divisionA.Supply == 0)
+                if (divisionA.SupplyCurrent == 0)
                 {
                     none_supply = true;
                     RecedeDivision(divisionA); // отступить
@@ -192,9 +192,8 @@ namespace MT.TacticWar.Gameplay.Battles
             // TODO: была ещё такая формула ранения, подумать о ней:
             //if ((wound / (double)unit2.ArmourFromInf) < 1)
 
-            unit1.Supply -= (int)power;
-            unit2.Health -= (int)wound;
-            if (unit2.Health < 0) unit2.Health = 0;
+            unit1.Shoot((int)power);
+            unit2.Wound((int)wound);
         }
 
         private double GetUnitPower(Unit unit, Division enemy, Cell cell)
@@ -209,8 +208,8 @@ namespace MT.TacticWar.Gameplay.Battles
             power = power * (rand.NextDouble() * (1 - exp) + exp);
 
             // если у юнита не хватает патронов
-            if (unit.Supply < power)
-                power = unit.Supply;
+            if (unit.SupplyCurrent < power)
+                power = unit.SupplyCurrent;
 
             return power;
         }

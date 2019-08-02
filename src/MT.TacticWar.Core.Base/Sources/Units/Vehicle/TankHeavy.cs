@@ -4,53 +4,36 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public class TankHeavy : Unit
     {
-        public TankHeavy(Division division)
+        public TankHeavy(int id, Division division, string name = null,
+            int experience = ExperienceRecruit, int health = HealthMax, int? supply = null) :
+            base(id, division, name, experience, health, supply)
         {
-            //номер юнита в подразделении
-            Id = 0;
+            Parameters = new UnitParameters()
+            {
+                Steps = 4,
+                Supply = 1200,
+                Cost = 2000,
 
-            //подразделение
-            Division = division;
-            //имя
-            Name = "Тяжёлый танк";
-            //цена юнита
-            Cost = 3000;
+                RadiusAttack = 0,
+                RadiusView = 1,
 
-            //здоровье
-            Health = 100;
+                PowerAntiInf = 20,
+                PowerAntiTank = 80,
+                PowerAntiAir = 20,
 
-            //общая мощь против пехоты и артиллерии
-            PowerAntiInf = 15;
-            //общая мощь против бронетехники и кораблей
-            PowerAntiTank = 80;
-            //общая мощь против воздуха
-            PowerAntiAir = 20;
+                ArmourFromInf = 80,
+                ArmourFromTank = 80,
+                ArmourFromAir = 80,
 
-            //общая защита от пехоты
-            ArmourFromInf = 80;
-            //общая защита от наземной техники
-            ArmourFromTank = 80;
-            //общая защита от воздушной атаки
-            ArmourFromAir = 80;
+                CanStepLand = true,
+                CanStepAqua = false
+            };
 
-            //максимальное число патронов и снарядов
-            SupplyMax = 1000;
-            //число патронов и снарядов
-            Supply = 1000;
+            if (string.IsNullOrEmpty(name))
+                Name = "Тяжёлый танк";
 
-            //радиус действия (для артиллерии)
-            RadiusAttack = 0;
-            //радиус обзора
-            RadiusView = 1;
-            //уровень повышения
-            Experience = ExperienceRecruit;
-
-            //число шагов
-            Steps = 4;
-            //ходит ли по земле
-            StepLand = true;
-            //ходит ли по воде
-            StepAqua = false;
+            if (!supply.HasValue)
+                SupplyCurrent = Parameters.Supply;
         }
     }
 }
