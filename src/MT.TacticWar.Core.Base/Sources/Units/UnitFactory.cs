@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Base.Objects;
 
@@ -6,99 +7,77 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public static class UnitFactory
     {
+        private static readonly List<UnitVariant> Units = new List<UnitVariant>()
+        {
+            new UnitVariant { DivisionType = "infantry", Name = "Партизан", UnitType = "partizan", Create = (id, division) => new Partizan(id, division) },
+            new UnitVariant { DivisionType = "infantry", Name = "Солдат", UnitType = "soldier", Create = (id, division) => new Soldier(id, division) },
+            new UnitVariant { DivisionType = "infantry", Name = "Диверсант", UnitType = "saboteur", Create = (id, division) => new Saboteur(id, division) },
+            new UnitVariant { DivisionType = "infantry", Name = "Лейтенант", UnitType = "igor", Create = (id, division) => new Igor(id, division) },
+
+            new UnitVariant { DivisionType = "vehicle", Name = "БМП", UnitType = "ifv", Create = (id, division) => new IFV(id, division) },
+            new UnitVariant { DivisionType = "vehicle", Name = "Средний танк", UnitType = "tank", Create = (id, division) => new TankMiddle(id, division) },
+            new UnitVariant { DivisionType = "vehicle", Name = "Тяжёлый танк", UnitType = "tankheavy", Create = (id, division) => new TankHeavy(id, division) },
+            new UnitVariant { DivisionType = "vehicle", Name = "ЗРК", UnitType = "antiair", Create = (id, division) => new AntiAir(id, division) },
+
+            new UnitVariant { DivisionType = "ship", Name = "Катер", UnitType = "powerboat", Create = (id, division) => new Powerboat(id, division) },
+
+            new UnitVariant { DivisionType = "navy", Name = "Линкор", UnitType = "battleship", Create = (id, division) => new Battleship(id, division) },
+            new UnitVariant { DivisionType = "navy", Name = "Крейсер", UnitType = "cruiser", Create = (id, division) => new Cruiser(id, division) },
+
+            new UnitVariant { DivisionType = "artillery", Name = "Гаубица", UnitType = "howitzer", Create = (id, division) => new Howitzer(id, division) },
+
+            new UnitVariant { DivisionType = "aviation", Name = "Штурмовик", UnitType = "aircraft", Create = (id, division) => new Aircraft(id, division) }
+        };
+
+        /*public static Dictionary<string, string> GetAvailableUnits(string divisionType)
+        {
+            var d = new Dictionary<string, string>();
+            foreach (var u in Units)
+            {
+                if (u.DivisionType.Equals(divisionType))
+                    d.Add(u.Name, u.UnitType);
+            }
+            return d;
+        }*/
+
+        public static List<UnitVariant> GetAvailableUnits(string divisionType)
+        {
+            var list = new List<UnitVariant>();
+            foreach (var unit in Units)
+            {
+                if (unit.DivisionType.Equals(divisionType))
+                    list.Add(unit);
+            }
+            return list;
+        }
+
         public static Unit CreateUnit(int id, Division division, string unitType)
         {
             if (division is Infantry)
-                return CreateUnitInfantry(id, division, unitType);
+                return CreateUnit("infantry", id, division, unitType);
             else if (division is Vehicle)
-                return CreateUnitVehicle(id, division, unitType);
+                return CreateUnit("vehicle", id, division, unitType);
             else if (division is Ship)
-                return CreateUnitShip(id, division, unitType);
+                return CreateUnit("ship", id, division, unitType);
             else if (division is Navy)
-                return CreateUnitNavy(id, division, unitType);
-            else if (division is Aviation)
-                return CreateUnitAviation(id, division, unitType);
+                return CreateUnit("navy", id, division, unitType);
             else if (division is Artillery)
-                return CreateUnitArtillery(id, division, unitType);
+                return CreateUnit("artillery", id, division, unitType);
+            else if (division is Aviation)
+                return CreateUnit("aviation", id, division, unitType);
 
             throw new Exception("Неизвестный тип подразделения.");
         }
 
-        public static Unit CreateUnitInfantry(int id, Division division, string unitType)
+        private static Unit CreateUnit(string divisionType, int id, Division division, string unitType)
         {
-            switch (unitType)
+            foreach (var u in Units)
             {
-                case "partizan":
-                    return new Partizan(id, division);
-                case "soldier":
-                    return new Soldier(id, division);
-                case "saboteur":
-                    return new Saboteur(id, division);
-                case "igor":
-                    return new Igor(id, division);
-            }
+                if (!u.DivisionType.Equals(divisionType))
+                    continue;
 
-            return null;
-        }
-
-        public static Unit CreateUnitVehicle(int id, Division division, string unitType)
-        {
-            switch (unitType)
-            {
-                case "ifv":
-                    return new IFV(id, division);
-                case "tank":
-                    return new TankMiddle(id, division);
-                case "tankheavy":
-                    return new TankHeavy(id, division);
-                case "antiair":
-                    return new AntiAir(id, division);
-            }
-
-            return null;
-        }
-
-        public static Unit CreateUnitShip(int id, Division division, string unitType)
-        {
-            switch (unitType)
-            {
-                case "powerboat":
-                    return new Powerboat(id, division);
-            }
-
-            return null;
-        }
-
-        public static Unit CreateUnitNavy(int id, Division division, string unitType)
-        {
-            switch (unitType)
-            {
-                case "battleship":
-                    return new Battleship(id, division);
-                case "cruiser":
-                    return new Cruiser(id, division);
-            }
-
-            return null;
-        }
-
-        public static Unit CreateUnitAviation(int id, Division division, string unitType)
-        {
-            switch (unitType)
-            {
-                case "aircraft":
-                    return new Aircraft(id, division);
-            }
-
-            return null;
-        }
-
-        public static Unit CreateUnitArtillery(int id, Division division, string unitType)
-        {
-            switch (unitType)
-            {
-                case "howitzer":
-                    return new Howitzer(id, division);
+                if (u.UnitType.Equals(unitType))
+                    return u.Create(id, division);
             }
 
             return null;

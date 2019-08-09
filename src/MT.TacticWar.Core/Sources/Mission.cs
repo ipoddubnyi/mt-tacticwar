@@ -18,6 +18,11 @@ namespace MT.TacticWar.Core
         public Map Map { get; private set; }
         public List<ISituation> Situations { get; private set; }
 
+        public Mission(string name, string briefing, Player[] players, Map map) :
+            this(name, briefing, players, new Zone[0], new Script[0], map)
+        {
+        }
+
         public Mission(string name, string briefing, Player[] players, Zone[] zones, Script[] scripts, Map map)
         {
             if (0 == players.Length)

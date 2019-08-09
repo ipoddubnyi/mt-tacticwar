@@ -1,10 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Objects
 {
     public static class ObjectFactory
     {
+        public static Dictionary<string, string> GetAvailableDivisionTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                { "Пехота", "infantry" },
+                { "Бронетехника", "vehicle" },
+                { "Малый флот", "ship" },
+                { "Большой флот", "navy" },
+                { "Артиллерия", "artillery" },
+                { "Авиация", "aviation" }
+            };
+        }
+
         public static Division CreateDivision(string type, Player player, int id, string name, int x, int y)
         {
             switch (type)

@@ -8,29 +8,56 @@ namespace MT.TacticWar.Core.Base.Landscape
 {
     public static class LandscapeFactory
     {
-        public static Dictionary<string, char> GetAvailable()
+        private static readonly List<CellVariant> Cells = new List<CellVariant>()
+        {
+            new CellVariant { Schema = "summer", Name = "Поле",    Symbol = '-', Create = (x, y) => new Field(x, y) },
+            new CellVariant { Schema = "summer", Name = "Дорога",  Symbol = '#', Create = (x, y) => new Road(x, y) },
+            new CellVariant { Schema = "summer", Name = "Вода",    Symbol = '~', Create = (x, y) => new Water(x, y) },
+            new CellVariant { Schema = "summer", Name = "Лес",     Symbol = '*', Create = (x, y) => new Forest(x, y) },
+            new CellVariant { Schema = "summer", Name = "Песок",   Symbol = ':', Create = (x, y) => new Sand(x, y) },
+            new CellVariant { Schema = "summer", Name = "Камни",   Symbol = 'o', Create = (x, y) => new Stones(x, y) },
+            new CellVariant { Schema = "summer", Name = "Мост",    Symbol = '+', Create = (x, y) => new Bridge(x, y) },
+
+            new CellVariant { Schema = "winter", Name = "Поле",    Symbol = '-', Create = (x, y) => new Snow(x, y) },
+            new CellVariant { Schema = "winter", Name = "Дорога",  Symbol = '#', Create = (x, y) => new Road(x, y) },
+            new CellVariant { Schema = "winter", Name = "Вода",    Symbol = '~', Create = (x, y) => new ColdWater(x, y) },
+            new CellVariant { Schema = "winter", Name = "Лес",     Symbol = '*', Create = (x, y) => new WinterForest(x, y) },
+            new CellVariant { Schema = "winter", Name = "Песок",   Symbol = ':', Create = (x, y) => new Sand(x, y) },
+            new CellVariant { Schema = "winter", Name = "Камни",   Symbol = 'o', Create = (x, y) => new Stones(x, y) },
+            new CellVariant { Schema = "winter", Name = "Мост",    Symbol = '+', Create = (x, y) => new Bridge(x, y) },
+            new CellVariant { Schema = "winter", Name = "Лёд",     Symbol = '≈', Create = (x, y) => new Ice(x, y) }
+        };
+
+        public static Dictionary<string, string> GetAvailableSchema()
+        {
+            return new Dictionary<string, string>
+            {
+                { "Лето", "summer" },
+                { "Зима", "winter" }
+                //{ "Город", "city" }
+            };
+        }
+
+        public static Dictionary<string, char> GetAvailableCells(string schema)
         {
             var d = new Dictionary<string, char>();
-            d.Add("Поле",       '-');
-            d.Add("Дорога",     '#');
-            d.Add("Вода",       '~');
-            d.Add("Лес",        '*');
-            d.Add("Песок",      ':');
-            d.Add("Камни",      'o');
-            d.Add("Мост",       '+');
+            foreach (var c in Cells)
+            {
+                if (c.Schema.Equals(schema))
+                    d.Add(c.Name, c.Symbol);
+            }
             return d;
         }
 
         public static Cell CreateCell(string schema, char cellType, int x, int y)
         {
-            switch (schema)
+            foreach (var c in Cells)
             {
-                case "summer":
-                    return CreateCellSummer(cellType, x, y);
-                case "winter":
-                    return CreateCellWinter(cellType, x, y);
-                case "city":
-                    return null;
+                if (!c.Schema.Equals(schema))
+                    continue;
+
+                if (c.Symbol == cellType)
+                    return c.Create(x, y);
             }
 
             throw new Exception("Неизвестный тип схемы ландшафта.");
@@ -38,73 +65,22 @@ namespace MT.TacticWar.Core.Base.Landscape
 
         public static Cell CreateCellSummer(char cellType, int x, int y)
         {
-            switch (cellType)
-            {
-                case '-':
-                    return new Field(x, y);
-
-                case '#':
-                    return new Road(x, y);
-
-                case '~':
-                    return new Water(x, y);
-
-                case '*':
-                    return new Forest(x, y);
-
-                case ':':
-                    return new Sand(x, y);
-
-                case 'o':
-                    return new Stones(x, y);
-
-                case '+':
-                    return new Bridge(x, y);
-            }
-
-            return null;
+            return CreateCell("summer", cellType, x, y);
         }
 
         public static Cell CreateCellWinter(char cellType, int x, int y)
         {
-            switch (cellType)
-            {
-                case '-':
-                    return new Snow(x, y);
-
-                case '#':
-                    return new Road(x, y);
-
-                case '~':
-                    return new ColdWater(x, y);
-
-                case '*':
-                    return new WinterForest(x, y);
-
-                case ':':
-                    return new Sand(x, y);
-
-                case 'o':
-                    return new Stones(x, y);
-
-                case '+':
-                    return new Bridge(x, y);
-
-                case '≈': // TODO: подумать о другом символе
-                    return new Ice(x, y);
-            }
-
-            return null;
+            return CreateCell("winter", cellType, x, y);
         }
 
-        public static char GetCellCode(string schema, Cell cell)
+        public static char GetCellSymbol(string schema, Cell cell)
         {
             switch (schema)
             {
                 case "summer":
-                    return GetCellCodeSummer(cell);
+                    return GetCellSymbolSummer(cell);
                 case "winter":
-                    return GetCellCodeWinter(cell);
+                    return GetCellSymbolWinter(cell);
                 case "city":
                     return '-';
             }
@@ -112,7 +88,7 @@ namespace MT.TacticWar.Core.Base.Landscape
             throw new Exception("Неизвестный тип схемы ландшафта.");
         }
 
-        public static char GetCellCodeSummer(Cell cell)
+        public static char GetCellSymbolSummer(Cell cell)
         {
             if (cell is Field)
                 return '-';
@@ -132,7 +108,7 @@ namespace MT.TacticWar.Core.Base.Landscape
             throw new Exception("Неизвестный тип ландшафта.");
         }
 
-        public static char GetCellCodeWinter(Cell cell)
+        public static char GetCellSymbolWinter(Cell cell)
         {
             if (cell is Snow)
                 return '-';
