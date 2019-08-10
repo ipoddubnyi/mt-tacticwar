@@ -17,7 +17,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         public Division NewDivision { get; private set; }
 
-        public DialogDivisionNew()
+        public DialogDivisionNew(Division division = null)
         {
             InitializeComponent();
 
@@ -27,7 +27,23 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             {
                 comboDivisionType.Items.Add(type.Value);
             }
-            comboDivisionType.SelectedIndex = 0;
+
+            if (null == division)
+            {
+                comboDivisionType.SelectedIndex = 0;
+                comboDivisionType.Enabled = true;
+            }
+            else
+            {
+                comboDivisionType.Enabled = false;
+                comboDivisionType.SelectedItem = ObjectFactory.GetDivisionCode(division);
+
+                listUnitsDivision.Items.Clear();
+                foreach (var unit in division.Units)
+                {
+                    listUnitsDivision.Items.Add(unit);
+                }
+            }
 
             /*comboDivisionType.DataSource = new BindingSource(divTypes, null);
             comboDivisionType.DisplayMember = "Key";
@@ -103,11 +119,12 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create(int.Parse(txtUnitIdCommon.Text), NewDivision);
-                unit.Update(txtUnitNameCommon.Text,
-                    int.Parse(txtUnitExperienceCommon.Text),
-                    int.Parse(txtUnitHealthCommon.Text),
-                    int.Parse(txtUnitSupplyCommon.Text)
+                var unit = uv.Create((int)numUnitIdCommon.Value, NewDivision);
+                unit.Update(
+                    txtUnitNameCommon.Text,
+                    (int)numUnitExperienceCommon.Value,
+                    (int)numUnitHealthCommon.Value,
+                    (int)numUnitSupplyCommon.Value
                 );
 
                 listUnitsDivision.Items.Add(
@@ -121,6 +138,12 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsDivision.SelectedItem)
             {
                 listUnitsDivision.Items.Remove(listUnitsDivision.SelectedItem);
+
+                numUnitIdDivision.Value = 0;
+                txtUnitNameDivision.Text = "";
+                numUnitHealthDivision.Value = 100;
+                numUnitExperienceDivision.Value = 0;
+                numUnitSupplyDivision.Value = 1000;
             }
         }
 
@@ -130,11 +153,11 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
                 var unit = uv.Create(0, NewDivision);
-                txtUnitIdCommon.Text = unit.Id.ToString();
+                numUnitIdCommon.Value = unit.Id;
                 txtUnitNameCommon.Text = unit.Name;
-                txtUnitHealthCommon.Text = unit.Health.ToString();
-                txtUnitExperienceCommon.Text = unit.Experience.ToString();
-                txtUnitSupplyCommon.Text = unit.SupplyCurrent.ToString();
+                numUnitHealthCommon.Value = unit.Health;
+                numUnitExperienceCommon.Value = unit.Experience;
+                numUnitSupplyCommon.Value = unit.SupplyCurrent;
             }
         }
 
@@ -143,11 +166,30 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsDivision.SelectedItem)
             {
                 var unit = (Unit)listUnitsDivision.SelectedItem;
-                txtUnitIdDivision.Text = unit.Id.ToString();
+                numUnitIdDivision.Value = unit.Id;
                 txtUnitNameDivision.Text = unit.Name;
-                txtUnitHealthDivision.Text = unit.Health.ToString();
-                txtUnitExperienceDivision.Text = unit.Experience.ToString();
-                txtUnitSupplyDivision.Text = unit.SupplyCurrent.ToString();
+                numUnitHealthDivision.Value = unit.Health;
+                numUnitExperienceDivision.Value = unit.Experience;
+                numUnitSupplyDivision.Value = unit.SupplyCurrent;
+            }
+        }
+
+        private void btnUnitDivisionApply_Click(object sender, EventArgs e)
+        {
+            if (null != listUnitsDivision.SelectedItem)
+            {
+                var unit = (Unit)listUnitsDivision.SelectedItem;
+                unit.Update(
+                    txtUnitNameDivision.Text,
+                    (int)numUnitExperienceDivision.Value,
+                    (int)numUnitHealthDivision.Value,
+                    (int)numUnitSupplyDivision.Value
+                );
+
+                int index = listUnitsDivision.Items.IndexOf(unit);
+                listUnitsDivision.Items.RemoveAt(index);
+                listUnitsDivision.Items.Insert(index, unit);
+                listUnitsDivision.SelectedIndex = index;
             }
         }
     }

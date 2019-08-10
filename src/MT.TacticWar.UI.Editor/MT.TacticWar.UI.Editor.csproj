@@ -74,8 +74,10 @@
     </Compile>
     <Compile Include="Sources\LanscapePainter.cs" />
     <Compile Include="Sources\MapEditor.cs" />
+    <Compile Include="Sources\TreeViewNodeSelector.cs" />
     <EmbeddedResource Include="EditorForm.resx">
       <DependentUpon>EditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -43,7 +43,7 @@ namespace MT.TacticWar.UI.Editor
         {
             TreeViewElements.Nodes.Clear();
 
-            var node = new TreeNode("Обычный курсор");
+            var node = new TreeNode("Указатель");
             TreeViewElements.Nodes.Add(node);
 
             node = new TreeNode("Ландшафт");
@@ -54,28 +54,78 @@ namespace MT.TacticWar.UI.Editor
             {
                 var subnode = new TreeNode(cell.Key)
                 {
-                    Tag = cell.Value
+                    Tag = new TreeViewNodeSelector(() => { SelectDrawCellType(cell.Value); })
                 };
                 node.Nodes.Add(subnode);
             }
 
             TreeViewElements.Nodes.Add(node);
+
+            node = new TreeNode("Проходимость")
+            {
+                Tag = new TreeViewNodeSelector(() => { DrawUnpassableShow(); })
+            };
+            var subnode2 = new TreeNode("Непроходимая зона")
+            {
+                Tag = new TreeViewNodeSelector(() => { SelectDrawPassability(false); })
+            };
+            node.Nodes.Add(subnode2);
+            subnode2 = new TreeNode("Проходимая зона")
+            {
+                Tag = new TreeViewNodeSelector(() => { SelectDrawPassability(true); })
+            };
+            node.Nodes.Add(subnode2);
+            node.Expand();
+            TreeViewElements.Nodes.Add(node);
         }
 
         private void TreeViewAddMission()
         {
-            var node = new TreeNode("Строения");
-            var subnode = new TreeNode("Новое строение");
+            var node = new TreeNode("Подразделения");
+            var subnode = new TreeNode("Новое подразделение")
+            {
+                Tag = new TreeViewNodeSelector(SelectShowDialogDivisionNew)
+            };
             node.Nodes.Add(subnode);
             node.Expand();
             TreeViewElements.Nodes.Add(node);
 
-            node = new TreeNode("Подразделения");
-            subnode = new TreeNode("Новое подразделение");
-            subnode.Tag = new DialogDivisionNew();
+            node = new TreeNode("Строения");
+            subnode = new TreeNode("Новое строение");
             node.Nodes.Add(subnode);
             node.Expand();
             TreeViewElements.Nodes.Add(node);
+        }
+
+        private void SelectDrawCellType(char cellType)
+        {
+            var cell = LandscapeFactory.CreateCell(SelectedMapSchema, cellType, 1, 1);
+            //graphics.DrawCell(cell);
+            graphicsPreview.DrawCell(cell);
+            painter.SetModeLandscape(cellType);
+        }
+
+        private void SelectDrawPassability(bool passable)
+        {
+            DrawUnpassableShow();
+            painter.SetModePassable(passable);
+        }
+
+        private void SelectShowDialogDivisionNew()
+        {
+            using (var dialog = new DialogDivisionNew())
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    var division = dialog.NewDivision;
+                    using (var dialog2 = new DialogDivisionNew(division))
+                    {
+                        if (DialogResult.OK == dialog2.ShowDialog())
+                        {
+                        }
+                    }
+                }
+            }
         }
 
         private void MenuFileCreateMap_Click(object sender, EventArgs e)
@@ -165,6 +215,34 @@ namespace MT.TacticWar.UI.Editor
             graphics.DrawMap(SelectedMap);
         }
 
+        private void DrawUnpassableShow()
+        {
+            for (int y = 0; y < SelectedMap.Height; ++y)
+            {
+                for (int x = 0; x < SelectedMap.Width; ++x)
+                {
+                    if (!SelectedMap[x, y].Passable)
+                    {
+                        graphics.DrawCross(new Coordinates(x, y));
+                    }
+                }
+            }
+        }
+
+        private void DrawUnpassableHide()
+        {
+            for (int y = 0; y < SelectedMap.Height; ++y)
+            {
+                for (int x = 0; x < SelectedMap.Width; ++x)
+                {
+                    if (!SelectedMap[x, y].Passable)
+                    {
+                        graphics.DrawCell(SelectedMap[x, y]);
+                    }
+                }
+            }
+        }
+
         private bool ResizeControls(Panel gameMap, int mapWidth, int mapHeight)
         {
             int widthOld = gameMap.Width;
@@ -204,6 +282,12 @@ namespace MT.TacticWar.UI.Editor
                 DrawAll();
         }
 
+        private void TreeViewElements_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+            painter.Reset();
+            DrawUnpassableHide();
+        }
+
         private void TreeViewElements_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (null != graphicsPreview)
@@ -211,21 +295,9 @@ namespace MT.TacticWar.UI.Editor
                 graphicsPreview.Clear(PANEL_CLEAR_COLOR);
                 if (null != e.Node.Tag)
                 {
-                    if (e.Node.Tag is char)
+                    if (e.Node.Tag is TreeViewNodeSelector)
                     {
-                        var cellType = (char)e.Node.Tag;
-                        var cell = LandscapeFactory.CreateCell(SelectedMapSchema, cellType, 1, 1);
-                        //graphics.DrawCell(cell);
-
-                        graphicsPreview.DrawCell(cell);
-                    }
-                    else if (e.Node.Tag is DialogDivisionNew)
-                    {
-                        var dialog = e.Node.Tag as DialogDivisionNew;
-                        if (DialogResult.OK == dialog.ShowDialog())
-                        {
-                            //
-                        }
+                        (e.Node.Tag as TreeViewNodeSelector).Select();
                     }
                 }
             }
@@ -270,8 +342,7 @@ namespace MT.TacticWar.UI.Editor
 
             if (null != TreeViewElements.SelectedNode)
             {
-                var node = TreeViewElements.SelectedNode;
-                if (null != node.Tag)
+                if (painter.IsSet())
                 {
                     int x = e.X / CellSize;
                     int y = e.Y / CellSize;
@@ -282,7 +353,7 @@ namespace MT.TacticWar.UI.Editor
                     if (y < 0 || y > SelectedMap.Height - 1)
                         return;
 
-                    painter.Start((char)node.Tag, x, y);
+                    painter.Start(x, y);
                     painter.Paint();
                 }
             }
@@ -315,6 +386,14 @@ namespace MT.TacticWar.UI.Editor
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnPlayerColor_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.OK == colorSelectDialog.ShowDialog())
+            {
+                btnPlayerColor.BackColor = colorSelectDialog.Color;
             }
         }
     }

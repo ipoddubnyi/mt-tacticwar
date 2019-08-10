@@ -19,6 +19,29 @@ namespace MT.TacticWar.Core.Base.Objects
             };
         }
 
+        public static string GetDivisionCode(Division division)
+        {
+            if (division is Infantry)
+                return "infantry";
+
+            if (division is Vehicle)
+                return "vehicle";
+
+            if (division is Ship)
+                return "ship";
+
+            if (division is Navy)
+                return "navy";
+
+            if (division is Artillery)
+                return "artillery";
+
+            if (division is Aviation)
+                return "aviation";
+
+            throw new Exception("Неизвестный тип подразделения.");
+        }
+
         public static Division CreateDivision(string type, Player player, int id, string name, int x, int y)
         {
             switch (type)

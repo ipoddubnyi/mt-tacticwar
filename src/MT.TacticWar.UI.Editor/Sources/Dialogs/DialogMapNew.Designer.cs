@@ -44,19 +44,17 @@
             // lblSizeWidth
             // 
             this.lblSizeWidth.AutoSize = true;
-            this.lblSizeWidth.Location = new System.Drawing.Point(44, 20);
-            this.lblSizeWidth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSizeWidth.Location = new System.Drawing.Point(33, 16);
             this.lblSizeWidth.Name = "lblSizeWidth";
-            this.lblSizeWidth.Size = new System.Drawing.Size(63, 17);
+            this.lblSizeWidth.Size = new System.Drawing.Size(49, 13);
             this.lblSizeWidth.TabIndex = 0;
             this.lblSizeWidth.Text = "Ширина:";
             // 
             // txtSizeWidth
             // 
-            this.txtSizeWidth.Location = new System.Drawing.Point(119, 16);
-            this.txtSizeWidth.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSizeWidth.Location = new System.Drawing.Point(89, 13);
             this.txtSizeWidth.Name = "txtSizeWidth";
-            this.txtSizeWidth.Size = new System.Drawing.Size(92, 22);
+            this.txtSizeWidth.Size = new System.Drawing.Size(70, 20);
             this.txtSizeWidth.TabIndex = 1;
             this.txtSizeWidth.Text = "25";
             // 
@@ -64,30 +62,27 @@
             // 
             this.lblSizeHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSizeHeight.AutoSize = true;
-            this.lblSizeHeight.Location = new System.Drawing.Point(222, 20);
-            this.lblSizeHeight.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSizeHeight.Location = new System.Drawing.Point(166, 16);
             this.lblSizeHeight.Name = "lblSizeHeight";
-            this.lblSizeHeight.Size = new System.Drawing.Size(61, 17);
+            this.lblSizeHeight.Size = new System.Drawing.Size(48, 13);
             this.lblSizeHeight.TabIndex = 2;
             this.lblSizeHeight.Text = "Высота:";
             // 
             // txtSizeHeight
             // 
             this.txtSizeHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSizeHeight.Location = new System.Drawing.Point(291, 16);
-            this.txtSizeHeight.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSizeHeight.Location = new System.Drawing.Point(218, 13);
             this.txtSizeHeight.Name = "txtSizeHeight";
-            this.txtSizeHeight.Size = new System.Drawing.Size(92, 22);
+            this.txtSizeHeight.Size = new System.Drawing.Size(70, 20);
             this.txtSizeHeight.TabIndex = 3;
             this.txtSizeHeight.Text = "25";
             // 
             // lblSchema
             // 
             this.lblSchema.AutoSize = true;
-            this.lblSchema.Location = new System.Drawing.Point(55, 51);
-            this.lblSchema.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSchema.Location = new System.Drawing.Point(41, 41);
             this.lblSchema.Name = "lblSchema";
-            this.lblSchema.Size = new System.Drawing.Size(52, 17);
+            this.lblSchema.Size = new System.Drawing.Size(42, 13);
             this.lblSchema.TabIndex = 4;
             this.lblSchema.Text = "Схема:";
             // 
@@ -97,20 +92,18 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboMapSchema.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboMapSchema.FormattingEnabled = true;
-            this.comboMapSchema.Location = new System.Drawing.Point(119, 48);
-            this.comboMapSchema.Margin = new System.Windows.Forms.Padding(4);
+            this.comboMapSchema.Location = new System.Drawing.Point(89, 39);
             this.comboMapSchema.Name = "comboMapSchema";
-            this.comboMapSchema.Size = new System.Drawing.Size(264, 24);
+            this.comboMapSchema.Size = new System.Drawing.Size(199, 21);
             this.comboMapSchema.TabIndex = 5;
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(283, 245);
-            this.btnOk.Margin = new System.Windows.Forms.Padding(4);
+            this.btnOk.Location = new System.Drawing.Point(212, 199);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(100, 28);
+            this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 6;
             this.btnOk.Text = "ОК";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -119,29 +112,28 @@
             // lblMapName
             // 
             this.lblMapName.AutoSize = true;
-            this.lblMapName.Location = new System.Drawing.Point(31, 84);
-            this.lblMapName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblMapName.Location = new System.Drawing.Point(23, 68);
             this.lblMapName.Name = "lblMapName";
-            this.lblMapName.Size = new System.Drawing.Size(76, 17);
+            this.lblMapName.Size = new System.Drawing.Size(60, 13);
             this.lblMapName.TabIndex = 7;
             this.lblMapName.Text = "Название:";
             // 
             // txtMapName
             // 
             this.txtMapName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMapName.Location = new System.Drawing.Point(119, 81);
-            this.txtMapName.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMapName.Location = new System.Drawing.Point(89, 66);
             this.txtMapName.Name = "txtMapName";
-            this.txtMapName.Size = new System.Drawing.Size(264, 22);
+            this.txtMapName.Size = new System.Drawing.Size(199, 20);
             this.txtMapName.TabIndex = 8;
             this.txtMapName.Text = "Карта местности";
             // 
             // lblMapDescription
             // 
             this.lblMapDescription.AutoSize = true;
-            this.lblMapDescription.Location = new System.Drawing.Point(29, 113);
+            this.lblMapDescription.Location = new System.Drawing.Point(22, 92);
+            this.lblMapDescription.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMapDescription.Name = "lblMapDescription";
-            this.lblMapDescription.Size = new System.Drawing.Size(78, 17);
+            this.lblMapDescription.Size = new System.Drawing.Size(60, 13);
             this.lblMapDescription.TabIndex = 9;
             this.lblMapDescription.Text = "Описание:";
             // 
@@ -150,19 +142,20 @@
             this.txtMapDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMapDescription.Location = new System.Drawing.Point(119, 110);
+            this.txtMapDescription.Location = new System.Drawing.Point(89, 89);
+            this.txtMapDescription.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtMapDescription.Multiline = true;
             this.txtMapDescription.Name = "txtMapDescription";
             this.txtMapDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMapDescription.Size = new System.Drawing.Size(264, 126);
+            this.txtMapDescription.Size = new System.Drawing.Size(199, 103);
             this.txtMapDescription.TabIndex = 10;
             // 
             // DialogMapNew
             // 
             this.AcceptButton = this.btnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 286);
+            this.ClientSize = new System.Drawing.Size(325, 232);
             this.Controls.Add(this.txtMapDescription);
             this.Controls.Add(this.lblMapDescription);
             this.Controls.Add(this.txtMapName);
@@ -175,13 +168,11 @@
             this.Controls.Add(this.txtSizeWidth);
             this.Controls.Add(this.lblSizeWidth);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DialogMapNew";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Новая карта";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.DialogMapNew_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
