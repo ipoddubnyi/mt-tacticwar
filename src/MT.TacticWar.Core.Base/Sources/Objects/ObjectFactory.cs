@@ -42,9 +42,9 @@ namespace MT.TacticWar.Core.Base.Objects
             throw new Exception("Неизвестный тип подразделения.");
         }
 
-        public static Division CreateDivision(string type, Player player, int id, string name, int x, int y)
+        public static Division CreateDivision(string code, Player player, int id, string name, int x, int y)
         {
-            switch (type)
+            switch (code)
             {
                 case "infantry":
                     return new Infantry(player, id, name, x, y);
@@ -63,9 +63,9 @@ namespace MT.TacticWar.Core.Base.Objects
             throw new Exception("Неизвестный тип подразделения.");
         }
 
-        public static bool CompareDivisionType(Division division, string type)
+        public static bool CompareDivisionType(Division division, string code)
         {
-            switch (type)
+            switch (code)
             {
                 case "infantry":
                     return division is Infantry;
@@ -84,9 +84,9 @@ namespace MT.TacticWar.Core.Base.Objects
             throw new Exception("Неизвестный тип подразделения.");
         }
 
-        public static Building CreateBuilding(string type, Player player, int id, string name, int x, int y, int health, int radius, int view, Division security)
+        public static Building CreateBuilding(string code, Player player, int id, string name, int x, int y, int health, int radius, int view, Division security)
         {
-            switch (type)
+            switch (code)
             {
                 case "factory":
                     return new Factory(player, id, name, x, y, health, security);

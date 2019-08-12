@@ -6,18 +6,11 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI.Editor.Dialogs
 {
-    public partial class DialogDivisionNew : Form
+    public partial class DialogDivisionEditor : Form
     {
-        private const int PlayersCountMin = 2;
-        private const int PlayersCountMax = 4;
+        public Division ResultDivision { get; private set; }
 
-        public int PlayersCount { get; private set; }
-        public string MissionName { get; private set; }
-        public string MissionBriefing { get; private set; }
-
-        public Division NewDivision { get; private set; }
-
-        public DialogDivisionNew(Division division = null)
+        public DialogDivisionEditor(Division division = null)
         {
             InitializeComponent();
 
@@ -32,12 +25,14 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             {
                 comboDivisionType.SelectedIndex = 0;
                 comboDivisionType.Enabled = true;
+                ComboDivisionType_SelectedIndexChanged(null, null);
             }
             else
             {
                 comboDivisionType.Enabled = false;
                 comboDivisionType.SelectedItem = ObjectFactory.GetDivisionCode(division);
 
+                ResultDivision = division;
                 listUnitsDivision.Items.Clear();
                 foreach (var unit in division.Units)
                 {
@@ -50,13 +45,6 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             comboDivisionType.ValueMember = "Value";*/
         }
 
-        private void DialogMapNew_Load(object sender, EventArgs e)
-        {
-            PlayersCount = 2;
-            MissionName = "";
-            MissionBriefing = "";
-        }
-
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateEntries())
@@ -65,27 +53,11 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private bool ValidateEntries()
         {
-            /*if (0 == txtMissionName.Text.Length)
+            if (0 == listUnitsDivision.Items.Count)
             {
-                ShowError("Название миссии не может быть пустым.");
+                ShowError("Необходимо добавить хотя бы одного юнита.");
                 return false;
             }
-
-            if (!int.TryParse(comboPlayersCount.SelectedItem.ToString(), out int players))
-            {
-                ShowError("Неверное число игроков.");
-                return false;
-            }
-
-            if (players < PlayersCountMin || players > PlayersCountMax)
-            {
-                ShowError($"Число игроков должно быть от {PlayersCountMin} до {PlayersCountMax}.");
-                return false;
-            }
-
-            PlayersCount = players;
-            MissionName = txtMissionName.Text;
-            MissionBriefing = txtMissionBriefing.Text;*/
 
             return true;
         }
@@ -97,21 +69,19 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private void ComboDivisionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //var units = UnitFactory.GetAvailableUnits(comboDivisionType.SelectedValue.ToString());
             var units = UnitFactory.GetAvailableUnits(comboDivisionType.SelectedItem.ToString());
             listUnitsAll.Items.Clear();
             foreach (var unit in units)
             {
                 listUnitsAll.Items.Add(unit);
             }
-            //listUnitsAll.DataSource = new BindingSource(units, null);
-            //listUnitsAll.DisplayMember = "Key";
-            //listUnitsAll.ValueMember = "Value";
+
+            if (listUnitsAll.Items.Count > 0)
+                listUnitsAll.SelectedIndex = 0;
 
             listUnitsDivision.Items.Clear();
 
-            //NewDivision = ObjectFactory.CreateDivision(comboDivisionType.SelectedValue.ToString(), null, 0, "", 0, 0);
-            NewDivision = ObjectFactory.CreateDivision(comboDivisionType.SelectedItem.ToString(), null, 0, "", 0, 0);
+            ResultDivision = ObjectFactory.CreateDivision(comboDivisionType.SelectedItem.ToString(), null, 0, "", 0, 0);
         }
 
         private void BtnUnitAdd_Click(object sender, EventArgs e)
@@ -119,7 +89,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create((int)numUnitIdCommon.Value, NewDivision);
+                var unit = uv.Create((int)numUnitIdCommon.Value, ResultDivision);
                 unit.Update(
                     txtUnitNameCommon.Text,
                     (int)numUnitExperienceCommon.Value,
@@ -127,9 +97,13 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                     (int)numUnitSupplyCommon.Value
                 );
 
+                ResultDivision.Units.Add(unit);
+
                 listUnitsDivision.Items.Add(
                     unit
                 );
+
+                listUnitsDivision.SelectedItem = unit;
             }
         }
 
@@ -152,7 +126,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create(0, NewDivision);
+                var unit = uv.Create(0, ResultDivision);
                 numUnitIdCommon.Value = unit.Id;
                 txtUnitNameCommon.Text = unit.Name;
                 numUnitHealthCommon.Value = unit.Health;

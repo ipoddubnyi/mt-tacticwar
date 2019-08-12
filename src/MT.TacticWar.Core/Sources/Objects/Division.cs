@@ -38,9 +38,9 @@ namespace MT.TacticWar.Core.Objects
             //    ResetParams(); // пересчитать показатели
         }
 
-        public void CompleteWithUnits(List<Unit> units)
+        public void CompleteWithUnits(IEnumerable<Unit> units)
         {
-            Units = units;
+            Units = new List<Unit>(units);
             if (Units.Count > 0)
                 ResetParams(true);
         }

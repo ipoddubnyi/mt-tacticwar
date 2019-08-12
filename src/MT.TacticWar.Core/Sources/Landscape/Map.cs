@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Landscape
 {
@@ -53,20 +54,21 @@ namespace MT.TacticWar.Core.Landscape
 
             foreach (var player in players)
             {
-                foreach (var div in player.Divisions)
-                {
-                    x = div.Position.X;
-                    y = div.Position.Y;
-                    Field[x, y].Object = div;
-                }
+                foreach (var division in player.Divisions)
+                    OccupateCell(division);
 
                 foreach (var building in player.Buildings)
-                {
-                    x = building.Position.X;
-                    y = building.Position.Y;
-                    Field[x, y].Object = building;
-                }
+                    OccupateCell(building);
             }
+        }
+
+        /// <summary>Задать занятость ячейки</summary>
+        /// <param name="obj">Объект, который занимает ячейку.</param>
+        public void OccupateCell(IObject obj)
+        {
+            int x = obj.Position.X;
+            int y = obj.Position.Y;
+            Field[x, y].Object = obj;
         }
 
         public Coordinates[] GetArea(Coordinates center, int radius)

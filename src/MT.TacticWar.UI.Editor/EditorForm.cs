@@ -10,8 +10,10 @@ using System.Windows.Forms;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Base.Landscape;
 using MT.TacticWar.Core.Landscape;
+using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Serialization;
 using MT.TacticWar.UI.Editor.Dialogs;
+using MT.TacticWar.UI.Editor.Painters;
 using MT.TacticWar.UI.Graphics;
 
 namespace MT.TacticWar.UI.Editor
@@ -24,15 +26,17 @@ namespace MT.TacticWar.UI.Editor
         private Mission SelectedMission = null;
         private Map SelectedMap = null;
         private string SelectedMapSchema = "summer";
+        private Division SelectedDivision = null;
         private GameGraphics graphics = null;
         private GameGraphics graphicsPreview = null;
-        private LanscapePainter painter = null;
+        private IPainter painter = null;
 
         public EditorForm()
         {
             InitializeComponent();
 
             TabControlLeft.TabPages.Remove(TabMissionInfo);
+            TabControlLeft.TabPages.Remove(TabPlayers);
         }
 
         private void EditorForm_Load(object sender, EventArgs e)
@@ -81,18 +85,20 @@ namespace MT.TacticWar.UI.Editor
 
         private void TreeViewAddMission()
         {
-            var node = new TreeNode("Подразделения");
-            var subnode = new TreeNode("Новое подразделение")
+            var node = new TreeNode("Объекты игроков");
+
+            var subnode = new TreeNode("Подразделение")
             {
                 Tag = new TreeViewNodeSelector(SelectShowDialogDivisionNew)
             };
             node.Nodes.Add(subnode);
-            node.Expand();
-            TreeViewElements.Nodes.Add(node);
 
-            node = new TreeNode("Строения");
-            subnode = new TreeNode("Новое строение");
+            subnode = new TreeNode("Строение")
+            {
+                //Tag = new TreeViewNodeSelector(SelectShowDialogDivisionNew)
+            };
             node.Nodes.Add(subnode);
+
             node.Expand();
             TreeViewElements.Nodes.Add(node);
         }
@@ -102,30 +108,24 @@ namespace MT.TacticWar.UI.Editor
             var cell = LandscapeFactory.CreateCell(SelectedMapSchema, cellType, 1, 1);
             //graphics.DrawCell(cell);
             graphicsPreview.DrawCell(cell);
-            painter.SetModeLandscape(cellType);
+            painter = new LanscapePainter(graphics, SelectedMap, SelectedMapSchema, cellType);
         }
 
         private void SelectDrawPassability(bool passable)
         {
             DrawUnpassableShow();
-            painter.SetModePassable(passable);
+            painter = new PassabilityPainter(graphics, SelectedMap, passable);
+        }
+
+        private void SelectShowDialogDivisionSelect()
+        {
+            panelDivision.Visible = true;
+            selector = true;
         }
 
         private void SelectShowDialogDivisionNew()
         {
-            using (var dialog = new DialogDivisionNew())
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    var division = dialog.NewDivision;
-                    using (var dialog2 = new DialogDivisionNew(division))
-                    {
-                        if (DialogResult.OK == dialog2.ShowDialog())
-                        {
-                        }
-                    }
-                }
-            }
+            panelDivision.Visible = true;
         }
 
         private void MenuFileCreateMap_Click(object sender, EventArgs e)
@@ -155,8 +155,6 @@ namespace MT.TacticWar.UI.Editor
                     lblMapSize.Text = $"Размер карты: {dialog.MapSizeWidth}x{dialog.MapSizeHeight}";
                     lblMapSchema.Text = $"Схема карты: {dialog.MapSchema}";
 
-                    painter = new LanscapePainter(SelectedMapSchema, SelectedMap, graphics);
-
                     DrawAll();
                 }
             }
@@ -179,8 +177,6 @@ namespace MT.TacticWar.UI.Editor
             lblMapSize.Text = $"Размер карты: {SelectedMap.Width}x{SelectedMap.Height}";
             lblMapSchema.Text = "Схема карты: -";
 
-            painter = new LanscapePainter(SelectedMapSchema, SelectedMap, graphics);
-
             DrawAll();
         }
 
@@ -190,22 +186,22 @@ namespace MT.TacticWar.UI.Editor
             {
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    var players = new Player[dialog.PlayersCount];
-                    for (int i = 0; i < dialog.PlayersCount; ++i)
-                    {
-                        players[i] = new Player(i, "", 0, "", Core.Players.PlayerRank.Soldier, 0, false);
-                    }
+                    int playersCount = 2;
+                    var players = new Player[playersCount];
+                    players[0] = new Player(0, "Игрок 1", 1, "green", Core.Players.PlayerRank.Soldier, 0, false);
+                    players[1] = new Player(1, "Игрок 2", 2, "red", Core.Players.PlayerRank.Soldier, 0, false);
 
                     SelectedMission = new Mission(dialog.MissionName, dialog.MissionBriefing, players, SelectedMap);
 
                     TreeViewAddMission();
                     TabControlLeft.TabPages.Add(TabMissionInfo);
+                    TabControlLeft.TabPages.Add(TabPlayers);
 
                     txtMissionName.Text = dialog.MissionName;
                     txtMissionBriefing.Text = dialog.MissionBriefing;
-                    comboPlayersCount.SelectedItem = dialog.PlayersCount.ToString();
+                    comboPlayersCount.SelectedItem = playersCount.ToString();
 
-                    //painter = new LanscapePainter(SelectedMapSchema, SelectedMap, graphics);
+                    comboDivisionPlayer.DataSource = new BindingSource(SelectedMission.Players, null);
                 }
             }
         }
@@ -284,7 +280,9 @@ namespace MT.TacticWar.UI.Editor
 
         private void TreeViewElements_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
-            painter.Reset();
+            panelDivision.Visible = false;
+            painter = null;
+            selector = false;
             DrawUnpassableHide();
         }
 
@@ -337,31 +335,98 @@ namespace MT.TacticWar.UI.Editor
 
         private void PanelEditor_MouseDown(object sender, MouseEventArgs e)
         {
-            if (null == SelectedMap)
-                return;
-
-            if (null != TreeViewElements.SelectedNode)
+            if (null != painter)
             {
-                if (painter.IsSet())
+                int x = e.X / CellSize;
+                int y = e.Y / CellSize;
+
+                if (x < 0 || x > SelectedMap.Width - 1)
+                    return;
+
+                if (y < 0 || y > SelectedMap.Height - 1)
+                    return;
+
+                painter.Start(x, y);
+                painter.Paint();
+            }
+            else if (selector)
+            {
+                int x = e.X / CellSize;
+                int y = e.Y / CellSize;
+
+                if (x < 0 || x > SelectedMap.Width - 1)
+                    return;
+
+                if (y < 0 || y > SelectedMap.Height - 1)
+                    return;
+
+                var division = SelectedMission.GetDivisionAt(x, y);
+                if (null != division)
                 {
-                    int x = e.X / CellSize;
-                    int y = e.Y / CellSize;
-
-                    if (x < 0 || x > SelectedMap.Width - 1)
-                        return;
-
-                    if (y < 0 || y > SelectedMap.Height - 1)
-                        return;
-
-                    painter.Start(x, y);
-                    painter.Paint();
+                    SelectedDivision = division;
+                    graphics.DrawDivision(SelectedDivision, true);
+                    return;
                 }
+
+                /*var building = SelectedMission.GetBuildingAt(x, y);
+                if (null != building)
+                {
+                    SelectedBuilding = building;
+                    return;
+                }*/
             }
         }
+
+        bool selector = false;
 
         private void PanelEditor_MouseUp(object sender, MouseEventArgs e)
         {
             painter?.Stop();
+        }
+
+        private void PanelEditor_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (null == SelectedMission)
+                return;
+
+            if (null != painter)
+            {
+                if (MouseButtons.Right == e.Button)
+                    painter = null;
+
+                return;
+            }
+
+            int x = e.X / CellSize;
+            int y = e.Y / CellSize;
+
+            if (x < 0 || x > SelectedMap.Width - 1)
+                return;
+
+            if (y < 0 || y > SelectedMap.Height - 1)
+                return;
+
+            var division = SelectedMission.GetDivisionAt(x, y);
+            if (null != division)
+            {
+                if (MouseButtons.Left == e.Button)
+                {
+                    SelectedDivision = division;
+                    graphics.DrawDivision(SelectedDivision, true);
+                }
+                else if (MouseButtons.Right == e.Button)
+                {
+                    contextMenuDivision.Tag = division;
+                    contextMenuDivision.Show(Cursor.Position);
+                }
+            }
+
+            /*var building = SelectedMission.GetBuildingAt(x, y);
+            if (null != building)
+            {
+                SelectedBuilding = building;
+                return;
+            }*/
         }
 
         private void MenuFileSaveMap_Click(object sender, EventArgs e)
@@ -394,6 +459,110 @@ namespace MT.TacticWar.UI.Editor
             if (DialogResult.OK == colorSelectDialog.ShowDialog())
             {
                 btnPlayerColor.BackColor = colorSelectDialog.Color;
+            }
+        }
+
+        //
+
+        private void BtnDivisionCreate_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new DialogDivisionEditor())
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    SelectedDivision = dialog.ResultDivision;
+
+                    painter = new DivisionPainter(graphics, SelectedMap,
+                        SelectedDivision,
+                        (comboDivisionPlayer.SelectedItem as Player),
+                        (int)numDivisionId.Value,
+                        txtDivisionName.Text
+                    );
+                }
+            }
+        }
+
+        private void BtnDivisionUpdate_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new DialogDivisionEditor(SelectedDivision))
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    SelectedDivision = dialog.ResultDivision;
+
+                    painter = new DivisionPainter(graphics, SelectedMap,
+                        SelectedDivision,
+                        (comboDivisionPlayer.SelectedItem as Player),
+                        (int)numDivisionId.Value,
+                        txtDivisionName.Text
+                    );
+                }
+            }
+        }
+
+        private void ContextMenuDivisionEdit_Click(object sender, EventArgs e)
+        {
+            if (null != contextMenuDivision.Tag)
+            {
+                var division = contextMenuDivision.Tag as Division;
+                using (var dialog = new DialogDivisionEditor(division))
+                {
+                    if (DialogResult.OK == dialog.ShowDialog())
+                    {
+                        division = dialog.ResultDivision;
+                    }
+                }
+            }
+        }
+
+        private void ContextMenuDivisionDelete_Click(object sender, EventArgs e)
+        {
+            if (null != contextMenuDivision.Tag)
+            {
+                var division = contextMenuDivision.Tag as Division;
+                division.Destroy();
+                graphics.DrawCell(SelectedMap[division.Position]);
+            }
+        }
+
+        private void ComboDivisionPlayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // TODO: избавиться от повторов.
+            // Лучше свойства подразделения вынести в UserControl.
+            if (null != SelectedDivision)
+            {
+                painter = new DivisionPainter(graphics, SelectedMap,
+                    SelectedDivision,
+                    (comboDivisionPlayer.SelectedItem as Player),
+                    (int)numDivisionId.Value,
+                    txtDivisionName.Text
+                );
+            }
+        }
+
+        private void NumDivisionId_ValueChanged(object sender, EventArgs e)
+        {
+            if (null != SelectedDivision)
+            {
+                painter = new DivisionPainter(graphics, SelectedMap,
+                    SelectedDivision,
+                    (comboDivisionPlayer.SelectedItem as Player),
+                    (int)numDivisionId.Value,
+                    txtDivisionName.Text
+                );
+            }
+        }
+
+        private void TxtDivisionName_TextChanged(object sender, EventArgs e)
+        {
+            if (null != SelectedDivision)
+            {
+                painter = new DivisionPainter(graphics, SelectedMap,
+                    SelectedDivision,
+                    (comboDivisionPlayer.SelectedItem as Player),
+                    (int)numDivisionId.Value,
+                    txtDivisionName.Text
+                );
             }
         }
     }

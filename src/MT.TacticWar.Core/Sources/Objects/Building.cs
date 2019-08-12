@@ -60,5 +60,13 @@ namespace MT.TacticWar.Core.Objects
         public virtual void Activate(Mission mission)
         {
         }
+
+        public void Destroy()
+        {
+            if (IsSecured)
+                RemoveSecurity();
+
+            Player.Buildings.Remove(this);
+        }
     }
 }

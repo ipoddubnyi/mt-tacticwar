@@ -96,5 +96,10 @@ namespace MT.TacticWar.Core
             }
             return support;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

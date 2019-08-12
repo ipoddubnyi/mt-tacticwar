@@ -1,6 +1,6 @@
 ﻿namespace MT.TacticWar.UI.Editor.Dialogs
 {
-    partial class DialogDivisionNew
+    partial class DialogDivisionEditor
     {
         /// <summary>
         /// Required designer variable.
@@ -406,8 +406,7 @@
             this.MinimizeBox = false;
             this.Name = "DialogDivisionNew";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Новое подразделение";
-            this.Load += new System.EventHandler(this.DialogMapNew_Load);
+            this.Text = "Редактор подразделений";
             ((System.ComponentModel.ISupportInitialize)(this.numUnitHealthCommon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitExperienceCommon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitSupplyCommon)).EndInit();

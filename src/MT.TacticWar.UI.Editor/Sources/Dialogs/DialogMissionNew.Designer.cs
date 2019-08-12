@@ -33,17 +33,17 @@
             this.txtMissionName = new System.Windows.Forms.TextBox();
             this.lblMissionBriefing = new System.Windows.Forms.Label();
             this.txtMissionBriefing = new System.Windows.Forms.TextBox();
-            this.lblPlayersCount = new System.Windows.Forms.Label();
-            this.comboPlayersCount = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(212, 144);
+            this.btnOk.Location = new System.Drawing.Point(283, 145);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(100, 28);
             this.btnOk.TabIndex = 6;
             this.btnOk.Text = "ОК";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -52,28 +52,29 @@
             // lblMissionName
             // 
             this.lblMissionName.AutoSize = true;
-            this.lblMissionName.Location = new System.Drawing.Point(26, 39);
+            this.lblMissionName.Location = new System.Drawing.Point(35, 12);
+            this.lblMissionName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMissionName.Name = "lblMissionName";
-            this.lblMissionName.Size = new System.Drawing.Size(60, 13);
+            this.lblMissionName.Size = new System.Drawing.Size(76, 17);
             this.lblMissionName.TabIndex = 7;
             this.lblMissionName.Text = "Название:";
             // 
             // txtMissionName
             // 
             this.txtMissionName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMissionName.Location = new System.Drawing.Point(89, 37);
+            this.txtMissionName.Location = new System.Drawing.Point(119, 10);
+            this.txtMissionName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtMissionName.Name = "txtMissionName";
-            this.txtMissionName.Size = new System.Drawing.Size(199, 20);
+            this.txtMissionName.Size = new System.Drawing.Size(264, 22);
             this.txtMissionName.TabIndex = 8;
             this.txtMissionName.Text = "Задание";
             // 
             // lblMissionBriefing
             // 
             this.lblMissionBriefing.AutoSize = true;
-            this.lblMissionBriefing.Location = new System.Drawing.Point(32, 63);
-            this.lblMissionBriefing.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblMissionBriefing.Location = new System.Drawing.Point(43, 42);
             this.lblMissionBriefing.Name = "lblMissionBriefing";
-            this.lblMissionBriefing.Size = new System.Drawing.Size(54, 13);
+            this.lblMissionBriefing.Size = new System.Drawing.Size(69, 17);
             this.lblMissionBriefing.TabIndex = 9;
             this.lblMissionBriefing.Text = "Брифинг:";
             // 
@@ -82,48 +83,27 @@
             this.txtMissionBriefing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMissionBriefing.Location = new System.Drawing.Point(89, 60);
-            this.txtMissionBriefing.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMissionBriefing.Location = new System.Drawing.Point(119, 38);
+            this.txtMissionBriefing.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMissionBriefing.Multiline = true;
             this.txtMissionBriefing.Name = "txtMissionBriefing";
             this.txtMissionBriefing.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMissionBriefing.Size = new System.Drawing.Size(199, 79);
+            this.txtMissionBriefing.Size = new System.Drawing.Size(264, 101);
             this.txtMissionBriefing.TabIndex = 10;
-            // 
-            // lblPlayersCount
-            // 
-            this.lblPlayersCount.AutoSize = true;
-            this.lblPlayersCount.Location = new System.Drawing.Point(34, 13);
-            this.lblPlayersCount.Name = "lblPlayersCount";
-            this.lblPlayersCount.Size = new System.Drawing.Size(53, 13);
-            this.lblPlayersCount.TabIndex = 4;
-            this.lblPlayersCount.Text = "Игроков:";
-            // 
-            // comboPlayersCount
-            // 
-            this.comboPlayersCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboPlayersCount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboPlayersCount.FormattingEnabled = true;
-            this.comboPlayersCount.Location = new System.Drawing.Point(89, 11);
-            this.comboPlayersCount.Name = "comboPlayersCount";
-            this.comboPlayersCount.Size = new System.Drawing.Size(199, 21);
-            this.comboPlayersCount.TabIndex = 5;
             // 
             // DialogMissionNew
             // 
             this.AcceptButton = this.btnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(325, 177);
+            this.ClientSize = new System.Drawing.Size(433, 188);
             this.Controls.Add(this.txtMissionBriefing);
             this.Controls.Add(this.lblMissionBriefing);
             this.Controls.Add(this.txtMissionName);
             this.Controls.Add(this.lblMissionName);
             this.Controls.Add(this.btnOk);
-            this.Controls.Add(this.comboPlayersCount);
-            this.Controls.Add(this.lblPlayersCount);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DialogMissionNew";
@@ -141,7 +121,5 @@
         private System.Windows.Forms.TextBox txtMissionName;
         private System.Windows.Forms.Label lblMissionBriefing;
         private System.Windows.Forms.TextBox txtMissionBriefing;
-        private System.Windows.Forms.Label lblPlayersCount;
-        private System.Windows.Forms.ComboBox comboPlayersCount;
     }
 }

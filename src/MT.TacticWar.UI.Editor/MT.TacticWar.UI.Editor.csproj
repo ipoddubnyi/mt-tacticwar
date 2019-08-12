@@ -54,11 +54,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sources\Dialogs\DialogDivisionNew.cs">
+    <Compile Include="Sources\Dialogs\DialogDivisionEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Sources\Dialogs\DialogDivisionNew.Designer.cs">
-      <DependentUpon>DialogDivisionNew.cs</DependentUpon>
+    <Compile Include="Sources\Dialogs\DialogDivisionEditor.Designer.cs">
+      <DependentUpon>DialogDivisionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Sources\Dialogs\DialogMissionNew.cs">
       <SubType>Form</SubType>
@@ -72,8 +72,11 @@
     <Compile Include="Sources\Dialogs\DialogMapNew.Designer.cs">
       <DependentUpon>DialogMapNew.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sources\LanscapePainter.cs" />
+    <Compile Include="Sources\Painters\PassabilityPainter.cs" />
+    <Compile Include="Sources\Painters\LanscapePainter.cs" />
     <Compile Include="Sources\MapEditor.cs" />
+    <Compile Include="Sources\Painters\IPainter.cs" />
+    <Compile Include="Sources\Painters\DivisionPainter.cs" />
     <Compile Include="Sources\TreeViewNodeSelector.cs" />
     <EmbeddedResource Include="EditorForm.resx">
       <DependentUpon>EditorForm.cs</DependentUpon>
@@ -88,8 +91,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Sources\Dialogs\DialogDivisionNew.resx">
-      <DependentUpon>DialogDivisionNew.cs</DependentUpon>
+    <EmbeddedResource Include="Sources\Dialogs\DialogDivisionEditor.resx">
+      <DependentUpon>DialogDivisionEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogMissionNew.resx">
       <DependentUpon>DialogMissionNew.cs</DependentUpon>
