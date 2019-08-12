@@ -3,21 +3,21 @@ using MT.TacticWar.UI.Graphics;
 
 namespace MT.TacticWar.UI.Editor.Painters
 {
-    class DivisionPainter : IPainter
+    class BuildingPainter : IPainter
     {
         private readonly GameGraphics graphics;
         private readonly Map map;
-        private readonly DivisionEditor division;
+        private readonly BuildingEditor building;
 
         private int x;
         private int y;
 
-        public DivisionPainter(GameGraphics graphics, Map map, DivisionEditor division)
+        public BuildingPainter(GameGraphics graphics, Map map, BuildingEditor building)
         {
             Stop();
             this.graphics = graphics;
             this.map = map;
-            this.division = division;
+            this.building = building;
         }
 
         public void Start(int x, int y)
@@ -51,14 +51,14 @@ namespace MT.TacticWar.UI.Editor.Painters
 
         public void Paint()
         {
-            var newdivision = division.CreateDivision(x, y);
+            var newbuilding = building.CreateBuilding(x, y);
 
             // если на этом месте есть юнит - стереть его
             if (map[x, y].Occupied)
                 map[x, y].Object.Destroy();
 
-            map.OccupateCell(newdivision);
-            graphics.DrawDivision(newdivision, false);
+            map.OccupateCell(newbuilding);
+            graphics.DrawBuilding(newbuilding, false);
         }
     }
 }

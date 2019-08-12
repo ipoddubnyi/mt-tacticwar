@@ -6,10 +6,10 @@ namespace MT.TacticWar.Core.Landscape
 {
     public class Map
     {
-        public string Name { get; private set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public Cell[,] Field { get; private set; }
+        public string Name { get; protected set; }
+        public int Width { get; protected set; }
+        public int Height { get; protected set; }
+        public Cell[,] Field { get; protected set; }
 
         public Cell this[int x, int y] => Field[x, y];
         public Cell this[Coordinates pt] => Field[pt.X, pt.Y];

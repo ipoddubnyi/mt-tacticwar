@@ -225,6 +225,14 @@ namespace MT.TacticWar.UI.Graphics
             }*/
         }
 
+        public void DrawPlayersObjects(Player[] players, Division selectedDivision, Building selectedBuilding)
+        {
+            foreach (var player in players)
+            {
+                DrawPlayerObjects(player, selectedDivision, selectedBuilding);
+            }
+        }
+
         public void DrawPlayersObjects(Player[] players, Player currentPlayer, Division selectedDivision, Building selectedBuilding, Fog fog)
         {
             foreach (var player in players)

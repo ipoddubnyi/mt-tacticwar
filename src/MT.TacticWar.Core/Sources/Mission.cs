@@ -8,15 +8,15 @@ namespace MT.TacticWar.Core
 {
     public class Mission
     {
-        public string Name { get; private set; }
-        public string Briefing { get; private set; }
-        public Player[] Players { get; private set; }
-        public Player CurrentPlayer { get; private set; }
-        public int Cycles { get; private set; }
-        public Zone[] Zones { get; private set; }
-        public Script[] Scripts { get; private set; }
-        public Map Map { get; private set; }
-        public List<ISituation> Situations { get; private set; }
+        public string Name { get; protected set; }
+        public string Briefing { get; protected set; }
+        public Player[] Players { get; protected set; }
+        public Player CurrentPlayer { get; protected set; }
+        public int Cycles { get; protected set; }
+        public Zone[] Zones { get; protected set; }
+        public Script[] Scripts { get; protected set; }
+        public Map Map { get; protected set; }
+        public List<ISituation> Situations { get; protected set; }
 
         public Mission(string name, string briefing, Player[] players, Map map) :
             this(name, briefing, players, new Zone[0], new Script[0], map)

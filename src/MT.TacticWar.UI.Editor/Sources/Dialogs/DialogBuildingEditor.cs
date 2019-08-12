@@ -6,11 +6,11 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI.Editor.Dialogs
 {
-    public partial class DialogDivisionEditor : Form
+    public partial class DialogBuildingEditor : Form
     {
-        public DivisionEditor ResultDivision { get; private set; }
+        public BuildingEditor ResultBuilding { get; private set; }
 
-        public DialogDivisionEditor(DivisionEditor division = null)
+        public DialogBuildingEditor(BuildingEditor building = null)
         {
             InitializeComponent();
 
@@ -21,7 +21,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 comboDivisionType.Items.Add(type.Value);
             }
 
-            if (null == division)
+            if (null == building)
             {
                 comboDivisionType.SelectedIndex = 0;
                 comboDivisionType.Enabled = true;
@@ -29,15 +29,15 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
             else
             {
-                comboDivisionType.Enabled = false;
-                comboDivisionType.SelectedItem = division.GetDivisionCode();
+                /*comboDivisionType.Enabled = false;
+                comboDivisionType.SelectedItem = building.GetDivisionCode();
 
-                ResultDivision = division;
+                ResultBuilding = building;
                 listUnitsDivision.Items.Clear();
-                foreach (var unit in division.Units)
+                foreach (var unit in building.Units)
                 {
                     listUnitsDivision.Items.Add(unit);
-                }
+                }*/
             }
 
             /*comboDivisionType.DataSource = new BindingSource(divTypes, null);
@@ -69,7 +69,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private void ComboDivisionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var units = UnitFactory.GetAvailableUnits(comboDivisionType.SelectedItem.ToString());
+            /*var units = UnitFactory.GetAvailableUnits(comboDivisionType.SelectedItem.ToString());
             listUnitsAll.Items.Clear();
             foreach (var unit in units)
             {
@@ -82,16 +82,16 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             listUnitsDivision.Items.Clear();
 
             var division = ObjectFactory.CreateDivision(comboDivisionType.SelectedItem.ToString(), null, 0, "", 0, 0);
-            ResultDivision = new DivisionEditor(division);
-            ResultDivision.SetName(division.Type);
+            ResultBuilding = new BuildingEditor(building);
+            ResultBuilding.SetName(division.Type);*/
         }
 
         private void BtnUnitAdd_Click(object sender, EventArgs e)
         {
-            if (null != listUnitsAll.SelectedItem)
+            /*if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create((int)numUnitIdCommon.Value, ResultDivision);
+                var unit = uv.Create((int)numUnitIdCommon.Value, ResultBuilding);
                 unit.Update(
                     txtUnitNameCommon.Text,
                     (int)numUnitExperienceCommon.Value,
@@ -106,7 +106,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 );
 
                 listUnitsDivision.SelectedItem = unit;
-            }
+            }*/
         }
 
         private void BtnUnitRemove_Click(object sender, EventArgs e)
@@ -125,16 +125,16 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private void ListUnitsAll_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (null != listUnitsAll.SelectedItem)
+            /*if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create(0, ResultDivision);
+                var unit = uv.Create(0, ResultBuilding);
                 numUnitIdCommon.Value = unit.Id;
                 txtUnitNameCommon.Text = unit.Name;
                 numUnitHealthCommon.Value = unit.Health;
                 numUnitExperienceCommon.Value = unit.Experience;
                 numUnitSupplyCommon.Value = unit.SupplyCurrent;
-            }
+            }*/
         }
 
         private void ListUnitsDivision_SelectedIndexChanged(object sender, EventArgs e)
