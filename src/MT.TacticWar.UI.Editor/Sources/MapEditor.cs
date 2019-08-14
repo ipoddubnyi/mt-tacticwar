@@ -7,21 +7,22 @@ namespace MT.TacticWar.UI.Editor
     {
         public string Schema { get; private set; }
 
-        public MapEditor(string name, int width, int height, string schema) :
-            base(name, width, height)
+        public MapEditor(string name, string descr, int width, int height, string schema) :
+            base(name, descr, width, height)
         {
             Schema = schema;
             InitCells();
         }
 
-        public MapEditor(Map map, string schema) :
-            base(map.Name, map.Width, map.Height, map.Field)
+        public MapEditor(Map map) :
+            base(map.Name, map.Description, map.Width, map.Height, map.Field)
         {
-            Schema = schema;
         }
 
         public void InitCells()
         {
+            //Schema = LandscapeFactory.CreateSchema(schemacode);
+
             Field = new Cell[Width, Height];
             for (int y = 0; y < Height; ++y)
                 for (int x = 0; x < Width; ++x)

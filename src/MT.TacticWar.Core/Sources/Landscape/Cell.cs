@@ -4,7 +4,7 @@ namespace MT.TacticWar.Core.Landscape
 {
     public abstract class Cell
     {
-        public Coordinates Coordinates { get; set; }
+        public Coordinates Coordinates { get; protected set; }
 
         /// <summary>Проходима ли ячейка</summary>
         public bool Passable { get; set; }
@@ -21,9 +21,7 @@ namespace MT.TacticWar.Core.Landscape
         public Cell(int x, int y, int passcost = 4)
         {
             Coordinates = new Coordinates(x, y);
-            Passable = true; //по умолчанию, ячейка проходима // proh;
-            //if (proh) PassableCost = prohCost;
-            //else PassableCost = int.MaxValue;
+            Passable = true;
             PassCost = passcost;
             Object = null;
         }

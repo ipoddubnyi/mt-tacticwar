@@ -51,6 +51,7 @@
     <Compile Include="Sources\Landscape\ILand.cs" />
     <Compile Include="Sources\Landscape\IWater.cs" />
     <None Include="Sources\Missions\MissionManage.md" />
+    <Compile Include="Sources\Landscape\Schema.cs" />
     <Compile Include="Sources\Objects\IAquatic.cs" />
     <Compile Include="Sources\Objects\IArmored.cs" />
     <Compile Include="Sources\Objects\IAviation.cs" />

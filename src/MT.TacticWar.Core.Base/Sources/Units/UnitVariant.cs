@@ -7,7 +7,7 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public struct UnitVariant
     {
-        public string DivisionType;
+        public Type DivisionType;
         public string Name;
         public string UnitType;
         public Type Type;

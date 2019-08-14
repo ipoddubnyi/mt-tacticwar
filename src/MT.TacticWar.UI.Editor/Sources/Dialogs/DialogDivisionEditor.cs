@@ -14,12 +14,9 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             InitializeComponent();
 
-            var divTypes = ObjectFactory.GetAvailableDivisionTypes();
             comboDivisionType.Items.Clear();
-            foreach (var type in divTypes)
-            {
-                comboDivisionType.Items.Add(type.Value);
-            }
+            foreach (var div in ObjectFactory.Divisions)
+                comboDivisionType.Items.Add(div);
 
             if (null == division)
             {
@@ -69,21 +66,25 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private void ComboDivisionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var units = UnitFactory.GetAvailableUnits(comboDivisionType.SelectedItem.ToString());
-            listUnitsAll.Items.Clear();
-            foreach (var unit in units)
+            if (null != comboDivisionType.SelectedItem)
             {
-                listUnitsAll.Items.Add(unit);
+                var div = (DivisionVariant)comboDivisionType.SelectedItem;
+                var units = UnitFactory.GetAvailableUnitsForDivision(div.Type);
+                listUnitsAll.Items.Clear();
+                foreach (var unit in units)
+                {
+                    listUnitsAll.Items.Add(unit);
+                }
+
+                if (listUnitsAll.Items.Count > 0)
+                    listUnitsAll.SelectedIndex = 0;
+
+                listUnitsDivision.Items.Clear();
+
+                var division = div.Create(null, 0, "", -1, -1);
+                ResultDivision = new DivisionEditor(division);
+                ResultDivision.SetName(division.Type);
             }
-
-            if (listUnitsAll.Items.Count > 0)
-                listUnitsAll.SelectedIndex = 0;
-
-            listUnitsDivision.Items.Clear();
-
-            var division = ObjectFactory.CreateDivision(comboDivisionType.SelectedItem.ToString(), null, 0, "", 0, 0);
-            ResultDivision = new DivisionEditor(division);
-            ResultDivision.SetName(division.Type);
         }
 
         private void BtnUnitAdd_Click(object sender, EventArgs e)

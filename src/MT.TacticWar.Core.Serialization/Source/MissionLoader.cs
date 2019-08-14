@@ -34,9 +34,10 @@ namespace MT.TacticWar.Core.Serialization
             var mp = SerialMap.Deserialize(filePath);
 
             var name = mp.Info.Name;
+            var description = mp.Info.Description;
             var width = mp.Info.Size.Width;
             var height = mp.Info.Size.Height;
-            var schema = mp.Info.Schema;
+            var schemacode = mp.Info.Schema;
 
             var landlines = MapLandscapeSplit(mp.Landscape, width);
             if (landlines.Length != height)
@@ -46,10 +47,11 @@ namespace MT.TacticWar.Core.Serialization
             if (impasslines.Length != height)
                 throw new FormatException("Неверный формат карты проходимости.");
 
-            var field = LoadMapField(width, height, schema, landlines);
+            var field = LoadMapField(width, height, schemacode, landlines);
             field = LoadMapFieldPassable(width, height, field, impasslines);
 
-            return new Map(name, width, height, field);
+            //var schema = LandscapeFactory.CreateSchema(schemacode);
+            return new Map(name, description, width, height, field);
         }
 
         private static Cell[,] LoadMapField(int width, int height, string schema, string[] landlines)
@@ -221,7 +223,7 @@ namespace MT.TacticWar.Core.Serialization
 
         private static Unit CreateUnit(Division division, SerialUnit u, SerialMissionTypes types)
         {
-            var unit = UnitFactory.CreateUnit(u.Id, division, u.Type);
+            var unit = UnitFactory.CreateUnit(division, u.Id, u.Type);
             if (null != unit)
                 return u.Update(unit);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MT.TacticWar.Core.Landscape;
+using MT.TacticWar.Core.Base.Landscape.Schemas;
 using MT.TacticWar.Core.Base.Landscape.Summer;
 using MT.TacticWar.Core.Base.Landscape.Winter;
 
@@ -8,13 +9,13 @@ namespace MT.TacticWar.Core.Base.Landscape
 {
     public static class LandscapeFactory
     {
-        private static readonly List<SchemaVariant> Schemas = new List<SchemaVariant>()
+        public static readonly List<SchemaVariant> Schemas = new List<SchemaVariant>()
         {
-            new SchemaVariant { Name = "Лето", Code = "summer" },
-            new SchemaVariant { Name = "Зима", Code = "winter" }
+            new SchemaVariant { Name = "Лето", Code = "summer", Type = typeof(SummerSchema) },
+            new SchemaVariant { Name = "Зима", Code = "winter", Type = typeof(WinterSchema) }
         };
 
-        private static readonly List<CellVariant> Cells = new List<CellVariant>()
+        public static readonly List<CellVariant> Cells = new List<CellVariant>()
         {
             new CellVariant { Schema = "summer", Name = "Поле",    Code = '-', Type = typeof(Field) },
             new CellVariant { Schema = "summer", Name = "Дорога",  Code = '#', Type = typeof(Road) },
@@ -34,35 +35,36 @@ namespace MT.TacticWar.Core.Base.Landscape
             new CellVariant { Schema = "winter", Name = "Лёд",     Code = '≈', Type = typeof(Ice) }
         };
 
-        public static Dictionary<string, string> GetAvailableSchema()
+        public static List<CellVariant> GetAvailableCellsForSchema(string schema)
         {
-            var d = new Dictionary<string, string>();
-            foreach (var s in Schemas)
+            var list = new List<CellVariant>();
+            foreach (var cell in Cells)
             {
-                d.Add(s.Name, s.Code);
+                if (cell.Schema.Equals(schema))
+                    list.Add(cell);
             }
-            return d;
+            return list;
         }
 
-        public static Dictionary<string, char> GetAvailableCells(string schema)
+        public static Schema CreateSchema(string code)
         {
-            var d = new Dictionary<string, char>();
-            foreach (var c in Cells)
+            foreach (var sch in Schemas)
             {
-                if (c.Schema.Equals(schema))
-                    d.Add(c.Name, c.Code);
+                if (sch.Code == code)
+                    return sch.Create();
             }
-            return d;
+
+            throw new Exception("Неизвестный тип схемы ландшафта.");
         }
 
-        public static Cell CreateCell(string schema, char cellType, int x, int y)
+        public static Cell CreateCell(string schema, char code, int x, int y)
         {
             foreach (var c in Cells)
             {
                 if (!c.Schema.Equals(schema))
                     continue;
 
-                if (c.Code == cellType)
+                if (c.Code == code)
                     return c.Create(x, y);
             }
 

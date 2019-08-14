@@ -15,12 +15,9 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             InitializeComponent();
 
-            var divTypes = ObjectFactory.GetAvailableBuildingTypes();
             comboBuildingType.Items.Clear();
-            foreach (var type in divTypes)
-            {
-                comboBuildingType.Items.Add(type.Value);
-            }
+            foreach (var bld in ObjectFactory.Buildings)
+                comboBuildingType.Items.Add(bld);
 
             if (null == building)
             {
@@ -62,9 +59,13 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private void ComboBuildingType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var building = ObjectFactory.CreateBuilding(comboBuildingType.SelectedItem.ToString(), null, 0, "", 0, 0, 100, null);
-            ResultBuilding = new BuildingEditor(building);
-            ResultBuilding.SetName(building.Type);
+            if (null != comboBuildingType.SelectedItem)
+            {
+                var bld = (BuildingVariant)comboBuildingType.SelectedItem;
+                var building = bld.Create(null, 0, "", -1, -1, 100, null);
+                ResultBuilding = new BuildingEditor(building);
+                ResultBuilding.SetName(building.Type);
+            }
         }
 
         private void BtnSecurityAdd_Click(object sender, EventArgs e)

@@ -13,7 +13,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         public int MapSizeWidth { get; private set; }
         public int MapSizeHeight { get; private set; }
-        public string MapSchema { get; private set; }
+        public SchemaVariant MapSchema { get; private set; }
         public string MapName { get; private set; }
         public string MapDescription { get; private set; }
 
@@ -21,18 +21,16 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             InitializeComponent();
 
-            var schemas = LandscapeFactory.GetAvailableSchema();
+            comboMapSchema.DataSource = null;
             comboMapSchema.Items.Clear();
-            comboMapSchema.DataSource = new BindingSource(schemas, null);
-            comboMapSchema.DisplayMember = "Key";
-            comboMapSchema.ValueMember = "Value";
+            comboMapSchema.DataSource = new BindingSource(LandscapeFactory.Schemas, null);
         }
 
         private void DialogMapNew_Load(object sender, EventArgs e)
         {
             MapSizeWidth = 0;
             MapSizeHeight = 0;
-            MapSchema = "";
+            //MapSchema = null;
             MapName = "";
             MapDescription = "";
         }
@@ -69,6 +67,12 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 return false;
             }
 
+            if (null == comboMapSchema.SelectedItem)
+            {
+                ShowError("Схема карты не может быть пустой.");
+                return false;
+            }
+
             if (0 == txtMapName.Text.Length)
             {
                 ShowError("Название карты не может быть пустым.");
@@ -77,7 +81,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
             MapSizeWidth = width;
             MapSizeHeight = height;
-            MapSchema = comboMapSchema.SelectedValue.ToString();
+            MapSchema = (SchemaVariant)comboMapSchema.SelectedItem;
             MapName = txtMapName.Text;
             MapDescription = txtMapDescription.Text;
 

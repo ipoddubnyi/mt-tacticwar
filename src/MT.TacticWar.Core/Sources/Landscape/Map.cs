@@ -7,20 +7,22 @@ namespace MT.TacticWar.Core.Landscape
     public class Map
     {
         public string Name { get; protected set; }
+        public string Description { get; protected set; }
         public int Width { get; protected set; }
         public int Height { get; protected set; }
+        //public Schema Schema { get; protected set; }
         public Cell[,] Field { get; protected set; }
 
         public Cell this[int x, int y] => Field[x, y];
         public Cell this[Coordinates pt] => Field[pt.X, pt.Y];
 
         public Map(int width, int height) :
-            this("Карта местности", width, height)
+            this("Карта местности", "", width, height)
         {
         }
 
-        public Map(string name, int width, int height) :
-            this(name, width, height, null)
+        public Map(string name, string description, int width, int height) :
+            this(name, description, width, height, null)
         {
             // инициализация пустыми ячейками
             Field = new Cell[height, width];
@@ -29,11 +31,13 @@ namespace MT.TacticWar.Core.Landscape
                     Field[x, y] = null;
         }
 
-        public Map(string name, int width, int height, Cell[,] field)
+        public Map(string name, string description, int width, int height, Cell[,] field)
         {
             Name = name;
+            Description = description;
             Width = width;
             Height = height;
+            //Schema = schema;
             Field = field;
         }
 

@@ -16,13 +16,13 @@ namespace MT.TacticWar.UI.Editor.Painters
         private int x;
         private int y;
 
-        public LanscapePainter(GameGraphics graphics, Map map, string schema, char celltype)
+        public LanscapePainter(GameGraphics graphics, Map map, string schema, char cellcode)
         {
             Stop();
             this.graphics = graphics;
             this.map = map;
             this.schema = schema;
-            this.celltype = celltype;
+            this.celltype = cellcode;
         }
 
         public void Start(int x, int y)
