@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows.Forms;
 using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Units;
@@ -14,51 +15,43 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             InitializeComponent();
 
-            var divTypes = ObjectFactory.GetAvailableDivisionTypes();
-            comboDivisionType.Items.Clear();
+            var divTypes = ObjectFactory.GetAvailableBuildingTypes();
+            comboBuildingType.Items.Clear();
             foreach (var type in divTypes)
             {
-                comboDivisionType.Items.Add(type.Value);
+                comboBuildingType.Items.Add(type.Value);
             }
 
             if (null == building)
             {
-                comboDivisionType.SelectedIndex = 0;
-                comboDivisionType.Enabled = true;
-                ComboDivisionType_SelectedIndexChanged(null, null);
+                comboBuildingType.SelectedIndex = 0;
+                comboBuildingType.Enabled = true;
+                ComboBuildingType_SelectedIndexChanged(null, null);
             }
             else
             {
-                /*comboDivisionType.Enabled = false;
-                comboDivisionType.SelectedItem = building.GetDivisionCode();
+                comboBuildingType.Enabled = false;
+                comboBuildingType.SelectedItem = building.GetBuildingCode();
 
                 ResultBuilding = building;
-                listUnitsDivision.Items.Clear();
-                foreach (var unit in building.Units)
-                {
-                    listUnitsDivision.Items.Add(unit);
-                }*/
+                ShowSecurityInfo(ResultBuilding.Security);
             }
-
-            /*comboDivisionType.DataSource = new BindingSource(divTypes, null);
-            comboDivisionType.DisplayMember = "Key";
-            comboDivisionType.ValueMember = "Value";*/
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateEntries())
                 DialogResult = DialogResult.None;
+
+            if (null != ResultBuilding.Security)
+            {
+                ResultBuilding.Security.SetId((int)numSecurityId.Value);
+                ResultBuilding.Security.SetName(txtSecurityName.Text);
+            }
         }
 
         private bool ValidateEntries()
         {
-            if (0 == listUnitsDivision.Items.Count)
-            {
-                ShowError("Необходимо добавить хотя бы одного юнита.");
-                return false;
-            }
-
             return true;
         }
 
@@ -67,106 +60,58 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             MessageBox.Show(message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void ComboDivisionType_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBuildingType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            /*var units = UnitFactory.GetAvailableUnits(comboDivisionType.SelectedItem.ToString());
-            listUnitsAll.Items.Clear();
-            foreach (var unit in units)
-            {
-                listUnitsAll.Items.Add(unit);
-            }
-
-            if (listUnitsAll.Items.Count > 0)
-                listUnitsAll.SelectedIndex = 0;
-
-            listUnitsDivision.Items.Clear();
-
-            var division = ObjectFactory.CreateDivision(comboDivisionType.SelectedItem.ToString(), null, 0, "", 0, 0);
+            var building = ObjectFactory.CreateBuilding(comboBuildingType.SelectedItem.ToString(), null, 0, "", 0, 0, 100, null);
             ResultBuilding = new BuildingEditor(building);
-            ResultBuilding.SetName(division.Type);*/
+            ResultBuilding.SetName(building.Type);
         }
 
-        private void BtnUnitAdd_Click(object sender, EventArgs e)
+        private void BtnSecurityAdd_Click(object sender, EventArgs e)
         {
-            /*if (null != listUnitsAll.SelectedItem)
+            using (var dialog = new DialogDivisionEditor(ResultBuilding.Security))
             {
-                var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create((int)numUnitIdCommon.Value, ResultBuilding);
-                unit.Update(
-                    txtUnitNameCommon.Text,
-                    (int)numUnitExperienceCommon.Value,
-                    (int)numUnitHealthCommon.Value,
-                    (int)numUnitSupplyCommon.Value
-                );
-
-                ResultDivision.Units.Add(unit);
-
-                listUnitsDivision.Items.Add(
-                    unit
-                );
-
-                listUnitsDivision.SelectedItem = unit;
-            }*/
-        }
-
-        private void BtnUnitRemove_Click(object sender, EventArgs e)
-        {
-            if (null != listUnitsDivision.SelectedItem)
-            {
-                listUnitsDivision.Items.Remove(listUnitsDivision.SelectedItem);
-
-                numUnitIdDivision.Value = 0;
-                txtUnitNameDivision.Text = "";
-                numUnitHealthDivision.Value = 100;
-                numUnitExperienceDivision.Value = 0;
-                numUnitSupplyDivision.Value = 1000;
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    ResultBuilding.Security = dialog.ResultDivision;
+                    ShowSecurityInfo(ResultBuilding.Security);
+                }
             }
         }
 
-        private void ListUnitsAll_SelectedIndexChanged(object sender, EventArgs e)
+        private void BtnSecurityRemove_Click(object sender, EventArgs e)
         {
-            /*if (null != listUnitsAll.SelectedItem)
+            if (null != ResultBuilding.Security)
             {
-                var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create(0, ResultBuilding);
-                numUnitIdCommon.Value = unit.Id;
-                txtUnitNameCommon.Text = unit.Name;
-                numUnitHealthCommon.Value = unit.Health;
-                numUnitExperienceCommon.Value = unit.Experience;
-                numUnitSupplyCommon.Value = unit.SupplyCurrent;
-            }*/
-        }
-
-        private void ListUnitsDivision_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (null != listUnitsDivision.SelectedItem)
-            {
-                var unit = (Unit)listUnitsDivision.SelectedItem;
-                numUnitIdDivision.Value = unit.Id;
-                txtUnitNameDivision.Text = unit.Name;
-                numUnitHealthDivision.Value = unit.Health;
-                numUnitExperienceDivision.Value = unit.Experience;
-                numUnitSupplyDivision.Value = unit.SupplyCurrent;
+                ResultBuilding.Security = null;
+                ShowSecurityInfo(null);
             }
         }
 
-        private void btnUnitDivisionApply_Click(object sender, EventArgs e)
+        private void ShowSecurityInfo(DivisionEditor division)
         {
-            if (null != listUnitsDivision.SelectedItem)
-            {
-                var unit = (Unit)listUnitsDivision.SelectedItem;
-                unit.Update(
-                    txtUnitNameDivision.Text,
-                    (int)numUnitExperienceDivision.Value,
-                    (int)numUnitHealthDivision.Value,
-                    (int)numUnitSupplyDivision.Value
-                );
+            var sb = new StringBuilder();
+            int id = 0;
+            string name = string.Empty;
 
-                int index = listUnitsDivision.Items.IndexOf(unit);
-                listUnitsDivision.Items.RemoveAt(index);
-                listUnitsDivision.Items.Insert(index, unit);
-                listUnitsDivision.SelectedIndex = index;
+            if (null != division)
+            {
+                sb.AppendLine(division.Type);
+                sb.AppendLine();
+                sb.AppendLine("Юниты:");
+                foreach (var unit in division.Units)
+                {
+                    sb.Append("- ");
+                    sb.AppendLine(unit.Name);
+                }
+
+                id = division.Id;
+                name = division.Name;
             }
+
+            lblSecurityInfo.Text = sb.ToString();
+            numSecurityId.Value = id;
+            txtSecurityName.Text = name;
         }
     }
 }

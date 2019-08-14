@@ -113,7 +113,17 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != listUnitsDivision.SelectedItem)
             {
-                listUnitsDivision.Items.Remove(listUnitsDivision.SelectedItem);
+                var index = listUnitsDivision.SelectedIndex;
+                var unit = listUnitsDivision.SelectedItem as Unit;
+
+                ResultDivision.Units.Remove(unit);
+
+                listUnitsDivision.Items.Remove(unit);
+
+                // выделяем следующего юнита или предыдущего, если это был последний
+                if (index >= listUnitsDivision.Items.Count)
+                    index -= 1;
+                listUnitsDivision.SelectedIndex = index;
 
                 numUnitIdDivision.Value = 0;
                 txtUnitNameDivision.Text = "";

@@ -202,8 +202,6 @@ namespace MT.TacticWar.Core.Serialization
                     bld.Position.X,
                     bld.Position.Y,
                     bld.Health,
-                    bld.Radius,
-                    bld.View,
                     security
                 ));
             }

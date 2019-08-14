@@ -55,7 +55,10 @@ namespace MT.TacticWar.UI.Editor.Painters
 
             // если на этом месте есть юнит - стереть его
             if (map[x, y].Occupied)
+            {
                 map[x, y].Object.Destroy();
+                graphics.DrawCell(map[x, y]);
+            }
 
             map.OccupateCell(newdivision);
             graphics.DrawDivision(newdivision, false);

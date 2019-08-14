@@ -19,6 +19,24 @@ namespace MT.TacticWar.Core.Base.Objects
             };
         }
 
+        public static Dictionary<string, string> GetAvailableBuildingTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                { "Завод", "factory" },
+                { "Казармы", "barracks" },
+                { "Склад", "storehouse" },
+                { "Радар", "radar" },
+                { "Аэродром", "airfield" },
+                { "Порт", "port" },
+                { "Верфь", "shipyard" },
+
+                { "Городской дом", "house" },
+                { "Сельский дом", "hut" },
+                { "Церковь", "church" }
+            };
+        }
+
         public static string GetDivisionCode(Division division)
         {
             if (division is Infantry)
@@ -40,6 +58,33 @@ namespace MT.TacticWar.Core.Base.Objects
                 return "aviation";
 
             throw new Exception("Неизвестный тип подразделения.");
+        }
+
+        public static string GetBuildingCode(Building building)
+        {
+            if (building is Factory)
+                return "factory";
+            if (building is Barracks)
+                return "barracks";
+            if (building is Storehouse)
+                return "storehouse";
+            if (building is Radar)
+                return "radar";
+            if (building is Airfield)
+                return "airfield";
+            if (building is Port)
+                return "port";
+            if (building is Shipyard)
+                return "shipyard";
+
+            if (building is CityHouse)
+                return "house";
+            if (building is VillageHut)
+                return "hut";
+            if (building is Church)
+                return "church";
+
+            throw new Exception("Неизвестный тип строения.");
         }
 
         public static Division CreateDivision(string code, Player player, int id, string name, int x, int y)
@@ -84,7 +129,7 @@ namespace MT.TacticWar.Core.Base.Objects
             throw new Exception("Неизвестный тип подразделения.");
         }
 
-        public static Building CreateBuilding(string code, Player player, int id, string name, int x, int y, int health, int radius, int view, Division security)
+        public static Building CreateBuilding(string code, Player player, int id, string name, int x, int y, int health, Division security)
         {
             switch (code)
             {

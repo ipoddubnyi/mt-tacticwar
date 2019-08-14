@@ -54,11 +54,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sources\Controls\DivisionProperties.cs">
+    <Compile Include="Sources\Controls\ObjectProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Sources\Controls\DivisionProperties.Designer.cs">
-      <DependentUpon>DivisionProperties.cs</DependentUpon>
+    <Compile Include="Sources\Controls\ObjectProperties.Designer.cs">
+      <DependentUpon>ObjectProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Sources\Dialogs\DialogBuildingEditor.cs">
       <SubType>Form</SubType>
@@ -113,8 +113,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Sources\Controls\DivisionProperties.resx">
-      <DependentUpon>DivisionProperties.cs</DependentUpon>
+    <EmbeddedResource Include="Sources\Controls\ObjectProperties.resx">
+      <DependentUpon>ObjectProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogBuildingEditor.resx">
       <DependentUpon>DialogBuildingEditor.cs</DependentUpon>

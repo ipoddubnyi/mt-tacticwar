@@ -8,14 +8,12 @@ namespace MT.TacticWar.UI.Editor
     public class DivisionEditor
     {
         private Division division;
-        private Player player;
-        private int id;
-        private string name;
 
         public Coordinates Position => division.Position;
-        public Player Player => player; // division.Player;
-        public int Id => id; //division.Id;
-        public string Name => name; // division.Name;
+        public string Type => division.Type;
+        public Player Player { get; private set; }
+        public int Id { get; private set; }
+        public string Name { get; private set; }
         public List<Unit> Units => division.Units;
 
         public DivisionEditor(Division division)
@@ -25,17 +23,17 @@ namespace MT.TacticWar.UI.Editor
 
         public void SetPlayer(Player player)
         {
-            this.player = player;
+            Player = player;
         }
 
         public void SetId(int id)
         {
-            this.id = id;
+            Id = id;
         }
 
         public void SetName(string name)
         {
-            this.name = name;
+            Name = name;
         }
 
         public string GetDivisionCode()

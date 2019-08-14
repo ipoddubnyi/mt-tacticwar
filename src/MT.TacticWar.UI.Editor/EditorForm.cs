@@ -30,12 +30,14 @@ namespace MT.TacticWar.UI.Editor
         private GameGraphics graphics = null;
         private GameGraphics graphicsPreview = null;
         private IPainter painter = null;
+        private bool selector = false;
 
         public EditorForm()
         {
             InitializeComponent();
 
             divisionProperties.Changed += DivisionProperties_Changed;
+            buildingProperties.Changed += BuildingProperties_Changed;
             TabControlLeft.TabPages.Remove(TabMissionInfo);
         }
 
@@ -47,7 +49,10 @@ namespace MT.TacticWar.UI.Editor
         {
             TreeViewElements.Nodes.Clear();
 
-            var node = new TreeNode("Указатель");
+            var node = new TreeNode("Указатель")
+            {
+                Tag = new TreeViewNodeSelector(() => { SelectSelection(); })
+            };
             TreeViewElements.Nodes.Add(node);
 
             node = new TreeNode("Ландшафт");
@@ -103,6 +108,11 @@ namespace MT.TacticWar.UI.Editor
             TreeViewElements.Nodes.Add(node);
         }
 
+        private void SelectSelection()
+        {
+            selector = true;
+        }
+
         private void SelectDrawCellType(char cellType)
         {
             var cell = LandscapeFactory.CreateCell(SelectedMap.Schema, cellType, 1, 1);
@@ -115,12 +125,6 @@ namespace MT.TacticWar.UI.Editor
         {
             DrawUnpassableShow();
             painter = new PassabilityPainter(graphics, SelectedMap, passable);
-        }
-
-        private void SelectShowDialogDivisionSelect()
-        {
-            panelDivision.Visible = true;
-            selector = true;
         }
 
         private void SelectShowDialogDivisionNew()
@@ -194,6 +198,7 @@ namespace MT.TacticWar.UI.Editor
                     txtMissionBriefing.Text = dialog.MissionBriefing;
 
                     divisionProperties.SetPlayersDataSource(SelectedMission.Players);
+                    buildingProperties.SetPlayersDataSource(SelectedMission.Players);
                 }
             }
         }
@@ -301,9 +306,6 @@ namespace MT.TacticWar.UI.Editor
             if (null == painter)
                 return;
 
-            if (!painter.IsActive())
-                return;
-
             int x = e.X / CellSize;
             int y = e.Y / CellSize;
 
@@ -313,9 +315,13 @@ namespace MT.TacticWar.UI.Editor
             if (y < 0 || y > SelectedMap.Height - 1)
                 return;
 
+            StatusCoordinates.Text = $"{x}, {y}";
+
+            if (!painter.IsActive())
+                return;
+
             if (painter.TryMove(x, y))
             {
-                StatusCoordinates.Text = $"{x}, {y}";
                 painter.Paint();
             }
         }
@@ -373,8 +379,6 @@ namespace MT.TacticWar.UI.Editor
             }
         }
 
-        bool selector = false;
-
         private void PanelEditor_MouseUp(object sender, MouseEventArgs e)
         {
             painter?.Stop();
@@ -408,13 +412,14 @@ namespace MT.TacticWar.UI.Editor
                 if (MouseButtons.Left == e.Button)
                 {
                     SelectedDivision = new DivisionEditor(division);
-                    lblSelectedDivisionStatus.Text = $"Подразделение: {SelectedDivision.Name}";
+                    ShowDivisionInfo(SelectedDivision);
                     graphics.DrawDivision(SelectedDivision, true);
                 }
                 else if (MouseButtons.Right == e.Button)
                 {
-                    contextMenuDivision.Tag = new DivisionEditor(division);
-                    contextMenuDivision.Show(Cursor.Position);
+                    // TODO: сделать, чтобы объект стирался
+                    //contextMenuDivision.Tag = new DivisionEditor(division);
+                    //contextMenuDivision.Show(Cursor.Position);
                 }
                 return;
             }
@@ -430,8 +435,9 @@ namespace MT.TacticWar.UI.Editor
                 }
                 else if (MouseButtons.Right == e.Button)
                 {
-                    contextMenuDivision.Tag = new BuildingEditor(building);
-                    contextMenuDivision.Show(Cursor.Position);
+                    // TODO: сделать, чтобы объект стирался
+                    //contextMenuDivision.Tag = new BuildingEditor(building);
+                    //contextMenuDivision.Show(Cursor.Position);
                 }
                 return;
             }
@@ -471,10 +477,10 @@ namespace MT.TacticWar.UI.Editor
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
                     SelectedDivision = dialog.ResultDivision;
-                    lblSelectedDivisionStatus.Text = $"Подразделение: {SelectedDivision.Name}";
+                    ShowDivisionInfo(SelectedDivision);
 
-                    SelectedDivision.SetPlayer(divisionProperties.DivisionPlayer);
-                    SelectedDivision.SetId(divisionProperties.DivisionId);
+                    SelectedDivision.SetPlayer(divisionProperties.ObjectPlayer);
+                    SelectedDivision.SetId(divisionProperties.ObjectId);
                     //SelectedDivision.SetName(divisionProperties.DivisionName);
                     divisionProperties.SetDivision(SelectedDivision);
 
@@ -490,7 +496,7 @@ namespace MT.TacticWar.UI.Editor
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
                     SelectedDivision = dialog.ResultDivision;
-                    lblSelectedDivisionStatus.Text = $"Подразделение: {SelectedDivision.Name}";
+                    ShowDivisionInfo(SelectedDivision);
                     divisionProperties.SetDivision(SelectedDivision);
 
                     painter = new DivisionPainter(graphics, SelectedMap, SelectedDivision);
@@ -498,7 +504,42 @@ namespace MT.TacticWar.UI.Editor
             }
         }
 
-        private void ContextMenuDivisionEdit_Click(object sender, EventArgs e)
+        private void ShowDivisionInfo(Division division)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine(division.Type);
+            sb.AppendLine();
+            sb.AppendLine("Юниты:");
+            foreach (var unit in division.Units)
+            {
+                sb.Append("- ");
+                sb.AppendLine(unit.Name);
+            }
+
+            lblSelectedDivisionStatus.Text = sb.ToString();
+        }
+
+        private void ShowBuildingInfo(Building building)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine(building.Type);
+            sb.AppendLine();
+            if (building.IsSecured)
+            {
+                sb.AppendLine("Охранение:");
+                sb.AppendLine(building.SecurityDivision.Type);
+            }
+            else
+            {
+                sb.AppendLine("Без охранения");
+            }
+
+            lblSelectedBuildingStatus.Text = sb.ToString();
+        }
+
+        /*private void ContextMenuDivisionEdit_Click(object sender, EventArgs e)
         {
             if (null != contextMenuDivision.Tag)
             {
@@ -516,13 +557,13 @@ namespace MT.TacticWar.UI.Editor
                 else if (contextMenuDivision.Tag is BuildingEditor)
                 {
                     var bulding = contextMenuDivision.Tag as BuildingEditor;
-                    /*using (var dialog = new DialogBuildingEditor(bulding))
+                    using (var dialog = new DialogBuildingEditor(bulding))
                     {
                         if (DialogResult.OK == dialog.ShowDialog())
                         {
-                            contextMenuDivision.Tag = dialog.ResultDivision;
+                            contextMenuDivision.Tag = dialog.ResultBuilding;
                         }
-                    }*/
+                    }
                 }
             }
         }
@@ -544,17 +585,29 @@ namespace MT.TacticWar.UI.Editor
                     graphics.DrawCell(SelectedMap[building.Position]);
                 }
             }
-        }
+        }*/
 
         private void DivisionProperties_Changed(object sender, EventArgs e)
         {
             if (null != SelectedDivision)
             {
-                SelectedDivision.SetPlayer(divisionProperties.DivisionPlayer);
-                SelectedDivision.SetId(divisionProperties.DivisionId);
-                SelectedDivision.SetName(divisionProperties.DivisionName);
+                SelectedDivision.SetPlayer(divisionProperties.ObjectPlayer);
+                SelectedDivision.SetId(divisionProperties.ObjectId);
+                SelectedDivision.SetName(divisionProperties.ObjectName);
 
                 painter = new DivisionPainter(graphics, SelectedMap, SelectedDivision);
+            }
+        }
+
+        private void BuildingProperties_Changed(object sender, EventArgs e)
+        {
+            if (null != SelectedBuilding)
+            {
+                SelectedBuilding.SetPlayer(buildingProperties.ObjectPlayer);
+                SelectedBuilding.SetId(buildingProperties.ObjectId);
+                SelectedBuilding.SetName(buildingProperties.ObjectName);
+
+                painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);
             }
         }
 
@@ -564,15 +617,15 @@ namespace MT.TacticWar.UI.Editor
             {
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    /*SelectedBuilding = dialog.ResultBuilding;
+                    SelectedBuilding = dialog.ResultBuilding;
                     lblSelectedBuildingStatus.Text = $"Строение: {SelectedBuilding.Name}";
 
-                    SelectedBuilding.SetPlayer(divisionProperties.DivisionPlayer);
-                    SelectedBuilding.SetId(divisionProperties.DivisionId);
-                    //SelectedBuilding.SetName(divisionProperties.DivisionName);
-                    divisionProperties.SetDivision(SelectedBuilding);
+                    SelectedBuilding.SetPlayer(buildingProperties.ObjectPlayer);
+                    SelectedBuilding.SetId(buildingProperties.ObjectId);
+                    //SelectedBuilding.SetName(buildingProperties.DivisionName);
+                    buildingProperties.SetBuilding(SelectedBuilding);
 
-                    painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);*/
+                    painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);
                 }
             }
         }
@@ -583,11 +636,11 @@ namespace MT.TacticWar.UI.Editor
             {
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    /*SelectedBuilding = dialog.ResultBuilding;
+                    SelectedBuilding = dialog.ResultBuilding;
                     lblSelectedBuildingStatus.Text = $"Строение: {SelectedBuilding.Name}";
-                    divisionProperties.SetDivision(SelectedBuilding);
+                    buildingProperties.SetBuilding(SelectedBuilding);
 
-                    painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);*/
+                    painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);
                 }
             }
         }
@@ -600,6 +653,7 @@ namespace MT.TacticWar.UI.Editor
                 {
                     SelectedMission.SetPlayers(dialog.Players);
                     divisionProperties.SetPlayersDataSource(SelectedMission.Players);
+                    buildingProperties.SetPlayersDataSource(SelectedMission.Players);
                     DrawAll();
                 }
             }

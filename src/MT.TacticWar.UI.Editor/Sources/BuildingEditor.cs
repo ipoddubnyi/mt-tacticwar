@@ -8,15 +8,13 @@ namespace MT.TacticWar.UI.Editor
     public class BuildingEditor
     {
         private Building building;
-        private Player player;
-        private int id;
-        private string name;
 
         public Coordinates Position => building.Position;
-        public Player Player => player; // division.Player;
-        public int Id => id; //division.Id;
-        public string Name => name; // division.Name;
-        //public List<Unit> Units => division.Units;
+        public string Type => building.Type;
+        public Player Player { get; private set; }
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public DivisionEditor Security { get; set; }
 
         public BuildingEditor(Building building)
         {
@@ -25,22 +23,24 @@ namespace MT.TacticWar.UI.Editor
 
         public void SetPlayer(Player player)
         {
-            this.player = player;
+            Player = player;
+            if (null != Security)
+                Security.SetPlayer(player);
         }
 
         public void SetId(int id)
         {
-            this.id = id;
+            Id = id;
         }
 
         public void SetName(string name)
         {
-            this.name = name;
+            Name = name;
         }
 
-        public string GetDivisionCode()
+        public string GetBuildingCode()
         {
-            return ""; // ObjectFactory.GetDivisionCode(division);
+            return ObjectFactory.GetBuildingCode(building);
         }
 
         public void Destroy()
@@ -50,14 +50,15 @@ namespace MT.TacticWar.UI.Editor
 
         public Building CreateBuilding(int x, int y)
         {
-            /*var code = ObjectFactory.GetDivisionCode(division);
-            var newdivision = ObjectFactory.CreateDivision(code, Player, Id, Name, x, y);
-            var units = new Unit[division.Units.Count];
-            division.Units.CopyTo(units);
-            newdivision.CompleteWithUnits(units);
-            newdivision.Player.Divisions.Add(newdivision);
-            return newdivision;*/
-            return null;
+            var code = ObjectFactory.GetBuildingCode(building);
+            var security = Security?.CreateDivision(x, y);
+            var newbuilding = ObjectFactory.CreateBuilding(
+                code, Player, Id, Name, x, y, building.Health, security
+            );
+            if (null != security)
+                newbuilding.Player.Divisions.Add(security);
+            newbuilding.Player.Buildings.Add(newbuilding);
+            return newbuilding;
         }
 
         public static implicit operator Building(BuildingEditor be)

@@ -61,7 +61,7 @@ namespace MT.TacticWar.Core.Serialization
                 sb.Append("        ");
                 for (int x = 0; x < width; x++)
                 {
-                    sb.Append(LandscapeFactory.GetCellSymbol(schema, cells[x, y]));
+                    sb.Append(LandscapeFactory.GetCellCode(schema, cells[x, y]));
                 }
             }
             sb.Append(Environment.NewLine);
