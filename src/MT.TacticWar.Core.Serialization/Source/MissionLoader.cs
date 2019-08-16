@@ -38,6 +38,7 @@ namespace MT.TacticWar.Core.Serialization
             var width = mp.Info.Size.Width;
             var height = mp.Info.Size.Height;
             var schemacode = mp.Info.Schema;
+            var schema = LandscapeFactory.CreateSchema(schemacode);
 
             var landlines = MapLandscapeSplit(mp.Landscape, width);
             if (landlines.Length != height)
@@ -47,14 +48,13 @@ namespace MT.TacticWar.Core.Serialization
             if (impasslines.Length != height)
                 throw new FormatException("Неверный формат карты проходимости.");
 
-            var field = LoadMapField(width, height, schemacode, landlines);
+            var field = LoadMapField(width, height, schema, landlines);
             field = LoadMapFieldPassable(width, height, field, impasslines);
 
-            //var schema = LandscapeFactory.CreateSchema(schemacode);
-            return new Map(name, description, width, height, field);
+            return new Map(name, description, width, height, schema, field);
         }
 
-        private static Cell[,] LoadMapField(int width, int height, string schema, string[] landlines)
+        private static Cell[,] LoadMapField(int width, int height, Schema schema, string[] landlines)
         {
             var field = new Cell[width, height];
             for (int y = 0; y < height; y++)
@@ -203,7 +203,7 @@ namespace MT.TacticWar.Core.Serialization
                     bld.Name,
                     bld.Position.X,
                     bld.Position.Y,
-                    bld.Health,
+                    bld.Health.HasValue ? bld.Health.Value : 100,
                     security
                 ));
             }
@@ -239,7 +239,7 @@ namespace MT.TacticWar.Core.Serialization
             foreach (var unittype in types.Units)
             {
                 if (ObjectFactory.CompareDivisionType(division, unittype.DivisionType) && unittype.Type.Equals(type))
-                    return unittype.Create(id, division);
+                    return unittype.CreateCustom(id, division);
             }
 
             return null;

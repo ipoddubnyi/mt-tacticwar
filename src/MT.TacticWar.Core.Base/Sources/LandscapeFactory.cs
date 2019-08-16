@@ -17,33 +17,44 @@ namespace MT.TacticWar.Core.Base.Landscape
 
         public static readonly List<CellVariant> Cells = new List<CellVariant>()
         {
-            new CellVariant { Schema = "summer", Name = "Поле",    Code = '-', Type = typeof(Field) },
-            new CellVariant { Schema = "summer", Name = "Дорога",  Code = '#', Type = typeof(Road) },
-            new CellVariant { Schema = "summer", Name = "Вода",    Code = '~', Type = typeof(Water) },
-            new CellVariant { Schema = "summer", Name = "Лес",     Code = '*', Type = typeof(Forest) },
-            new CellVariant { Schema = "summer", Name = "Песок",   Code = ':', Type = typeof(Sand) },
-            new CellVariant { Schema = "summer", Name = "Камни",   Code = 'o', Type = typeof(Stones) },
-            new CellVariant { Schema = "summer", Name = "Мост",    Code = '+', Type = typeof(Bridge) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Поле",     Code = '-', Type = typeof(Field) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Дорога",   Code = '#', Type = typeof(Road) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Вода",     Code = '~', Type = typeof(Water) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Лес",      Code = '*', Type = typeof(Forest) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Песок",    Code = ':', Type = typeof(Sand) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Камни",    Code = 'o', Type = typeof(Stones) },
+            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Мост",     Code = '+', Type = typeof(Bridge) },
 
-            new CellVariant { Schema = "winter", Name = "Поле",    Code = '-', Type = typeof(Snow) },
-            new CellVariant { Schema = "winter", Name = "Дорога",  Code = '#', Type = typeof(Road) },
-            new CellVariant { Schema = "winter", Name = "Вода",    Code = '~', Type = typeof(ColdWater) },
-            new CellVariant { Schema = "winter", Name = "Лес",     Code = '*', Type = typeof(WinterForest) },
-            new CellVariant { Schema = "winter", Name = "Песок",   Code = ':', Type = typeof(Sand) },
-            new CellVariant { Schema = "winter", Name = "Камни",   Code = 'o', Type = typeof(Stones) },
-            new CellVariant { Schema = "winter", Name = "Мост",    Code = '+', Type = typeof(Bridge) },
-            new CellVariant { Schema = "winter", Name = "Лёд",     Code = '≈', Type = typeof(Ice) }
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Поле",     Code = '-', Type = typeof(Snow) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Дорога",   Code = '#', Type = typeof(Road) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Вода",     Code = '~', Type = typeof(ColdWater) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Лес",      Code = '*', Type = typeof(WinterForest) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Песок",    Code = ':', Type = typeof(Sand) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Камни",    Code = 'o', Type = typeof(Stones) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Мост",     Code = '+', Type = typeof(Bridge) },
+            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Лёд",      Code = '≈', Type = typeof(Ice) }
         };
 
-        public static List<CellVariant> GetAvailableCellsForSchema(string schema)
+        public static List<CellVariant> GetAvailableCellsForSchema(Schema schema)
         {
             var list = new List<CellVariant>();
             foreach (var cell in Cells)
             {
-                if (cell.Schema.Equals(schema))
+                if (cell.SchemaType.Equals(schema.GetType()))
                     list.Add(cell);
             }
             return list;
+        }
+
+        public static string GetSchemaCode(Schema schema)
+        {
+            foreach (var sch in Schemas)
+            {
+                if (sch.Type.Equals(schema.GetType()))
+                    return sch.Code;
+            }
+
+            throw new Exception("Неизвестный тип схемы.");
         }
 
         public static Schema CreateSchema(string code)
@@ -57,11 +68,11 @@ namespace MT.TacticWar.Core.Base.Landscape
             throw new Exception("Неизвестный тип схемы ландшафта.");
         }
 
-        public static Cell CreateCell(string schema, char code, int x, int y)
+        public static Cell CreateCell(Schema schema, char code, int x, int y)
         {
             foreach (var c in Cells)
             {
-                if (!c.Schema.Equals(schema))
+                if (!c.SchemaType.Equals(schema.GetType()))
                     continue;
 
                 if (c.Code == code)
@@ -71,11 +82,11 @@ namespace MT.TacticWar.Core.Base.Landscape
             throw new Exception("Неизвестный тип схемы ландшафта.");
         }
 
-        public static char GetCellCode(string schema, Cell cell)
+        public static char GetCellCode(Schema schema, Cell cell)
         {
             foreach (var c in Cells)
             {
-                if (!c.Schema.Equals(schema))
+                if (!c.SchemaType.Equals(schema.GetType()))
                     continue;
 
                 if (c.Type.Equals(cell.GetType()))

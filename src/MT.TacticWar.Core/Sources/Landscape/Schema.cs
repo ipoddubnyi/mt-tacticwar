@@ -8,5 +8,10 @@ namespace MT.TacticWar.Core.Landscape
         public Schema()
         {
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

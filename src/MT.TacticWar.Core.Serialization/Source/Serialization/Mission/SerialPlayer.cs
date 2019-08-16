@@ -7,7 +7,7 @@ namespace MT.TacticWar.Core.Serialization
     public class SerialPlayer
     {
         [XmlAttribute("id")]
-        public char Id { get; set; }
+        public int Id { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }

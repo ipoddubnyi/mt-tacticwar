@@ -9,14 +9,14 @@ namespace MT.TacticWar.UI.Editor.Painters
     {
         private readonly GameGraphics graphics;
         private readonly Map map;
-        private readonly string schema;
+        private readonly Schema schema;
         private readonly char celltype;
 
         private bool active; // непрерывное рисование
         private int x;
         private int y;
 
-        public LanscapePainter(GameGraphics graphics, Map map, string schema, char cellcode)
+        public LanscapePainter(GameGraphics graphics, Map map, Schema schema, char cellcode)
         {
             Stop();
             this.graphics = graphics;

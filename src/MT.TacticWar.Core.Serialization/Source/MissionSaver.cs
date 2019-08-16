@@ -29,18 +29,18 @@ namespace MT.TacticWar.Core.Serialization
             return mis;
         }*/
 
-        public static void SaveMap(string filePath, Map map, string name, string descr, string schema, string version)
+        public static void SaveMap(string filePath, Map map, string name, string descr, string version)
         {
             var mp = new SerialMap();
 
             mp.Info = new SerialMapInfo() {
                 Name = name,
                 Description = descr,
-                Schema = schema,
+                Schema = LandscapeFactory.GetSchemaCode(map.Schema),
                 Size = new SerialSize() { Width = map.Width, Height = map.Height },
                 Version = version
             };
-            mp.Landscape = MapLandscapeToString(map.Field, map.Width, map.Height, schema);
+            mp.Landscape = MapLandscapeToString(map.Field, map.Width, map.Height, map.Schema);
             mp.Impassability = MapImpassabilityToString(map.Field, map.Width, map.Height);
             mp.Cells = null;
 
@@ -52,7 +52,7 @@ namespace MT.TacticWar.Core.Serialization
             SerialMap.Serialize(filePath, mp);
         }
 
-        private static string MapLandscapeToString(Cell[,] cells, int width, int height, string schema)
+        private static string MapLandscapeToString(Cell[,] cells, int width, int height, Schema schema)
         {
             var sb = new StringBuilder();
             for (int y = 0; y < height; y++)
@@ -98,120 +98,101 @@ namespace MT.TacticWar.Core.Serialization
                 }
             }
             return buffer.ToString().Trim();
+        }*/
+
+        public static void SaveMission(string filePath, Mission mission, string name, string brief, string version)
+        {
+            var mis = new SerialMission();
+
+            mis.Info = new SerialMissionInfo()
+            {
+                Name = name,
+                Description = brief,
+                Version = version
+            };
+
+            mis.Players = MissionPlayers(mission);
+            //m.Types
+            //m.Zones
+            //m.Scripts
+
+            // TODO: отрефакторить создание папки
+            var dirPath = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+
+            SerialMission.Serialize(filePath, mis);
         }
 
-        public static Mission LoadMission(string filePath, Map map)
+        private static SerialPlayer[] MissionPlayers(Mission mis)
         {
-            var mis = SerialMission.Deserialize(filePath);
-
-            var players = LoadMissionPlayers(mis);
-            var zones = LoadMissionZones(mis);
-            var scripts = LoadMissionScripts(mis);
-            return new Mission(
-                mis.Info.Name,
-                MissionTextTrim(mis.Info.Description),
-                players,
-                zones,
-                scripts,
-                map
-            );
-        }
-
-        private static Player[] LoadMissionPlayers(SerialMission mis)
-        {
-            var players = new List<Player>();
+            var players = new List<SerialPlayer>();
             foreach (var pl in mis.Players)
             {
-                var player = LoadMissionPlayer(pl, mis.Types);
+                var player = MissionPlayer(pl, null);
                 players.Add(player);
             }
 
             return players.ToArray();
         }
 
-        private static Player LoadMissionPlayer(SerialPlayer pl, SerialMissionTypes types)
+        private static SerialPlayer MissionPlayer(Player pl, SerialMissionTypes types)
         {
-            var player = new Player(
-                pl.Id,
-                pl.Name,
-                pl.Team,
-                pl.Color,
-                (PlayerRank)pl.Rank,
-                pl.Money,
-                pl.AI
-            );
+            var player = new SerialPlayer()
+            {
+                Id = pl.Id,
+                Name = pl.Name,
+                Team = pl.Team,
+                Color = pl.Color,
+                Rank = (int)pl.Rank,
+                Money = pl.Money,
+                AI = pl.AI == PlayerIntelligence.AI
+            };
 
-            player.Divisions = LoadMissionPlayerDivisions(pl, types, player);
-            player.Buildings = LoadMissionPlayerBuildings(pl, player);
-            player.Gates = GetPlayerGates(pl);
+            player.Divisions = MissionPlayerDivisions(pl, types);
+            player.Buildings = MissionPlayerBuildings(pl);
+            player.Gates = MissionPlayerGates(pl);
 
             return player;
         }
 
-        private static List<Division> LoadMissionPlayerDivisions(SerialPlayer pl, SerialMissionTypes types, Player player)
+        private static SerialDivision[] MissionPlayerDivisions(Player pl, SerialMissionTypes types)
         {
-            var divisions = new List<Division>();
-            foreach (var div in pl.Divisions)
+            var divisions = new List<SerialDivision>();
+            foreach (var division in pl.Divisions)
             {
-                var division = ObjectFactory.CreateDivision(
-                    div.Type,
-                    player,
-                    div.Id,
-                    div.Name,
-                    div.Position.X,
-                    div.Position.Y
-                );
-
-                var units = new List<Unit>();
-                foreach (var un in div.Units)
-                {
-                    units.Add(CreateUnit(division, un, types));
-                }
-
-                division.CompleteWithUnits(units);
-                divisions.Add(division);
+                divisions.Add(new SerialDivision(division));
             }
-
-            return divisions;
+            return divisions.ToArray();
         }
 
-        private static List<Building> LoadMissionPlayerBuildings(SerialPlayer pl, Player player)
+        private static SerialBuilding[] MissionPlayerBuildings(Player pl)
         {
-            var buildings = new List<Building>();
-            foreach (var bld in pl.Buildings)
+            var buildings = new List<SerialBuilding>();
+            foreach (var building in pl.Buildings)
             {
-                var security = bld.Security.HasValue ?
-                    player.Divisions.GetById(bld.Security.Value) :
-                    null;
-
-                buildings.Add(ObjectFactory.CreateBuilding(
-                    bld.Type,
-                    player,
-                    bld.Id,
-                    bld.Name,
-                    bld.Position.X,
-                    bld.Position.Y,
-                    bld.Health,
-                    bld.Radius,
-                    bld.View,
-                    security
-                ));
+                buildings.Add(new SerialBuilding(building));
             }
-
-            return buildings;
+            return buildings.ToArray();
         }
 
-        private static List<Gate> GetPlayerGates(SerialPlayer pl)
+        private static SerialGate[] MissionPlayerGates(Player pl)
         {
-            var gates = new List<Gate>();
+            var gates = new List<SerialGate>();
             foreach (var gate in pl.Gates)
             {
-                gates.Add(new Gate(gate.Id, gate.X, gate.Y));
+                var gt = new SerialGate
+                {
+                    Id = gate.Id,
+                    X = gate.X,
+                    Y = gate.Y
+                };
+                gates.Add(gt);
             }
-            return gates;
+            return gates.ToArray();
         }
 
-        private static Unit CreateUnit(Division division, SerialUnit u, SerialMissionTypes types)
+        /*private static Unit CreateUnit(Division division, SerialUnit u, SerialMissionTypes types)
         {
             var unit = UnitFactory.CreateUnit(u.Id, division, u.Type);
             if (null != unit)

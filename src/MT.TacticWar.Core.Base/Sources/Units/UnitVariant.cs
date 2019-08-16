@@ -9,7 +9,7 @@ namespace MT.TacticWar.Core.Base.Units
     {
         public Type DivisionType;
         public string Name;
-        public string UnitType;
+        public string Code;
         public Type Type;
 
         public Unit Create(int id, Division division)

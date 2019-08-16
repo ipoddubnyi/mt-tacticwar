@@ -5,7 +5,7 @@ namespace MT.TacticWar.Core.Base.Landscape
 {
     public struct CellVariant
     {
-        public string Schema;
+        public Type SchemaType;
         public string Name;
         public char Code;
         public Type Type;

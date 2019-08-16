@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -32,6 +34,9 @@ namespace MT.TacticWar.UI.Editor
         private IPainter painter = null;
         private bool selector = false;
 
+        private string FilePathMap;
+        private string FilePathMission;
+
         public EditorForm()
         {
             InitializeComponent();
@@ -46,7 +51,7 @@ namespace MT.TacticWar.UI.Editor
         {
         }
 
-        private void UpdateUI(string schema, bool missionload = false)
+        private void UpdateUI(Schema schema, bool missionload = false)
         {
             UpdateUIClear();
             UpdateUIMap(schema);
@@ -68,7 +73,7 @@ namespace MT.TacticWar.UI.Editor
             SelectedBuilding = null;
         }
 
-        private void UpdateUIMap(string schema)
+        private void UpdateUIMap(Schema schema)
         {
             // показать элементы дерева
             var node = new TreeNode("Указатель")
@@ -172,85 +177,11 @@ namespace MT.TacticWar.UI.Editor
             panelBuilding.Visible = true;
         }
 
-        private void MenuFileCreateMap_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new DialogMapNew())
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    SelectedMap = new MapEditor(dialog.MapName, dialog.MapDescription, dialog.MapSizeWidth, dialog.MapSizeHeight, dialog.MapSchema.Code);
-
-                    ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
-                    graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
-                    graphicsPreview = new GameGraphics(PanelElementPreview.CreateGraphics(), CellSize);
-
-                    UpdateUI(SelectedMap.Schema);
-                }
-            }
-        }
-
-        private void MenuFileOpenMap_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new OpenFileDialog())
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    SelectedMap = new MapEditor(MissionLoader.LoadMap(dialog.FileName));
-
-                    ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
-                    graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
-                    graphicsPreview = new GameGraphics(PanelElementPreview.CreateGraphics(), CellSize);
-
-                    UpdateUI(SelectedMap.Schema);
-                }
-            }
-        }
-
-        private void MenuFileCreateMission_Click(object sender, EventArgs e)
-        {
-            if (null == SelectedMap)
-            {
-                MessageBox.Show("Сначала нужно создать/загрузить карту.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            using (var dialog = new DialogMissionNew())
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    int playersCount = 2;
-                    var players = new Player[playersCount];
-                    players[0] = new Player(0, "Игрок 1", 1, "green", Core.Players.PlayerRank.Soldier, 0, false);
-                    players[1] = new Player(1, "Игрок 2", 2, "red", Core.Players.PlayerRank.Soldier, 0, false);
-
-                    SelectedMission = new MissionEditor(dialog.MissionName, dialog.MissionBriefing, players, SelectedMap);
-                    UpdateUI(SelectedMap.Schema, true);
-                }
-            }
-        }
-
-        private void MenuFileOpenMission_Click(object sender, EventArgs e)
-        {
-            if (null == SelectedMap)
-            {
-                MessageBox.Show("Сначала нужно создать/загрузить карту.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            using (var dialog = new OpenFileDialog())
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    SelectedMission = new MissionEditor(MissionLoader.LoadMission(dialog.FileName, SelectedMap));
-                    UpdateUI(SelectedMap.Schema, true);
-                }
-            }
-        }
-
         private void SetMapInfo(MapEditor map)
         {
             txtMapName.Text = map.Name;
             txtMapDescription.Text = map.Description;
+            txtMapVersion.Text = "1.0";
             lblMapSize.Text = $"Размер карты: {map.Width}x{map.Height}";
             lblMapSchema.Text = $"Схема карты: {map.Schema}";
         }
@@ -504,23 +435,109 @@ namespace MT.TacticWar.UI.Editor
             }
         }
 
-        private void MenuFileSaveMap_Click(object sender, EventArgs e)
+        #region Меню Карта
+
+        private void MenuMapNew_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new DialogMapNew())
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    SelectedMap = new MapEditor(dialog.MapName, dialog.MapDescription, dialog.MapSizeWidth, dialog.MapSizeHeight, dialog.MapSchema.Code);
+
+                    ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
+                    graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
+                    graphicsPreview = new GameGraphics(PanelElementPreview.CreateGraphics(), CellSize);
+
+                    UpdateUI(SelectedMap.Schema);
+                }
+            }
+        }
+
+        private void MenuMapOpen_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                dialog.RestoreDirectory = true;
+
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    FilePathMap = dialog.FileName;
+                    SelectedMap = new MapEditor(MissionLoader.LoadMap(dialog.FileName));
+
+                    ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
+                    graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
+                    graphicsPreview = new GameGraphics(PanelElementPreview.CreateGraphics(), CellSize);
+
+                    UpdateUI(SelectedMap.Schema);
+                }
+            }
+        }
+
+        private void MenuMapSave_Click(object sender, EventArgs e)
         {
             try
             {
-                if (null != SelectedMap)
+                if (string.IsNullOrEmpty(FilePathMap))
                 {
-                    var filePath = @"test\map";
+                    MenuMapSaveAs_Click(sender, e);
+                    return;
+                }
+
+                if (!ValidateSaveMap())
+                    return;
+                
+                MissionSaver.SaveMap(
+                    FilePathMap,
+                    SelectedMap,
+                    txtMapName.Text,
+                    txtMapDescription.Text,
+                    txtMapVersion.Text
+                );
+
+                MessageBox.Show(
+                    "Карта успешно сохранена.",
+                    "Сохранение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void MenuMapSaveAs_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!ValidateSaveMap())
+                    return;
+
+                using (var dialog = new SaveFileDialog())
+                {
+                    dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                    dialog.RestoreDirectory = true;
+
+                    if (DialogResult.OK != dialog.ShowDialog())
+                        return;
+
+                    FilePathMap = dialog.FileName;
+
                     MissionSaver.SaveMap(
-                        filePath,
+                        FilePathMap,
                         SelectedMap,
-                        "Тест",
-                        "Тестирование сохранения",
-                        SelectedMap.Schema,
-                        "1.0"
+                        txtMapName.Text,
+                        txtMapDescription.Text,
+                        txtMapVersion.Text
                     );
 
-                    MessageBox.Show("Сохранено.", "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        "Карта успешно сохранена.",
+                        "Сохранение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -528,6 +545,177 @@ namespace MT.TacticWar.UI.Editor
                 MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private bool ValidateSaveMap()
+        {
+            try
+            {
+                if (null == SelectedMap)
+                    throw new Exception("Карта не создана.");
+
+                if (0 == txtMapName.Text.Length)
+                    throw new Exception("Имя карты не может быть пустым.");
+
+                if (!Version.TryParse(txtMapVersion.Text, out Version result))
+                    throw new Exception("Версия карты задана в неверном формате.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Меню Миссия
+
+        private void MenuMissionNew_Click(object sender, EventArgs e)
+        {
+            if (null == SelectedMap)
+            {
+                MessageBox.Show("Сначала нужно создать/загрузить карту.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var dialog = new DialogMissionNew())
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    int playersCount = 2;
+                    var players = new Player[playersCount];
+                    players[0] = new Player(0, "Игрок 1", 1, "green", Core.Players.PlayerRank.Soldier, 0, false);
+                    players[1] = new Player(1, "Игрок 2", 2, "red", Core.Players.PlayerRank.Soldier, 0, false);
+
+                    SelectedMission = new MissionEditor(dialog.MissionName, dialog.MissionBriefing, players, SelectedMap);
+                    UpdateUI(SelectedMap.Schema, true);
+                }
+            }
+        }
+
+        private void MenuMissionOpen_Click(object sender, EventArgs e)
+        {
+            if (null == SelectedMap)
+            {
+                MessageBox.Show("Сначала нужно создать/загрузить карту.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                dialog.RestoreDirectory = true;
+
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    FilePathMission = dialog.FileName;
+                    SelectedMission = new MissionEditor(MissionLoader.LoadMission(dialog.FileName, SelectedMap));
+                    UpdateUI(SelectedMap.Schema, true);
+                }
+            }
+        }
+
+        private void MenuMissionSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(FilePathMission))
+                {
+                    MenuMissionSaveAs_Click(sender, e);
+                    return;
+                }
+
+                if (!ValidateSaveMission())
+                    return;
+
+                MissionSaver.SaveMission(
+                    FilePathMission,
+                    SelectedMission,
+                    txtMissionName.Text,
+                    txtMissionBriefing.Text,
+                    txtMissionVersion.Text
+                );
+
+                MessageBox.Show(
+                    "Миссия успешно сохранена.",
+                    "Сохранение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void MenuMissionSaveAs_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!ValidateSaveMission())
+                    return;
+
+                using (var dialog = new SaveFileDialog())
+                {
+                    dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                    dialog.RestoreDirectory = true;
+
+                    if (DialogResult.OK != dialog.ShowDialog())
+                        return;
+
+                    FilePathMission = dialog.FileName;
+
+                    MissionSaver.SaveMission(
+                        FilePathMission,
+                        SelectedMission,
+                        txtMissionName.Text,
+                        txtMissionBriefing.Text,
+                        txtMissionVersion.Text
+                    );
+
+                    MessageBox.Show(
+                        "Миссия успешно сохранена.",
+                        "Сохранение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void MenuMissionCompile_Click(object sender, EventArgs e)
+        {
+            //
+        }
+
+        private bool ValidateSaveMission()
+        {
+            try
+            {
+                if (null == SelectedMission)
+                    throw new Exception("Миссия не создана.");
+
+                if (0 == txtMissionName.Text.Length)
+                    throw new Exception("Имя миссии не может быть пустым.");
+
+                if (!Version.TryParse(txtMissionVersion.Text, out Version result))
+                    throw new Exception("Версия миссии задана в неверном формате.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
 
         //
 

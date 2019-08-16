@@ -5,28 +5,20 @@ namespace MT.TacticWar.UI.Editor
 {
     public class MapEditor : Map
     {
-        public string Schema { get; private set; }
+        //public string Schema { get; private set; }
 
         public MapEditor(string name, string descr, int width, int height, string schema) :
-            base(name, descr, width, height)
+            base(name, descr, width, height, LandscapeFactory.CreateSchema(schema))
         {
-            Schema = schema;
-            InitCells();
-        }
-
-        public MapEditor(Map map) :
-            base(map.Name, map.Description, map.Width, map.Height, map.Field)
-        {
-        }
-
-        public void InitCells()
-        {
-            //Schema = LandscapeFactory.CreateSchema(schemacode);
-
             Field = new Cell[Width, Height];
             for (int y = 0; y < Height; ++y)
                 for (int x = 0; x < Width; ++x)
                     Field[x, y] = LandscapeFactory.CreateCell(Schema, '-', x, y);
+        }
+
+        public MapEditor(Map map) :
+            base(map.Name, map.Description, map.Width, map.Height, map.Schema, map.Field)
+        {
         }
     }
 }
