@@ -7,7 +7,7 @@ namespace MT.TacticWar.UI.Editor.Painters
     {
         private readonly GameGraphics graphics;
         private readonly Map map;
-        private readonly BuildingEditor building;
+        public BuildingEditor Building { get; private set; }
 
         private int x;
         private int y;
@@ -17,7 +17,7 @@ namespace MT.TacticWar.UI.Editor.Painters
             Stop();
             this.graphics = graphics;
             this.map = map;
-            this.building = building;
+            Building = building;
         }
 
         public void Start(int x, int y)
@@ -51,7 +51,7 @@ namespace MT.TacticWar.UI.Editor.Painters
 
         public void Paint()
         {
-            var newbuilding = building.CreateBuilding(x, y);
+            var newbuilding = Building.CreateBuilding(x, y);
 
             // если на этом месте есть юнит - стереть его
             if (map[x, y].Occupied)

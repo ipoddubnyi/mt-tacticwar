@@ -27,12 +27,10 @@ namespace MT.TacticWar.UI.Editor
         private const int CellSize = 21;
         private MapEditor SelectedMap = null;
         private MissionEditor SelectedMission = null;
-        private DivisionEditor SelectedDivision = null;
-        private BuildingEditor SelectedBuilding = null;
+        private IObjectEditor SelectedObject = null;
         private GameGraphics graphics = null;
         private GameGraphics graphicsPreview = null;
         private IPainter painter = null;
-        private bool selector = false;
 
         private string FilePathMap;
         private string FilePathMission;
@@ -41,8 +39,6 @@ namespace MT.TacticWar.UI.Editor
         {
             InitializeComponent();
 
-            divisionProperties.Changed += DivisionProperties_Changed;
-            buildingProperties.Changed += BuildingProperties_Changed;
             TabControlLeft.TabPages.Remove(TabMissionInfo);
             TabControlLeft.TabPages.Remove(TabMapInfo);
         }
@@ -69,8 +65,7 @@ namespace MT.TacticWar.UI.Editor
             TreeViewElements.Nodes.Clear();
             TabControlLeft.TabPages.Remove(TabMissionInfo);
             TabControlLeft.TabPages.Remove(TabMapInfo);
-            SelectedDivision = null;
-            SelectedBuilding = null;
+            SelectedObject = null;
         }
 
         private void UpdateUIMap(Schema schema)
@@ -78,7 +73,7 @@ namespace MT.TacticWar.UI.Editor
             // показать элементы дерева
             var node = new TreeNode("Указатель")
             {
-                Tag = new TreeViewNodeSelector(() => { SelectSelection(); })
+                Tag = new TreeViewNodeSelector()
             };
             TreeViewElements.Nodes.Add(node);
 
@@ -128,13 +123,13 @@ namespace MT.TacticWar.UI.Editor
 
             var subnode = new TreeNode("Подразделение")
             {
-                Tag = new TreeViewNodeSelector(SelectShowDialogDivisionNew)
+                Tag = new TreeViewNodeSelector(SelectShowObjectToolset)
             };
             node.Nodes.Add(subnode);
 
             subnode = new TreeNode("Строение")
             {
-                Tag = new TreeViewNodeSelector(SelectShowDialogBuildingNew)
+                Tag = new TreeViewNodeSelector(SelectShowObjectToolset)
             };
             node.Nodes.Add(subnode);
 
@@ -146,11 +141,6 @@ namespace MT.TacticWar.UI.Editor
 
             // показать информацию на табе
             SetMissionInfo(SelectedMission);
-        }
-
-        private void SelectSelection()
-        {
-            selector = true;
         }
 
         private void SelectDrawCellType(CellVariant cellvar)
@@ -167,14 +157,9 @@ namespace MT.TacticWar.UI.Editor
             painter = new PassabilityPainter(graphics, SelectedMap, passable);
         }
 
-        private void SelectShowDialogDivisionNew()
+        private void SelectShowObjectToolset()
         {
-            panelDivision.Visible = true;
-        }
-
-        private void SelectShowDialogBuildingNew()
-        {
-            panelBuilding.Visible = true;
+            panelObjectToolset.Visible = true;
         }
 
         private void SetMapInfo(MapEditor map)
@@ -190,9 +175,6 @@ namespace MT.TacticWar.UI.Editor
         {
             txtMissionName.Text = mission.Name;
             txtMissionBriefing.Text = mission.Briefing;
-
-            divisionProperties.SetPlayersDataSource(mission.Players);
-            buildingProperties.SetPlayersDataSource(mission.Players);
         }
 
         private void DrawAll()
@@ -271,10 +253,8 @@ namespace MT.TacticWar.UI.Editor
 
         private void TreeViewElements_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
-            panelDivision.Visible = false;
-            panelBuilding.Visible = false;
+            panelObjectToolset.Visible = false;
             painter = null;
-            selector = false;
             DrawUnpassableHide();
         }
 
@@ -328,47 +308,20 @@ namespace MT.TacticWar.UI.Editor
 
         private void PanelEditor_MouseDown(object sender, MouseEventArgs e)
         {
-            if (null != painter)
-            {
-                int x = e.X / CellSize;
-                int y = e.Y / CellSize;
+            if (null == painter)
+                return;
 
-                if (x < 0 || x > SelectedMap.Width - 1)
-                    return;
+            int x = e.X / CellSize;
+            int y = e.Y / CellSize;
 
-                if (y < 0 || y > SelectedMap.Height - 1)
-                    return;
+            if (x < 0 || x > SelectedMap.Width - 1)
+                return;
 
-                painter.Start(x, y);
-                painter.Paint();
-            }
-            else if (selector)
-            {
-                int x = e.X / CellSize;
-                int y = e.Y / CellSize;
+            if (y < 0 || y > SelectedMap.Height - 1)
+                return;
 
-                if (x < 0 || x > SelectedMap.Width - 1)
-                    return;
-
-                if (y < 0 || y > SelectedMap.Height - 1)
-                    return;
-
-                var division = SelectedMission.GetDivisionAt(x, y);
-                if (null != division)
-                {
-                    SelectedDivision = new DivisionEditor(division);
-                    graphics.DrawDivision(SelectedDivision, true);
-                    return;
-                }
-
-                var building = SelectedMission.GetBuildingAt(x, y);
-                if (null != building)
-                {
-                    SelectedBuilding = new BuildingEditor(building);
-                    graphics.DrawBuilding(SelectedBuilding, true);
-                    return;
-                }
-            }
+            painter.Start(x, y);
+            painter.Paint();
         }
 
         private void PanelEditor_MouseUp(object sender, MouseEventArgs e)
@@ -398,40 +351,58 @@ namespace MT.TacticWar.UI.Editor
             if (y < 0 || y > SelectedMap.Height - 1)
                 return;
 
-            var division = SelectedMission.GetDivisionAt(x, y);
-            if (null != division)
-            {
-                if (MouseButtons.Left == e.Button)
-                {
-                    SelectedDivision = new DivisionEditor(division);
-                    ShowDivisionInfo(SelectedDivision);
-                    graphics.DrawDivision(SelectedDivision, true);
-                }
-                else if (MouseButtons.Right == e.Button)
-                {
-                    // TODO: сделать, чтобы объект стирался
-                    //contextMenuDivision.Tag = new DivisionEditor(division);
-                    //contextMenuDivision.Show(Cursor.Position);
-                }
-                return;
-            }
-
             var building = SelectedMission.GetBuildingAt(x, y);
             if (null != building)
             {
                 if (MouseButtons.Left == e.Button)
                 {
-                    SelectedBuilding = new BuildingEditor(building);
-                    lblSelectedBuildingStatus.Text = $"Строение: {SelectedBuilding.Name}";
-                    graphics.DrawBuilding(SelectedBuilding, true);
+                    DrawObject(SelectedObject, false);
+                    SelectedObject = new BuildingEditor(building);
+                    ShowBuildingInfo(SelectedObject as BuildingEditor);
+                    DrawObject(SelectedObject, true);
                 }
                 else if (MouseButtons.Right == e.Button)
                 {
                     // TODO: сделать, чтобы объект стирался
-                    //contextMenuDivision.Tag = new BuildingEditor(building);
-                    //contextMenuDivision.Show(Cursor.Position);
+                    //DeselectObject();
                 }
                 return;
+            }
+
+            var division = SelectedMission.GetDivisionAt(x, y);
+            if (null != division)
+            {
+                if (MouseButtons.Left == e.Button)
+                {
+                    DrawObject(SelectedObject, false);
+                    SelectedObject = new DivisionEditor(division);
+                    ShowDivisionInfo(SelectedObject as DivisionEditor);
+                    DrawObject(SelectedObject, true);
+                }
+                else if (MouseButtons.Right == e.Button)
+                {
+                    // TODO: сделать, чтобы объект стирался
+                    //DeselectObject();
+                }
+                return;
+            }
+        }
+
+        private void DrawObject(IObjectEditor obj, bool selected)
+        {
+            if (null == obj)
+                return;
+
+            if (obj is DivisionEditor)
+            {
+                var div = obj as DivisionEditor;
+                graphics.DrawDivision(div, selected);
+            }
+
+            if (obj is BuildingEditor)
+            {
+                var bld = obj as BuildingEditor;
+                graphics.DrawBuilding(bld, selected);
             }
         }
 
@@ -719,98 +690,121 @@ namespace MT.TacticWar.UI.Editor
 
         //
 
-        /*private void ContextMenuDivisionEdit_Click(object sender, EventArgs e)
+        private void BtnObjectNewDivision_Click(object sender, EventArgs e)
         {
-            if (null != contextMenuDivision.Tag)
-            {
-                if (contextMenuDivision.Tag is DivisionEditor)
-                {
-                    var division = contextMenuDivision.Tag as DivisionEditor;
-                    using (var dialog = new DialogDivisionEditor(division))
-                    {
-                        if (DialogResult.OK == dialog.ShowDialog())
-                        {
-                            contextMenuDivision.Tag = dialog.ResultDivision;
-                        }
-                    }
-                }
-                else if (contextMenuDivision.Tag is BuildingEditor)
-                {
-                    var bulding = contextMenuDivision.Tag as BuildingEditor;
-                    using (var dialog = new DialogBuildingEditor(bulding))
-                    {
-                        if (DialogResult.OK == dialog.ShowDialog())
-                        {
-                            contextMenuDivision.Tag = dialog.ResultBuilding;
-                        }
-                    }
-                }
-            }
-        }
-
-        private void ContextMenuDivisionDelete_Click(object sender, EventArgs e)
-        {
-            if (null != contextMenuDivision.Tag)
-            {
-                if (contextMenuDivision.Tag is DivisionEditor)
-                {
-                    var division = contextMenuDivision.Tag as DivisionEditor;
-                    division.Destroy();
-                    graphics.DrawCell(SelectedMap[division.Position]);
-                }
-                else if (contextMenuDivision.Tag is BuildingEditor)
-                {
-                    var building = contextMenuDivision.Tag as BuildingEditor;
-                    building.Destroy();
-                    graphics.DrawCell(SelectedMap[building.Position]);
-                }
-            }
-        }*/
-
-        private void BtnDivisionCreate_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new DialogDivisionEditor())
+            using (var dialog = new DialogDivisionEditor(SelectedMission.Players))
             {
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    SelectedDivision = dialog.ResultDivision;
-                    ShowDivisionInfo(SelectedDivision);
+                    var division = dialog.Division;
+                    ShowDivisionInfo(division);
 
-                    SelectedDivision.SetPlayer(divisionProperties.ObjectPlayer);
-                    SelectedDivision.SetId(divisionProperties.ObjectId);
-                    //SelectedDivision.SetName(divisionProperties.DivisionName);
-                    divisionProperties.SetDivision(SelectedDivision);
-
-                    painter = new DivisionPainter(graphics, SelectedMap, SelectedDivision);
+                    painter = new DivisionPainter(graphics, SelectedMap, division);
                 }
             }
         }
 
-        private void BtnDivisionUpdate_Click(object sender, EventArgs e)
+        private void BtnObjectNewBuilding_Click(object sender, EventArgs e)
         {
-            using (var dialog = new DialogDivisionEditor(SelectedDivision))
+            using (var dialog = new DialogBuildingEditor(SelectedMission.Players))
             {
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    SelectedDivision = dialog.ResultDivision;
-                    ShowDivisionInfo(SelectedDivision);
-                    divisionProperties.SetDivision(SelectedDivision);
+                    var building = dialog.Building;
+                    ShowBuildingInfo(building);
 
-                    painter = new DivisionPainter(graphics, SelectedMap, SelectedDivision);
+                    painter = new BuildingPainter(graphics, SelectedMap, building);
                 }
             }
         }
 
-        private void BtnDivisionDelete_Click(object sender, EventArgs e)
+        private void BtnObjectUpdate_Click(object sender, EventArgs e)
         {
-            //
+            if (null == SelectedObject)
+            {
+                MessageBox.Show("Сначала выделите объект.");
+                return;
+            }
+
+            if (SelectedObject is DivisionEditor)
+                BtnObjectUpdateDivision();
+            else if (SelectedObject is BuildingEditor)
+                BtnObjectUpdateBuilding();
         }
 
-        private void ShowDivisionInfo(Division division)
+        private void BtnObjectUpdateDivision()
+        {
+            using (var dialog = new DialogDivisionEditor(SelectedMission.Players, SelectedObject as DivisionEditor))
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    var division = dialog.Division;
+
+                    // заменяем объект на новый (мог смениться игрок)
+                    painter = new DivisionPainter(graphics, SelectedMap, division);
+                    painter.TryMove(division.Position.X, division.Position.Y);
+                    painter.Paint();
+                    painter = null;
+
+                    // выделяем новый объект
+                    var divisionnew = SelectedMission.GetDivisionAt(division.Position);
+                    if (null != divisionnew)
+                    {
+                        SelectedObject = new DivisionEditor(divisionnew);
+                        ShowDivisionInfo(SelectedObject as DivisionEditor);
+                        DrawObject(SelectedObject, true);
+                    }
+                }
+            }
+        }
+
+        private void BtnObjectUpdateBuilding()
+        {
+            using (var dialog = new DialogBuildingEditor(SelectedMission.Players, SelectedObject as BuildingEditor))
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    var building = dialog.Building;
+
+                    // заменяем объект на новый (мог смениться игрок)
+                    painter = new BuildingPainter(graphics, SelectedMap, building);
+                    painter.TryMove(building.Position.X, building.Position.Y);
+                    painter.Paint();
+                    painter = null;
+
+                    // выделяем новый объект
+                    var buildingnew = SelectedMission.GetBuildingAt(building.Position);
+                    if (null != buildingnew)
+                    {
+                        SelectedObject = new BuildingEditor(buildingnew);
+                        ShowBuildingInfo(SelectedObject as BuildingEditor);
+                        DrawObject(SelectedObject, true);
+                    }
+                }
+            }
+        }
+
+        private void BtnObjectDelete_Click(object sender, EventArgs e)
+        {
+            if (null == SelectedObject)
+            {
+                MessageBox.Show("Сначала выделите объект.");
+                return;
+            }
+
+            DeleteObject(SelectedObject);
+            SelectedObject = null;
+            txtObjectStatus.Text = string.Empty;
+        }
+
+        private void ShowDivisionInfo(DivisionEditor division)
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine(division.Type);
+            sb.AppendFormat("Игрок: {0}{1}", division.Player, Environment.NewLine);
+            sb.AppendFormat("Id: {0}{1}", division.Id, Environment.NewLine);
+            sb.AppendFormat("Тип: {0}{1}", division.Type, Environment.NewLine);
+            sb.AppendFormat("Имя: {0}{1}", division.Name, Environment.NewLine);
             sb.AppendLine();
             sb.AppendLine("Юниты:");
             foreach (var unit in division.Units)
@@ -819,88 +813,47 @@ namespace MT.TacticWar.UI.Editor
                 sb.AppendLine(unit.Name);
             }
 
-            lblSelectedDivisionStatus.Text = sb.ToString();
+            txtObjectStatus.Text = sb.ToString();
+            panelObjectToolset.Visible = true;
         }
 
-        private void DivisionProperties_Changed(object sender, EventArgs e)
-        {
-            if (null != SelectedDivision)
-            {
-                SelectedDivision.SetPlayer(divisionProperties.ObjectPlayer);
-                SelectedDivision.SetId(divisionProperties.ObjectId);
-                SelectedDivision.SetName(divisionProperties.ObjectName);
-
-                painter = new DivisionPainter(graphics, SelectedMap, SelectedDivision);
-            }
-        }
-
-        private void BtnBuildingCreate_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new DialogBuildingEditor())
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    SelectedBuilding = dialog.ResultBuilding;
-                    lblSelectedBuildingStatus.Text = $"Строение: {SelectedBuilding.Name}";
-
-                    SelectedBuilding.SetPlayer(buildingProperties.ObjectPlayer);
-                    SelectedBuilding.SetId(buildingProperties.ObjectId);
-                    //SelectedBuilding.SetName(buildingProperties.DivisionName);
-                    buildingProperties.SetBuilding(SelectedBuilding);
-
-                    painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);
-                }
-            }
-        }
-
-        private void BtnBuildingUpdate_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new DialogBuildingEditor(SelectedBuilding))
-            {
-                if (DialogResult.OK == dialog.ShowDialog())
-                {
-                    SelectedBuilding = dialog.ResultBuilding;
-                    lblSelectedBuildingStatus.Text = $"Строение: {SelectedBuilding.Name}";
-                    buildingProperties.SetBuilding(SelectedBuilding);
-
-                    painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);
-                }
-            }
-        }
-
-        private void BtnBuildingDelete_Click(object sender, EventArgs e)
-        {
-            //
-        }
-
-        private void ShowBuildingInfo(Building building)
+        private void ShowBuildingInfo(BuildingEditor building)
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine(building.Type);
+            sb.AppendFormat("Игрок: {0}{1}", building.Player, Environment.NewLine);
+            sb.AppendFormat("Id: {0}{1}", building.Id, Environment.NewLine);
+            sb.AppendFormat("Тип: {0}{1}", building.Type, Environment.NewLine);
+            sb.AppendFormat("Имя: {0}{1}", building.Name, Environment.NewLine);
             sb.AppendLine();
-            if (building.IsSecured)
+            if (null != building.Security)
             {
                 sb.AppendLine("Охранение:");
-                sb.AppendLine(building.SecurityDivision.Type);
+                sb.AppendLine(building.Security.Type);
             }
             else
             {
                 sb.AppendLine("Без охранения");
             }
 
-            lblSelectedBuildingStatus.Text = sb.ToString();
+            txtObjectStatus.Text = sb.ToString();
+            panelObjectToolset.Visible = true;
         }
 
-        private void BuildingProperties_Changed(object sender, EventArgs e)
+        private void DeselectObject()
         {
-            if (null != SelectedBuilding)
-            {
-                SelectedBuilding.SetPlayer(buildingProperties.ObjectPlayer);
-                SelectedBuilding.SetId(buildingProperties.ObjectId);
-                SelectedBuilding.SetName(buildingProperties.ObjectName);
+            DrawObject(SelectedObject, false);
+            SelectedObject = null;
+        }
 
-                painter = new BuildingPainter(graphics, SelectedMap, SelectedBuilding);
+        private void DeleteObject(IObjectEditor obj)
+        {
+            if (null != obj)
+            {
+                var pos = obj.Position;
+                obj.Destroy();
+                SelectedMap[pos].Object = null;
+                graphics.DrawCell(SelectedMap[pos]);
             }
         }
 
@@ -911,8 +864,6 @@ namespace MT.TacticWar.UI.Editor
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
                     SelectedMission.SetPlayers(dialog.Players);
-                    divisionProperties.SetPlayersDataSource(SelectedMission.Players);
-                    buildingProperties.SetPlayersDataSource(SelectedMission.Players);
                     DrawAll();
                 }
             }

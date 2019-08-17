@@ -5,7 +5,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI.Editor
 {
-    public class BuildingEditor
+    public class BuildingEditor : IObjectEditor
     {
         private Building building;
 
@@ -19,6 +19,12 @@ namespace MT.TacticWar.UI.Editor
         public BuildingEditor(Building building)
         {
             this.building = building;
+            Player = building.Player;
+            Id = building.Id;
+            Name = building.Name;
+
+            if (building.IsSecured)
+                Security = new DivisionEditor(building.SecurityDivision);
         }
 
         public void SetPlayer(Player player)

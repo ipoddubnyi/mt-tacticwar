@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using MT.TacticWar.Core;
 using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Objects;
@@ -8,11 +9,30 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 {
     public partial class DialogDivisionEditor : Form
     {
-        public DivisionEditor ResultDivision { get; private set; }
+        public Player[] Players { get; private set; }
+        public DivisionEditor Division { get; private set; }
+        public Player SelectedPlayer
+        {
+            get => comboDivisionPlayer.SelectedItem as Player;
+            set => comboDivisionPlayer.SelectedItem = value;
+        }
+        public bool CanChangePlayer
+        {
+            get => comboDivisionPlayer.Enabled;
+            set => comboDivisionPlayer.Enabled = value;
+        }
 
-        public DialogDivisionEditor(DivisionEditor division = null)
+        public DialogDivisionEditor(Player[] players, DivisionEditor division = null)
         {
             InitializeComponent();
+
+            Players = players;
+            CanChangePlayer = true;
+
+            comboDivisionPlayer.DataSource = null;
+            comboDivisionPlayer.Items.Clear();
+            comboDivisionPlayer.DataSource = Players;
+            comboDivisionPlayer.SelectedIndex = 0;
 
             comboDivisionType.Items.Clear();
             foreach (var div in ObjectFactory.Divisions)
@@ -27,25 +47,35 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             else
             {
                 comboDivisionType.Enabled = false;
-                comboDivisionType.SelectedItem = division.GetDivisionCode();
 
-                ResultDivision = division;
+                var divCode = division.GetDivisionCode();
+                foreach (DivisionVariant div in comboDivisionType.Items)
+                {
+                    if (div.Code.Equals(divCode))
+                        comboDivisionType.SelectedItem = div;
+                }
+
+                Division = division;
                 listUnitsDivision.Items.Clear();
                 foreach (var unit in division.Units)
                 {
                     listUnitsDivision.Items.Add(unit);
                 }
-            }
 
-            /*comboDivisionType.DataSource = new BindingSource(divTypes, null);
-            comboDivisionType.DisplayMember = "Key";
-            comboDivisionType.ValueMember = "Value";*/
+                comboDivisionPlayer.SelectedItem = division.Player;
+                numDivisionId.Value = division.Id;
+                txtDivisionName.Text = division.Name;
+            }
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateEntries())
                 DialogResult = DialogResult.None;
+
+            Division.SetPlayer(comboDivisionPlayer.SelectedItem as Player);
+            Division.SetId((int)numDivisionId.Value);
+            Division.SetName(txtDivisionName.Text);
         }
 
         private bool ValidateEntries()
@@ -81,9 +111,11 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
                 listUnitsDivision.Items.Clear();
 
+
                 var division = div.Create(null, 0, "", -1, -1);
-                ResultDivision = new DivisionEditor(division);
-                ResultDivision.SetName(division.Type);
+                Division = new DivisionEditor(division);
+
+                txtDivisionName.Text = division.Type;
             }
         }
 
@@ -92,7 +124,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create((int)numUnitIdCommon.Value, ResultDivision);
+                var unit = uv.Create((int)numUnitIdCommon.Value, Division);
                 unit.Update(
                     txtUnitNameCommon.Text,
                     (int)numUnitExperienceCommon.Value,
@@ -100,7 +132,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                     (int)numUnitSupplyCommon.Value
                 );
 
-                ResultDivision.Units.Add(unit);
+                Division.Units.Add(unit);
 
                 listUnitsDivision.Items.Add(
                     unit
@@ -117,7 +149,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 var index = listUnitsDivision.SelectedIndex;
                 var unit = listUnitsDivision.SelectedItem as Unit;
 
-                ResultDivision.Units.Remove(unit);
+                Division.Units.Remove(unit);
 
                 listUnitsDivision.Items.Remove(unit);
 
@@ -139,7 +171,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != listUnitsAll.SelectedItem)
             {
                 var uv = (UnitVariant)listUnitsAll.SelectedItem;
-                var unit = uv.Create(0, ResultDivision);
+                var unit = uv.Create(0, Division);
                 numUnitIdCommon.Value = unit.Id;
                 txtUnitNameCommon.Text = unit.Name;
                 numUnitHealthCommon.Value = unit.Health;

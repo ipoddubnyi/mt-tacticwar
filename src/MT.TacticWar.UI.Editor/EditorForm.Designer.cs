@@ -58,27 +58,20 @@
             this.lblMapDescription = new System.Windows.Forms.Label();
             this.txtMapName = new System.Windows.Forms.TextBox();
             this.TabMissionInfo = new System.Windows.Forms.TabPage();
+            this.txtMissionVersion = new System.Windows.Forms.TextBox();
+            this.lblMissionVersion = new System.Windows.Forms.Label();
             this.btnMissionPlayers = new System.Windows.Forms.Button();
             this.lblMissionName = new System.Windows.Forms.Label();
             this.txtMissionName = new System.Windows.Forms.TextBox();
             this.txtMissionBriefing = new System.Windows.Forms.TextBox();
             this.lblMissionBriefing = new System.Windows.Forms.Label();
-            this.flowLayoutRight = new System.Windows.Forms.FlowLayoutPanel();
-            this.panelDivision = new System.Windows.Forms.Panel();
-            this.btnDivisionDelete = new System.Windows.Forms.Button();
-            this.lblSelectedDivisionStatus = new System.Windows.Forms.Label();
-            this.btnDivisionUpdate = new System.Windows.Forms.Button();
-            this.btnDivisionCreate = new System.Windows.Forms.Button();
-            this.panelBuilding = new System.Windows.Forms.Panel();
-            this.btnBuildingDelete = new System.Windows.Forms.Button();
-            this.lblSelectedBuildingStatus = new System.Windows.Forms.Label();
-            this.btnBuildingUpdate = new System.Windows.Forms.Button();
-            this.btnBuildingCreate = new System.Windows.Forms.Button();
+            this.panelObjectToolset = new System.Windows.Forms.Panel();
+            this.txtObjectStatus = new System.Windows.Forms.TextBox();
+            this.btnObjectDelete = new System.Windows.Forms.Button();
+            this.btnObjectNewBuilding = new System.Windows.Forms.Button();
+            this.btnObjectUpdate = new System.Windows.Forms.Button();
+            this.btnObjectNewDivision = new System.Windows.Forms.Button();
             this.PanelEditor = new System.Windows.Forms.Panel();
-            this.txtMissionVersion = new System.Windows.Forms.TextBox();
-            this.lblMissionVersion = new System.Windows.Forms.Label();
-            this.divisionProperties = new MT.TacticWar.UI.Editor.Controls.ObjectProperties();
-            this.buildingProperties = new MT.TacticWar.UI.Editor.Controls.ObjectProperties();
             this.Menu.SuspendLayout();
             this.Status.SuspendLayout();
             this.TabControlLeft.SuspendLayout();
@@ -89,9 +82,7 @@
             this.SplitContainerLeft.SuspendLayout();
             this.TabMapInfo.SuspendLayout();
             this.TabMissionInfo.SuspendLayout();
-            this.flowLayoutRight.SuspendLayout();
-            this.panelDivision.SuspendLayout();
-            this.panelBuilding.SuspendLayout();
+            this.panelObjectToolset.SuspendLayout();
             this.SuspendLayout();
             // 
             // Menu
@@ -103,7 +94,7 @@
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.Menu.Size = new System.Drawing.Size(1235, 28);
+            this.Menu.Size = new System.Drawing.Size(1235, 30);
             this.Menu.TabIndex = 0;
             this.Menu.Text = "Меню";
             // 
@@ -115,7 +106,7 @@
             this.MenuMapSave,
             this.MenuMapSaveAs});
             this.MenuMap.Name = "MenuMap";
-            this.MenuMap.Size = new System.Drawing.Size(63, 24);
+            this.MenuMap.Size = new System.Drawing.Size(63, 26);
             this.MenuMap.Text = "&Карта";
             // 
             // MenuMapNew
@@ -156,7 +147,7 @@
             this.MenuMissionSeparator,
             this.MenuMissionCompile});
             this.MenuMission.Name = "MenuMission";
-            this.MenuMission.Size = new System.Drawing.Size(76, 24);
+            this.MenuMission.Size = new System.Drawing.Size(76, 26);
             this.MenuMission.Text = "&Миссия";
             // 
             // MenuMissionNew
@@ -269,7 +260,7 @@
             // 
             this.TreeViewElements.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TreeViewElements.Location = new System.Drawing.Point(0, 0);
-            this.TreeViewElements.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TreeViewElements.Margin = new System.Windows.Forms.Padding(4);
             this.TreeViewElements.Name = "TreeViewElements";
             this.TreeViewElements.Size = new System.Drawing.Size(266, 371);
             this.TreeViewElements.TabIndex = 0;
@@ -281,7 +272,7 @@
             this.PanelElementPreview.BackColor = System.Drawing.SystemColors.Control;
             this.PanelElementPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelElementPreview.Location = new System.Drawing.Point(0, 0);
-            this.PanelElementPreview.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PanelElementPreview.Margin = new System.Windows.Forms.Padding(4);
             this.PanelElementPreview.Name = "PanelElementPreview";
             this.PanelElementPreview.Size = new System.Drawing.Size(266, 120);
             this.PanelElementPreview.TabIndex = 1;
@@ -310,7 +301,7 @@
             this.txtMapVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMapVersion.Location = new System.Drawing.Point(9, 379);
-            this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4);
             this.txtMapVersion.Name = "txtMapVersion";
             this.txtMapVersion.Size = new System.Drawing.Size(192, 22);
             this.txtMapVersion.TabIndex = 5;
@@ -402,12 +393,33 @@
             this.TabMissionInfo.Text = "Миссия";
             this.TabMissionInfo.UseVisualStyleBackColor = true;
             // 
+            // txtMissionVersion
+            // 
+            this.txtMissionVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtMissionVersion.Location = new System.Drawing.Point(9, 329);
+            this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMissionVersion.Name = "txtMissionVersion";
+            this.txtMissionVersion.Size = new System.Drawing.Size(192, 22);
+            this.txtMissionVersion.TabIndex = 5;
+            this.txtMissionVersion.Text = "1.0";
+            // 
+            // lblMissionVersion
+            // 
+            this.lblMissionVersion.AutoSize = true;
+            this.lblMissionVersion.Location = new System.Drawing.Point(6, 308);
+            this.lblMissionVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblMissionVersion.Name = "lblMissionVersion";
+            this.lblMissionVersion.Size = new System.Drawing.Size(60, 17);
+            this.lblMissionVersion.TabIndex = 4;
+            this.lblMissionVersion.Text = "Версия:";
+            // 
             // btnMissionPlayers
             // 
             this.btnMissionPlayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMissionPlayers.Location = new System.Drawing.Point(9, 372);
-            this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4);
             this.btnMissionPlayers.Name = "btnMissionPlayers";
             this.btnMissionPlayers.Size = new System.Drawing.Size(195, 28);
             this.btnMissionPlayers.TabIndex = 6;
@@ -455,157 +467,92 @@
             this.lblMissionBriefing.TabIndex = 2;
             this.lblMissionBriefing.Text = "Брифинг:";
             // 
-            // flowLayoutRight
+            // panelObjectToolset
             // 
-            this.flowLayoutRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.panelObjectToolset.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutRight.AutoSize = true;
-            this.flowLayoutRight.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutRight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutRight.Controls.Add(this.panelDivision);
-            this.flowLayoutRight.Controls.Add(this.panelBuilding);
-            this.flowLayoutRight.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutRight.Location = new System.Drawing.Point(774, 32);
-            this.flowLayoutRight.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.flowLayoutRight.Name = "flowLayoutRight";
-            this.flowLayoutRight.Size = new System.Drawing.Size(460, 504);
-            this.flowLayoutRight.TabIndex = 6;
+            this.panelObjectToolset.Controls.Add(this.txtObjectStatus);
+            this.panelObjectToolset.Controls.Add(this.btnObjectDelete);
+            this.panelObjectToolset.Controls.Add(this.btnObjectNewBuilding);
+            this.panelObjectToolset.Controls.Add(this.btnObjectUpdate);
+            this.panelObjectToolset.Controls.Add(this.btnObjectNewDivision);
+            this.panelObjectToolset.Location = new System.Drawing.Point(1012, 32);
+            this.panelObjectToolset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelObjectToolset.Name = "panelObjectToolset";
+            this.panelObjectToolset.Size = new System.Drawing.Size(223, 516);
+            this.panelObjectToolset.TabIndex = 1;
+            this.panelObjectToolset.Visible = false;
             // 
-            // panelDivision
+            // txtObjectStatus
             // 
-            this.panelDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelDivision.Controls.Add(this.btnDivisionDelete);
-            this.panelDivision.Controls.Add(this.lblSelectedDivisionStatus);
-            this.panelDivision.Controls.Add(this.divisionProperties);
-            this.panelDivision.Controls.Add(this.btnDivisionUpdate);
-            this.panelDivision.Controls.Add(this.btnDivisionCreate);
-            this.panelDivision.Location = new System.Drawing.Point(232, 2);
-            this.panelDivision.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panelDivision.Name = "panelDivision";
-            this.panelDivision.Size = new System.Drawing.Size(223, 498);
-            this.panelDivision.TabIndex = 1;
-            this.panelDivision.Visible = false;
-            // 
-            // btnDivisionDelete
-            // 
-            this.btnDivisionDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDivisionDelete.Location = new System.Drawing.Point(13, 73);
-            this.btnDivisionDelete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDivisionDelete.Name = "btnDivisionDelete";
-            this.btnDivisionDelete.Size = new System.Drawing.Size(193, 23);
-            this.btnDivisionDelete.TabIndex = 3;
-            this.btnDivisionDelete.Text = "Удалить";
-            this.btnDivisionDelete.UseVisualStyleBackColor = true;
-            this.btnDivisionDelete.Click += new System.EventHandler(this.BtnDivisionDelete_Click);
-            // 
-            // lblSelectedDivisionStatus
-            // 
-            this.lblSelectedDivisionStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.txtObjectStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSelectedDivisionStatus.Location = new System.Drawing.Point(13, 199);
-            this.lblSelectedDivisionStatus.Name = "lblSelectedDivisionStatus";
-            this.lblSelectedDivisionStatus.Size = new System.Drawing.Size(193, 282);
-            this.lblSelectedDivisionStatus.TabIndex = 2;
-            this.lblSelectedDivisionStatus.Text = "Подразделение не выбрано";
+            this.txtObjectStatus.Location = new System.Drawing.Point(13, 155);
+            this.txtObjectStatus.Multiline = true;
+            this.txtObjectStatus.Name = "txtObjectStatus";
+            this.txtObjectStatus.ReadOnly = true;
+            this.txtObjectStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtObjectStatus.Size = new System.Drawing.Size(198, 344);
+            this.txtObjectStatus.TabIndex = 4;
             // 
-            // btnDivisionUpdate
+            // btnObjectDelete
             // 
-            this.btnDivisionUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.btnObjectDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDivisionUpdate.Location = new System.Drawing.Point(13, 43);
-            this.btnDivisionUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDivisionUpdate.Name = "btnDivisionUpdate";
-            this.btnDivisionUpdate.Size = new System.Drawing.Size(193, 23);
-            this.btnDivisionUpdate.TabIndex = 1;
-            this.btnDivisionUpdate.Text = "Изменить";
-            this.btnDivisionUpdate.UseVisualStyleBackColor = true;
-            this.btnDivisionUpdate.Click += new System.EventHandler(this.BtnDivisionUpdate_Click);
+            this.btnObjectDelete.Location = new System.Drawing.Point(13, 111);
+            this.btnObjectDelete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnObjectDelete.Name = "btnObjectDelete";
+            this.btnObjectDelete.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectDelete.TabIndex = 3;
+            this.btnObjectDelete.Text = "Удалить";
+            this.btnObjectDelete.UseVisualStyleBackColor = true;
+            this.btnObjectDelete.Click += new System.EventHandler(this.BtnObjectDelete_Click);
             // 
-            // btnDivisionCreate
+            // btnObjectNewBuilding
             // 
-            this.btnDivisionCreate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.btnObjectNewBuilding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDivisionCreate.Location = new System.Drawing.Point(13, 14);
-            this.btnDivisionCreate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDivisionCreate.Name = "btnDivisionCreate";
-            this.btnDivisionCreate.Size = new System.Drawing.Size(193, 23);
-            this.btnDivisionCreate.TabIndex = 0;
-            this.btnDivisionCreate.Text = "Добавить";
-            this.btnDivisionCreate.UseVisualStyleBackColor = true;
-            this.btnDivisionCreate.Click += new System.EventHandler(this.BtnDivisionCreate_Click);
+            this.btnObjectNewBuilding.Location = new System.Drawing.Point(13, 47);
+            this.btnObjectNewBuilding.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnObjectNewBuilding.Name = "btnObjectNewBuilding";
+            this.btnObjectNewBuilding.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectNewBuilding.TabIndex = 1;
+            this.btnObjectNewBuilding.Text = "+ Строение";
+            this.btnObjectNewBuilding.UseVisualStyleBackColor = true;
+            this.btnObjectNewBuilding.Click += new System.EventHandler(this.BtnObjectNewBuilding_Click);
             // 
-            // panelBuilding
+            // btnObjectUpdate
             // 
-            this.panelBuilding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelBuilding.Controls.Add(this.btnBuildingDelete);
-            this.panelBuilding.Controls.Add(this.lblSelectedBuildingStatus);
-            this.panelBuilding.Controls.Add(this.buildingProperties);
-            this.panelBuilding.Controls.Add(this.btnBuildingUpdate);
-            this.panelBuilding.Controls.Add(this.btnBuildingCreate);
-            this.panelBuilding.Location = new System.Drawing.Point(3, 2);
-            this.panelBuilding.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panelBuilding.Name = "panelBuilding";
-            this.panelBuilding.Size = new System.Drawing.Size(223, 498);
-            this.panelBuilding.TabIndex = 2;
-            this.panelBuilding.Visible = false;
-            // 
-            // btnBuildingDelete
-            // 
-            this.btnBuildingDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.btnObjectUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBuildingDelete.Location = new System.Drawing.Point(13, 73);
-            this.btnBuildingDelete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnBuildingDelete.Name = "btnBuildingDelete";
-            this.btnBuildingDelete.Size = new System.Drawing.Size(193, 23);
-            this.btnBuildingDelete.TabIndex = 3;
-            this.btnBuildingDelete.Text = "Удалить";
-            this.btnBuildingDelete.UseVisualStyleBackColor = true;
-            this.btnBuildingDelete.Click += new System.EventHandler(this.BtnBuildingDelete_Click);
+            this.btnObjectUpdate.Location = new System.Drawing.Point(13, 79);
+            this.btnObjectUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnObjectUpdate.Name = "btnObjectUpdate";
+            this.btnObjectUpdate.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectUpdate.TabIndex = 2;
+            this.btnObjectUpdate.Text = "Изменить";
+            this.btnObjectUpdate.UseVisualStyleBackColor = true;
+            this.btnObjectUpdate.Click += new System.EventHandler(this.BtnObjectUpdate_Click);
             // 
-            // lblSelectedBuildingStatus
+            // btnObjectNewDivision
             // 
-            this.lblSelectedBuildingStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.btnObjectNewDivision.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSelectedBuildingStatus.Location = new System.Drawing.Point(13, 199);
-            this.lblSelectedBuildingStatus.Name = "lblSelectedBuildingStatus";
-            this.lblSelectedBuildingStatus.Size = new System.Drawing.Size(193, 282);
-            this.lblSelectedBuildingStatus.TabIndex = 2;
-            this.lblSelectedBuildingStatus.Text = "Строение не выбрано";
-            // 
-            // btnBuildingUpdate
-            // 
-            this.btnBuildingUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBuildingUpdate.Location = new System.Drawing.Point(13, 43);
-            this.btnBuildingUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnBuildingUpdate.Name = "btnBuildingUpdate";
-            this.btnBuildingUpdate.Size = new System.Drawing.Size(193, 23);
-            this.btnBuildingUpdate.TabIndex = 1;
-            this.btnBuildingUpdate.Text = "Изменить";
-            this.btnBuildingUpdate.UseVisualStyleBackColor = true;
-            this.btnBuildingUpdate.Click += new System.EventHandler(this.BtnBuildingUpdate_Click);
-            // 
-            // btnBuildingCreate
-            // 
-            this.btnBuildingCreate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBuildingCreate.Location = new System.Drawing.Point(13, 14);
-            this.btnBuildingCreate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnBuildingCreate.Name = "btnBuildingCreate";
-            this.btnBuildingCreate.Size = new System.Drawing.Size(193, 23);
-            this.btnBuildingCreate.TabIndex = 0;
-            this.btnBuildingCreate.Text = "Добавить";
-            this.btnBuildingCreate.UseVisualStyleBackColor = true;
-            this.btnBuildingCreate.Click += new System.EventHandler(this.BtnBuildingCreate_Click);
+            this.btnObjectNewDivision.Location = new System.Drawing.Point(13, 15);
+            this.btnObjectNewDivision.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnObjectNewDivision.Name = "btnObjectNewDivision";
+            this.btnObjectNewDivision.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectNewDivision.TabIndex = 0;
+            this.btnObjectNewDivision.Text = "+ Подразделение";
+            this.btnObjectNewDivision.UseVisualStyleBackColor = true;
+            this.btnObjectNewDivision.Click += new System.EventHandler(this.BtnObjectNewDivision_Click);
             // 
             // PanelEditor
             // 
             this.PanelEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelEditor.Location = new System.Drawing.Point(309, 37);
-            this.PanelEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PanelEditor.Margin = new System.Windows.Forms.Padding(4);
             this.PanelEditor.Name = "PanelEditor";
             this.PanelEditor.Size = new System.Drawing.Size(391, 350);
             this.PanelEditor.TabIndex = 5;
@@ -615,59 +562,18 @@
             this.PanelEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseMove);
             this.PanelEditor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseUp);
             // 
-            // txtMissionVersion
-            // 
-            this.txtMissionVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMissionVersion.Location = new System.Drawing.Point(9, 329);
-            this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4);
-            this.txtMissionVersion.Name = "txtMissionVersion";
-            this.txtMissionVersion.Size = new System.Drawing.Size(192, 22);
-            this.txtMissionVersion.TabIndex = 5;
-            this.txtMissionVersion.Text = "1.0";
-            // 
-            // lblMissionVersion
-            // 
-            this.lblMissionVersion.AutoSize = true;
-            this.lblMissionVersion.Location = new System.Drawing.Point(6, 308);
-            this.lblMissionVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblMissionVersion.Name = "lblMissionVersion";
-            this.lblMissionVersion.Size = new System.Drawing.Size(60, 17);
-            this.lblMissionVersion.TabIndex = 4;
-            this.lblMissionVersion.Text = "Версия:";
-            // 
-            // divisionProperties
-            // 
-            this.divisionProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.divisionProperties.Location = new System.Drawing.Point(13, 103);
-            this.divisionProperties.Margin = new System.Windows.Forms.Padding(5);
-            this.divisionProperties.Name = "divisionProperties";
-            this.divisionProperties.Size = new System.Drawing.Size(193, 91);
-            this.divisionProperties.TabIndex = 0;
-            // 
-            // buildingProperties
-            // 
-            this.buildingProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buildingProperties.Location = new System.Drawing.Point(13, 103);
-            this.buildingProperties.Margin = new System.Windows.Forms.Padding(5);
-            this.buildingProperties.Name = "buildingProperties";
-            this.buildingProperties.Size = new System.Drawing.Size(193, 91);
-            this.buildingProperties.TabIndex = 0;
-            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1235, 572);
+            this.Controls.Add(this.panelObjectToolset);
             this.Controls.Add(this.TabControlLeft);
-            this.Controls.Add(this.flowLayoutRight);
             this.Controls.Add(this.PanelEditor);
             this.Controls.Add(this.Status);
             this.Controls.Add(this.Menu);
             this.MainMenuStrip = this.Menu;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1061, 596);
             this.Name = "EditorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -689,9 +595,8 @@
             this.TabMapInfo.PerformLayout();
             this.TabMissionInfo.ResumeLayout(false);
             this.TabMissionInfo.PerformLayout();
-            this.flowLayoutRight.ResumeLayout(false);
-            this.panelDivision.ResumeLayout(false);
-            this.panelBuilding.ResumeLayout(false);
+            this.panelObjectToolset.ResumeLayout(false);
+            this.panelObjectToolset.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -723,19 +628,11 @@
         private System.Windows.Forms.TextBox txtMissionName;
         private System.Windows.Forms.TextBox txtMissionBriefing;
         private System.Windows.Forms.Label lblMissionBriefing;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutRight;
-        private System.Windows.Forms.Panel panelDivision;
-        private System.Windows.Forms.Button btnDivisionDelete;
-        private System.Windows.Forms.Label lblSelectedDivisionStatus;
-        private Controls.ObjectProperties divisionProperties;
-        private System.Windows.Forms.Button btnDivisionUpdate;
-        private System.Windows.Forms.Button btnDivisionCreate;
-        private System.Windows.Forms.Panel panelBuilding;
-        private System.Windows.Forms.Button btnBuildingDelete;
-        private System.Windows.Forms.Label lblSelectedBuildingStatus;
-        private Controls.ObjectProperties buildingProperties;
-        private System.Windows.Forms.Button btnBuildingUpdate;
-        private System.Windows.Forms.Button btnBuildingCreate;
+        private System.Windows.Forms.Panel panelObjectToolset;
+        private System.Windows.Forms.Button btnObjectDelete;
+        private System.Windows.Forms.Button btnObjectUpdate;
+        private System.Windows.Forms.Button btnObjectNewDivision;
+        private System.Windows.Forms.Button btnObjectNewBuilding;
         private System.Windows.Forms.Panel PanelEditor;
         private System.Windows.Forms.TextBox txtMapVersion;
         private System.Windows.Forms.Label lblMapVersion;
@@ -749,6 +646,7 @@
         private System.Windows.Forms.ToolStripMenuItem MenuMissionSaveAs;
         private System.Windows.Forms.TextBox txtMissionVersion;
         private System.Windows.Forms.Label lblMissionVersion;
+        private System.Windows.Forms.TextBox txtObjectStatus;
     }
 }
 

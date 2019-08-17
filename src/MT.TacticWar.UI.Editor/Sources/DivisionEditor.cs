@@ -5,7 +5,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.UI.Editor
 {
-    public class DivisionEditor
+    public class DivisionEditor : IObjectEditor
     {
         private Division division;
 
@@ -19,6 +19,9 @@ namespace MT.TacticWar.UI.Editor
         public DivisionEditor(Division division)
         {
             this.division = division;
+            Player = division.Player;
+            Id = division.Id;
+            Name = division.Name;
         }
 
         public void SetPlayer(Player player)

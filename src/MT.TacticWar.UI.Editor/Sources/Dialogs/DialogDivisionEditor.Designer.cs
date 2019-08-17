@@ -54,6 +54,12 @@
             this.numUnitHealthDivision = new System.Windows.Forms.NumericUpDown();
             this.numUnitExperienceDivision = new System.Windows.Forms.NumericUpDown();
             this.numUnitSupplyDivision = new System.Windows.Forms.NumericUpDown();
+            this.lblDivisionPlayer = new System.Windows.Forms.Label();
+            this.comboDivisionPlayer = new System.Windows.Forms.ComboBox();
+            this.lblDivisionId = new System.Windows.Forms.Label();
+            this.numDivisionId = new System.Windows.Forms.NumericUpDown();
+            this.lblDivisionName = new System.Windows.Forms.Label();
+            this.txtDivisionName = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitHealthCommon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitExperienceCommon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitSupplyCommon)).BeginInit();
@@ -62,15 +68,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.numUnitHealthDivision)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitExperienceDivision)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitSupplyDivision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDivisionId)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(241, 338);
+            this.btnOk.Location = new System.Drawing.Point(321, 455);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(100, 28);
             this.btnOk.TabIndex = 6;
             this.btnOk.Text = "ОК";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -82,20 +90,21 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboDivisionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboDivisionType.FormattingEnabled = true;
-            this.comboDivisionType.Location = new System.Drawing.Point(9, 28);
-            this.comboDivisionType.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboDivisionType.Location = new System.Drawing.Point(12, 83);
+            this.comboDivisionType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboDivisionType.Name = "comboDivisionType";
-            this.comboDivisionType.Size = new System.Drawing.Size(308, 21);
+            this.comboDivisionType.Size = new System.Drawing.Size(409, 24);
             this.comboDivisionType.TabIndex = 7;
             this.comboDivisionType.SelectedIndexChanged += new System.EventHandler(this.ComboDivisionType_SelectedIndexChanged);
             // 
             // listUnitsAll
             // 
             this.listUnitsAll.FormattingEnabled = true;
-            this.listUnitsAll.Location = new System.Drawing.Point(9, 78);
-            this.listUnitsAll.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listUnitsAll.ItemHeight = 16;
+            this.listUnitsAll.Location = new System.Drawing.Point(12, 145);
+            this.listUnitsAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.listUnitsAll.Name = "listUnitsAll";
-            this.listUnitsAll.Size = new System.Drawing.Size(125, 82);
+            this.listUnitsAll.Size = new System.Drawing.Size(165, 100);
             this.listUnitsAll.TabIndex = 8;
             this.listUnitsAll.SelectedIndexChanged += new System.EventHandler(this.ListUnitsAll_SelectedIndexChanged);
             // 
@@ -103,30 +112,29 @@
             // 
             this.listUnitsDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.listUnitsDivision.FormattingEnabled = true;
-            this.listUnitsDivision.Location = new System.Drawing.Point(192, 78);
-            this.listUnitsDivision.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listUnitsDivision.ItemHeight = 16;
+            this.listUnitsDivision.Location = new System.Drawing.Point(256, 145);
+            this.listUnitsDivision.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.listUnitsDivision.Name = "listUnitsDivision";
-            this.listUnitsDivision.Size = new System.Drawing.Size(125, 82);
+            this.listUnitsDivision.Size = new System.Drawing.Size(165, 100);
             this.listUnitsDivision.TabIndex = 9;
             this.listUnitsDivision.SelectedIndexChanged += new System.EventHandler(this.ListUnitsDivision_SelectedIndexChanged);
             // 
             // lblDivisionType
             // 
             this.lblDivisionType.AutoSize = true;
-            this.lblDivisionType.Location = new System.Drawing.Point(7, 12);
-            this.lblDivisionType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDivisionType.Location = new System.Drawing.Point(9, 64);
             this.lblDivisionType.Name = "lblDivisionType";
-            this.lblDivisionType.Size = new System.Drawing.Size(110, 13);
+            this.lblDivisionType.Size = new System.Drawing.Size(144, 17);
             this.lblDivisionType.TabIndex = 10;
             this.lblDivisionType.Text = "Тип подразделения:";
             // 
             // lblUnitsAll
             // 
             this.lblUnitsAll.AutoSize = true;
-            this.lblUnitsAll.Location = new System.Drawing.Point(7, 62);
-            this.lblUnitsAll.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitsAll.Location = new System.Drawing.Point(9, 125);
             this.lblUnitsAll.Name = "lblUnitsAll";
-            this.lblUnitsAll.Size = new System.Drawing.Size(103, 13);
+            this.lblUnitsAll.Size = new System.Drawing.Size(133, 17);
             this.lblUnitsAll.TabIndex = 11;
             this.lblUnitsAll.Text = "Доступные юниты:";
             // 
@@ -134,10 +142,9 @@
             // 
             this.lblUnitsDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblUnitsDivision.AutoSize = true;
-            this.lblUnitsDivision.Location = new System.Drawing.Point(190, 62);
-            this.lblUnitsDivision.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitsDivision.Location = new System.Drawing.Point(253, 125);
             this.lblUnitsDivision.Name = "lblUnitsDivision";
-            this.lblUnitsDivision.Size = new System.Drawing.Size(98, 13);
+            this.lblUnitsDivision.Size = new System.Drawing.Size(128, 17);
             this.lblUnitsDivision.TabIndex = 12;
             this.lblUnitsDivision.Text = "В подразделении:";
             // 
@@ -145,10 +152,10 @@
             // 
             this.btnUnitAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUnitAdd.Location = new System.Drawing.Point(138, 78);
-            this.btnUnitAdd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnUnitAdd.Location = new System.Drawing.Point(184, 145);
+            this.btnUnitAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnUnitAdd.Name = "btnUnitAdd";
-            this.btnUnitAdd.Size = new System.Drawing.Size(50, 19);
+            this.btnUnitAdd.Size = new System.Drawing.Size(67, 23);
             this.btnUnitAdd.TabIndex = 13;
             this.btnUnitAdd.Text = ">>";
             this.btnUnitAdd.UseVisualStyleBackColor = true;
@@ -158,10 +165,10 @@
             // 
             this.btnUnitRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUnitRemove.Location = new System.Drawing.Point(138, 102);
-            this.btnUnitRemove.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnUnitRemove.Location = new System.Drawing.Point(184, 175);
+            this.btnUnitRemove.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnUnitRemove.Name = "btnUnitRemove";
-            this.btnUnitRemove.Size = new System.Drawing.Size(50, 19);
+            this.btnUnitRemove.Size = new System.Drawing.Size(67, 23);
             this.btnUnitRemove.TabIndex = 14;
             this.btnUnitRemove.Text = "<<";
             this.btnUnitRemove.UseVisualStyleBackColor = true;
@@ -171,10 +178,10 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(9, 338);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancel.Location = new System.Drawing.Point(12, 455);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(100, 28);
             this.btnCancel.TabIndex = 15;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -182,76 +189,72 @@
             // lblUnitName
             // 
             this.lblUnitName.AutoSize = true;
-            this.lblUnitName.Location = new System.Drawing.Point(137, 202);
-            this.lblUnitName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitName.Location = new System.Drawing.Point(183, 298);
             this.lblUnitName.Name = "lblUnitName";
-            this.lblUnitName.Size = new System.Drawing.Size(57, 13);
+            this.lblUnitName.Size = new System.Drawing.Size(72, 17);
             this.lblUnitName.TabIndex = 18;
             this.lblUnitName.Text = "Название";
             // 
             // txtUnitNameCommon
             // 
-            this.txtUnitNameCommon.Location = new System.Drawing.Point(9, 200);
-            this.txtUnitNameCommon.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtUnitNameCommon.Location = new System.Drawing.Point(12, 295);
+            this.txtUnitNameCommon.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtUnitNameCommon.Name = "txtUnitNameCommon";
-            this.txtUnitNameCommon.Size = new System.Drawing.Size(107, 20);
+            this.txtUnitNameCommon.Size = new System.Drawing.Size(141, 22);
             this.txtUnitNameCommon.TabIndex = 19;
             // 
             // lblUnitHealth
             // 
             this.lblUnitHealth.AutoSize = true;
-            this.lblUnitHealth.Location = new System.Drawing.Point(137, 226);
-            this.lblUnitHealth.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitHealth.Location = new System.Drawing.Point(183, 327);
             this.lblUnitHealth.Name = "lblUnitHealth";
-            this.lblUnitHealth.Size = new System.Drawing.Size(56, 13);
+            this.lblUnitHealth.Size = new System.Drawing.Size(71, 17);
             this.lblUnitHealth.TabIndex = 20;
             this.lblUnitHealth.Text = "Здоровье";
             // 
             // lblUnitExperience
             // 
             this.lblUnitExperience.AutoSize = true;
-            this.lblUnitExperience.Location = new System.Drawing.Point(144, 250);
-            this.lblUnitExperience.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitExperience.Location = new System.Drawing.Point(192, 357);
             this.lblUnitExperience.Name = "lblUnitExperience";
-            this.lblUnitExperience.Size = new System.Drawing.Size(34, 13);
+            this.lblUnitExperience.Size = new System.Drawing.Size(44, 17);
             this.lblUnitExperience.TabIndex = 22;
             this.lblUnitExperience.Text = "Опыт";
             // 
             // lblUnitSupply
             // 
             this.lblUnitSupply.AutoSize = true;
-            this.lblUnitSupply.Location = new System.Drawing.Point(137, 273);
-            this.lblUnitSupply.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitSupply.Location = new System.Drawing.Point(183, 385);
             this.lblUnitSupply.Name = "lblUnitSupply";
-            this.lblUnitSupply.Size = new System.Drawing.Size(52, 13);
+            this.lblUnitSupply.Size = new System.Drawing.Size(67, 17);
             this.lblUnitSupply.TabIndex = 24;
             this.lblUnitSupply.Text = "Патроны";
             // 
             // lblUnitId
             // 
             this.lblUnitId.AutoSize = true;
-            this.lblUnitId.Location = new System.Drawing.Point(155, 177);
-            this.lblUnitId.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUnitId.Location = new System.Drawing.Point(207, 267);
             this.lblUnitId.Name = "lblUnitId";
-            this.lblUnitId.Size = new System.Drawing.Size(16, 13);
+            this.lblUnitId.Size = new System.Drawing.Size(19, 17);
             this.lblUnitId.TabIndex = 16;
             this.lblUnitId.Text = "Id";
             // 
             // txtUnitNameDivision
             // 
             this.txtUnitNameDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUnitNameDivision.Location = new System.Drawing.Point(210, 200);
-            this.txtUnitNameDivision.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtUnitNameDivision.Location = new System.Drawing.Point(280, 295);
+            this.txtUnitNameDivision.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtUnitNameDivision.Name = "txtUnitNameDivision";
-            this.txtUnitNameDivision.Size = new System.Drawing.Size(107, 20);
+            this.txtUnitNameDivision.Size = new System.Drawing.Size(141, 22);
             this.txtUnitNameDivision.TabIndex = 27;
             // 
             // btnUnitDivisionApply
             // 
             this.btnUnitDivisionApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUnitDivisionApply.Location = new System.Drawing.Point(210, 297);
+            this.btnUnitDivisionApply.Location = new System.Drawing.Point(280, 415);
+            this.btnUnitDivisionApply.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnUnitDivisionApply.Name = "btnUnitDivisionApply";
-            this.btnUnitDivisionApply.Size = new System.Drawing.Size(107, 23);
+            this.btnUnitDivisionApply.Size = new System.Drawing.Size(143, 28);
             this.btnUnitDivisionApply.TabIndex = 31;
             this.btnUnitDivisionApply.Text = "Применить";
             this.btnUnitDivisionApply.UseVisualStyleBackColor = true;
@@ -259,9 +262,10 @@
             // 
             // numUnitHealthCommon
             // 
-            this.numUnitHealthCommon.Location = new System.Drawing.Point(9, 224);
+            this.numUnitHealthCommon.Location = new System.Drawing.Point(12, 325);
+            this.numUnitHealthCommon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitHealthCommon.Name = "numUnitHealthCommon";
-            this.numUnitHealthCommon.Size = new System.Drawing.Size(107, 20);
+            this.numUnitHealthCommon.Size = new System.Drawing.Size(143, 22);
             this.numUnitHealthCommon.TabIndex = 21;
             this.numUnitHealthCommon.Value = new decimal(new int[] {
             100,
@@ -271,9 +275,10 @@
             // 
             // numUnitExperienceCommon
             // 
-            this.numUnitExperienceCommon.Location = new System.Drawing.Point(9, 248);
+            this.numUnitExperienceCommon.Location = new System.Drawing.Point(12, 354);
+            this.numUnitExperienceCommon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitExperienceCommon.Name = "numUnitExperienceCommon";
-            this.numUnitExperienceCommon.Size = new System.Drawing.Size(107, 20);
+            this.numUnitExperienceCommon.Size = new System.Drawing.Size(143, 22);
             this.numUnitExperienceCommon.TabIndex = 23;
             // 
             // numUnitSupplyCommon
@@ -283,14 +288,15 @@
             0,
             0,
             0});
-            this.numUnitSupplyCommon.Location = new System.Drawing.Point(9, 271);
+            this.numUnitSupplyCommon.Location = new System.Drawing.Point(12, 383);
+            this.numUnitSupplyCommon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitSupplyCommon.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.numUnitSupplyCommon.Name = "numUnitSupplyCommon";
-            this.numUnitSupplyCommon.Size = new System.Drawing.Size(107, 20);
+            this.numUnitSupplyCommon.Size = new System.Drawing.Size(143, 22);
             this.numUnitSupplyCommon.TabIndex = 25;
             this.numUnitSupplyCommon.Value = new decimal(new int[] {
             1000,
@@ -300,36 +306,39 @@
             // 
             // numUnitIdCommon
             // 
-            this.numUnitIdCommon.Location = new System.Drawing.Point(9, 175);
+            this.numUnitIdCommon.Location = new System.Drawing.Point(12, 264);
+            this.numUnitIdCommon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitIdCommon.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.numUnitIdCommon.Name = "numUnitIdCommon";
-            this.numUnitIdCommon.Size = new System.Drawing.Size(107, 20);
+            this.numUnitIdCommon.Size = new System.Drawing.Size(143, 22);
             this.numUnitIdCommon.TabIndex = 17;
             // 
             // numUnitIdDivision
             // 
             this.numUnitIdDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numUnitIdDivision.Enabled = false;
-            this.numUnitIdDivision.Location = new System.Drawing.Point(211, 175);
+            this.numUnitIdDivision.Location = new System.Drawing.Point(281, 264);
+            this.numUnitIdDivision.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitIdDivision.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.numUnitIdDivision.Name = "numUnitIdDivision";
-            this.numUnitIdDivision.Size = new System.Drawing.Size(106, 20);
+            this.numUnitIdDivision.Size = new System.Drawing.Size(141, 22);
             this.numUnitIdDivision.TabIndex = 26;
             // 
             // numUnitHealthDivision
             // 
             this.numUnitHealthDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numUnitHealthDivision.Location = new System.Drawing.Point(210, 224);
+            this.numUnitHealthDivision.Location = new System.Drawing.Point(280, 325);
+            this.numUnitHealthDivision.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitHealthDivision.Name = "numUnitHealthDivision";
-            this.numUnitHealthDivision.Size = new System.Drawing.Size(107, 20);
+            this.numUnitHealthDivision.Size = new System.Drawing.Size(143, 22);
             this.numUnitHealthDivision.TabIndex = 28;
             this.numUnitHealthDivision.Value = new decimal(new int[] {
             100,
@@ -340,9 +349,10 @@
             // numUnitExperienceDivision
             // 
             this.numUnitExperienceDivision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numUnitExperienceDivision.Location = new System.Drawing.Point(210, 248);
+            this.numUnitExperienceDivision.Location = new System.Drawing.Point(280, 354);
+            this.numUnitExperienceDivision.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitExperienceDivision.Name = "numUnitExperienceDivision";
-            this.numUnitExperienceDivision.Size = new System.Drawing.Size(107, 20);
+            this.numUnitExperienceDivision.Size = new System.Drawing.Size(143, 22);
             this.numUnitExperienceDivision.TabIndex = 29;
             // 
             // numUnitSupplyDivision
@@ -353,14 +363,15 @@
             0,
             0,
             0});
-            this.numUnitSupplyDivision.Location = new System.Drawing.Point(210, 271);
+            this.numUnitSupplyDivision.Location = new System.Drawing.Point(280, 383);
+            this.numUnitSupplyDivision.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numUnitSupplyDivision.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.numUnitSupplyDivision.Name = "numUnitSupplyDivision";
-            this.numUnitSupplyDivision.Size = new System.Drawing.Size(107, 20);
+            this.numUnitSupplyDivision.Size = new System.Drawing.Size(143, 22);
             this.numUnitSupplyDivision.TabIndex = 30;
             this.numUnitSupplyDivision.Value = new decimal(new int[] {
             1000,
@@ -368,13 +379,74 @@
             0,
             0});
             // 
-            // DialogDivisionNew
+            // lblDivisionPlayer
+            // 
+            this.lblDivisionPlayer.AutoSize = true;
+            this.lblDivisionPlayer.Location = new System.Drawing.Point(12, 9);
+            this.lblDivisionPlayer.Name = "lblDivisionPlayer";
+            this.lblDivisionPlayer.Size = new System.Drawing.Size(50, 17);
+            this.lblDivisionPlayer.TabIndex = 32;
+            this.lblDivisionPlayer.Text = "Игрок:";
+            // 
+            // comboDivisionPlayer
+            // 
+            this.comboDivisionPlayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboDivisionPlayer.FormattingEnabled = true;
+            this.comboDivisionPlayer.Location = new System.Drawing.Point(12, 29);
+            this.comboDivisionPlayer.Name = "comboDivisionPlayer";
+            this.comboDivisionPlayer.Size = new System.Drawing.Size(121, 24);
+            this.comboDivisionPlayer.TabIndex = 33;
+            // 
+            // lblDivisionId
+            // 
+            this.lblDivisionId.AutoSize = true;
+            this.lblDivisionId.Location = new System.Drawing.Point(158, 11);
+            this.lblDivisionId.Name = "lblDivisionId";
+            this.lblDivisionId.Size = new System.Drawing.Size(23, 17);
+            this.lblDivisionId.TabIndex = 34;
+            this.lblDivisionId.Text = "Id:";
+            // 
+            // numDivisionId
+            // 
+            this.numDivisionId.Location = new System.Drawing.Point(158, 31);
+            this.numDivisionId.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numDivisionId.Name = "numDivisionId";
+            this.numDivisionId.Size = new System.Drawing.Size(120, 22);
+            this.numDivisionId.TabIndex = 35;
+            // 
+            // lblDivisionName
+            // 
+            this.lblDivisionName.AutoSize = true;
+            this.lblDivisionName.Location = new System.Drawing.Point(300, 9);
+            this.lblDivisionName.Name = "lblDivisionName";
+            this.lblDivisionName.Size = new System.Drawing.Size(76, 17);
+            this.lblDivisionName.TabIndex = 36;
+            this.lblDivisionName.Text = "Название:";
+            // 
+            // txtDivisionName
+            // 
+            this.txtDivisionName.Location = new System.Drawing.Point(300, 31);
+            this.txtDivisionName.Name = "txtDivisionName";
+            this.txtDivisionName.Size = new System.Drawing.Size(121, 22);
+            this.txtDivisionName.TabIndex = 37;
+            // 
+            // DialogDivisionEditor
             // 
             this.AcceptButton = this.btnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(325, 372);
+            this.ClientSize = new System.Drawing.Size(433, 497);
+            this.Controls.Add(this.txtDivisionName);
+            this.Controls.Add(this.lblDivisionName);
+            this.Controls.Add(this.numDivisionId);
+            this.Controls.Add(this.lblDivisionId);
+            this.Controls.Add(this.comboDivisionPlayer);
+            this.Controls.Add(this.lblDivisionPlayer);
             this.Controls.Add(this.numUnitSupplyDivision);
             this.Controls.Add(this.numUnitExperienceDivision);
             this.Controls.Add(this.numUnitHealthDivision);
@@ -402,9 +474,10 @@
             this.Controls.Add(this.comboDivisionType);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DialogDivisionNew";
+            this.Name = "DialogDivisionEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Редактор подразделений";
             ((System.ComponentModel.ISupportInitialize)(this.numUnitHealthCommon)).EndInit();
@@ -415,6 +488,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numUnitHealthDivision)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitExperienceDivision)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUnitSupplyDivision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDivisionId)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -447,5 +521,11 @@
         private System.Windows.Forms.NumericUpDown numUnitHealthDivision;
         private System.Windows.Forms.NumericUpDown numUnitExperienceDivision;
         private System.Windows.Forms.NumericUpDown numUnitSupplyDivision;
+        private System.Windows.Forms.Label lblDivisionPlayer;
+        private System.Windows.Forms.ComboBox comboDivisionPlayer;
+        private System.Windows.Forms.Label lblDivisionId;
+        private System.Windows.Forms.NumericUpDown numDivisionId;
+        private System.Windows.Forms.Label lblDivisionName;
+        private System.Windows.Forms.TextBox txtDivisionName;
     }
 }

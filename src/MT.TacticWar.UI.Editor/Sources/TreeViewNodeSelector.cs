@@ -6,6 +6,11 @@ namespace MT.TacticWar.UI.Editor
     {
         public Action Select { get; private set; }
 
+        public TreeViewNodeSelector() :
+            this(() => { })
+        {
+        }
+
         public TreeViewNodeSelector(Action select)
         {
             Select = select;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Windows.Forms;
+using MT.TacticWar.Core;
 using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Objects;
@@ -9,11 +10,30 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 {
     public partial class DialogBuildingEditor : Form
     {
-        public BuildingEditor ResultBuilding { get; private set; }
+        public Player[] Players { get; private set; }
+        public BuildingEditor Building { get; private set; }
+        private DivisionEditor Security { get; set; }
+        public Player SelectedPlayer
+        {
+            get => comboBuildingPlayer.SelectedItem as Player;
+            set => comboBuildingPlayer.SelectedItem = value;
+        }
+        public bool CanChangePlayer
+        {
+            get => comboBuildingPlayer.Enabled;
+            set => comboBuildingPlayer.Enabled = value;
+        }
 
-        public DialogBuildingEditor(BuildingEditor building = null)
+        public DialogBuildingEditor(Player[] players, BuildingEditor building = null)
         {
             InitializeComponent();
+
+            Players = players;
+
+            comboBuildingPlayer.DataSource = null;
+            comboBuildingPlayer.Items.Clear();
+            comboBuildingPlayer.DataSource = Players;
+            comboBuildingPlayer.SelectedIndex = 0;
 
             comboBuildingType.Items.Clear();
             foreach (var bld in ObjectFactory.Buildings)
@@ -28,10 +48,21 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             else
             {
                 comboBuildingType.Enabled = false;
-                comboBuildingType.SelectedItem = building.GetBuildingCode();
 
-                ResultBuilding = building;
-                ShowSecurityInfo(ResultBuilding.Security);
+                var bldCode = building.GetBuildingCode();
+                foreach (BuildingVariant bld in comboBuildingType.Items)
+                {
+                    if (bld.Code.Equals(bldCode))
+                        comboBuildingType.SelectedItem = bld;
+                }
+
+                Building = building;
+                Security = building.Security;
+
+                comboBuildingPlayer.SelectedItem = building.Player;
+                numBuildingId.Value = building.Id;
+                txtBuildingName.Text = building.Name;
+                ShowSecurityInfo(Security);
             }
         }
 
@@ -40,11 +71,10 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (!ValidateEntries())
                 DialogResult = DialogResult.None;
 
-            if (null != ResultBuilding.Security)
-            {
-                ResultBuilding.Security.SetId((int)numSecurityId.Value);
-                ResultBuilding.Security.SetName(txtSecurityName.Text);
-            }
+            Building.SetPlayer(comboBuildingPlayer.SelectedItem as Player);
+            Building.SetId((int)numBuildingId.Value);
+            Building.SetName(txtBuildingName.Text);
+            Building.Security = Security;
         }
 
         private bool ValidateEntries()
@@ -63,41 +93,44 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             {
                 var bld = (BuildingVariant)comboBuildingType.SelectedItem;
                 var building = bld.Create(null, 0, "", -1, -1, 100, null);
-                ResultBuilding = new BuildingEditor(building);
-                ResultBuilding.SetName(building.Type);
+                Building = new BuildingEditor(building);
+                txtBuildingName.Text = building.Type;
             }
         }
 
-        private void BtnSecurityAdd_Click(object sender, EventArgs e)
+        private void BtnSecurityEdit_Click(object sender, EventArgs e)
         {
-            using (var dialog = new DialogDivisionEditor(ResultBuilding.Security))
+            using (var dialog = new DialogDivisionEditor(Players, Security))
             {
+                dialog.SelectedPlayer = comboBuildingPlayer.SelectedItem as Player;
+                dialog.CanChangePlayer = false;
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    ResultBuilding.Security = dialog.ResultDivision;
-                    ShowSecurityInfo(ResultBuilding.Security);
+                    Security = dialog.Division;
+                    ShowSecurityInfo(Security);
                 }
             }
         }
 
         private void BtnSecurityRemove_Click(object sender, EventArgs e)
         {
-            if (null != ResultBuilding.Security)
+            if (null != Security)
             {
-                ResultBuilding.Security = null;
-                ShowSecurityInfo(null);
+                Security = null;
+                ShowSecurityInfo(Security);
             }
         }
 
         private void ShowSecurityInfo(DivisionEditor division)
         {
             var sb = new StringBuilder();
-            int id = 0;
-            string name = string.Empty;
 
             if (null != division)
             {
-                sb.AppendLine(division.Type);
+                sb.AppendFormat("Игрок: {0}{1}", division.Player, Environment.NewLine);
+                sb.AppendFormat("Id: {0}{1}", division.Id, Environment.NewLine);
+                sb.AppendFormat("Тип: {0}{1}", division.Type, Environment.NewLine);
+                sb.AppendFormat("Имя: {0}{1}", division.Name, Environment.NewLine);
                 sb.AppendLine();
                 sb.AppendLine("Юниты:");
                 foreach (var unit in division.Units)
@@ -105,14 +138,9 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                     sb.Append("- ");
                     sb.AppendLine(unit.Name);
                 }
-
-                id = division.Id;
-                name = division.Name;
             }
 
-            lblSecurityInfo.Text = sb.ToString();
-            numSecurityId.Value = id;
-            txtSecurityName.Text = name;
+            txtSecurityInfo.Text = sb.ToString();
         }
     }
 }
