@@ -78,6 +78,8 @@ namespace MT.TacticWar.UI.Graphics
                 return $"{path}artillery.png";
             else if (division is Aviation)
                 return $"{path}plane.png";
+            else if (division is Engineers)
+                return $"{path}engineers.png";
 
             throw new Exception("Неизвестный тип подразделения.");
         }

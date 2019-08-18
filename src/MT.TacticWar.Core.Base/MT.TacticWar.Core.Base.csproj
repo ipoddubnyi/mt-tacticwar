@@ -70,6 +70,7 @@
     <Compile Include="Sources\Objects\Buildings\Factory.cs" />
     <Compile Include="Sources\Objects\Buildings\Storehouse.cs" />
     <Compile Include="Sources\Objects\BuildingVariant.cs" />
+    <Compile Include="Sources\Objects\Divisions\Engineers.cs" />
     <Compile Include="Sources\Objects\DivisionVariant.cs" />
     <Compile Include="Sources\Objects\Divisions\Aviation.cs" />
     <Compile Include="Sources\Objects\Divisions\Navy.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Sources\Units\Infantry\Igor.cs" />
     <Compile Include="Sources\Units\Infantry\Partizan.cs" />
     <Compile Include="Sources\Units\Infantry\Saboteur.cs" />
+    <Compile Include="Sources\Units\Infantry\Medic.cs" />
     <Compile Include="Sources\Units\Infantry\Soldier.cs" />
     <Compile Include="Sources\Units\Navy\Cruiser.cs" />
     <Compile Include="Sources\Units\Navy\Battleship.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Sources\Units\Vehicle\AntiAir.cs" />
     <Compile Include="Sources\Units\Vehicle\IFV.cs" />
     <Compile Include="Sources\Units\Vehicle\TankHeavy.cs" />
+    <Compile Include="Sources\Units\Engineers\BridgeBuilder.cs" />
     <Compile Include="Sources\Units\Vehicle\TankMiddle.cs" />
   </ItemGroup>
   <ItemGroup>

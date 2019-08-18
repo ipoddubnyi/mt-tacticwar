@@ -46,9 +46,9 @@ namespace MT.TacticWar.Core.Landscape
             Field = field;
         }
 
-        public void SetCell(int x, int y, Cell cell)
+        public void SetCell(Cell cell)
         {
-            Field[x, y] = cell;
+            Field[cell.Coordinates.X, cell.Coordinates.Y] = cell;
         }
 
         /// <summary>Задать занятость ячеек</summary>

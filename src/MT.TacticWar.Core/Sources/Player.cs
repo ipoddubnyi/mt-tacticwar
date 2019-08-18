@@ -65,6 +65,14 @@ namespace MT.TacticWar.Core
             }
         }
 
+        public void ActivateDivisions(Mission mission)
+        {
+            foreach (var division in Divisions)
+            {
+                division.Activate(mission);
+            }
+        }
+
         public void ActivateBuildings(Mission mission)
         {
             foreach (var building in Buildings)
@@ -95,6 +103,16 @@ namespace MT.TacticWar.Core
                 }
             }
             return support;
+        }
+
+        public bool CanBuy(int money)
+        {
+            return Money >= money;
+        }
+
+        public void Buy(int money, string comment)
+        {
+            Money -= money;
         }
 
         public override string ToString()

@@ -266,11 +266,24 @@ namespace MT.TacticWar.Core.Objects
             Player.Divisions.Remove(this);
         }
 
+        /// <summary>Активировать функции юнитов. Например, лечение, построение мостов и т.п.</summary>
+        public virtual void Activate(Mission mission)
+        {
+            foreach (var unit in Units)
+                unit.Activate(mission);
+        }
+
         public void RepairUnits()
         {
             foreach (var unit in Units)
             {
-                unit.Repair();
+                int medkit = Unit.HealthMax - unit.Health;
+
+                if (!Player.CanBuy(medkit))
+                    continue;
+
+                unit.Repair(medkit);
+                Player.Buy(medkit, $"Лечение юнита {unit} ({unit.Id})");
             }
         }
 
@@ -278,7 +291,13 @@ namespace MT.TacticWar.Core.Objects
         {
             foreach (var unit in Units)
             {
-                unit.Equip();
+                int weapon = unit.Parameters.Supply - unit.SupplyCurrent;
+
+                if (!Player.CanBuy(weapon))
+                    continue;
+
+                unit.Equip(weapon);
+                Player.Buy(weapon, $"Вооружение юнита {unit} ({unit.Id})");
             }
         }
 

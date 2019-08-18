@@ -101,6 +101,7 @@ namespace MT.TacticWar.Gameplay
         {
             DeselectAll();
             Mission.NextPlayer();
+            Mission.CurrentPlayer.ActivateDivisions(Mission);
             Mission.CurrentPlayer.ActivateBuildings(Mission);
             Mission.CurrentPlayer.ResetDivisionsParams();
         }

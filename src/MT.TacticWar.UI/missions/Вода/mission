@@ -45,10 +45,10 @@
                     </units>
                 </division>
                 
-                <division id="1021" type="infantry" name="Взвод пехоты">
+                <division id="1021" type="engineers" name="Мостоукладчик">
                     <position x="3" y="24" />
                     <units>
-                        <unit type="soldier" />
+                        <unit type="bridgebuilder" />
                     </units>
                 </division>
             </divisions>

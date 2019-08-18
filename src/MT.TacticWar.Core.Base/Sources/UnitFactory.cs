@@ -13,6 +13,7 @@ namespace MT.TacticWar.Core.Base.Units
             new UnitVariant { DivisionType = typeof(Infantry),  Name = "Солдат",        Code = "soldier",       Type = typeof(Soldier) },
             new UnitVariant { DivisionType = typeof(Infantry),  Name = "Диверсант",     Code = "saboteur",      Type = typeof(Saboteur) },
             new UnitVariant { DivisionType = typeof(Infantry),  Name = "Лейтенант",     Code = "igor",          Type = typeof(Igor) },
+            new UnitVariant { DivisionType = typeof(Infantry),  Name = "Врач",          Code = "medic",         Type = typeof(Medic) },
 
             new UnitVariant { DivisionType = typeof(Vehicle),   Name = "БМП",           Code = "ifv",           Type = typeof(IFV) },
             new UnitVariant { DivisionType = typeof(Vehicle),   Name = "Средний танк",  Code = "tank",          Type = typeof(TankMiddle) },
@@ -26,7 +27,9 @@ namespace MT.TacticWar.Core.Base.Units
 
             new UnitVariant { DivisionType = typeof(Artillery), Name = "Гаубица",       Code = "howitzer",      Type = typeof(Howitzer) },
 
-            new UnitVariant { DivisionType = typeof(Aviation),  Name = "Штурмовик",     Code = "aircraft",      Type = typeof(Aircraft) }
+            new UnitVariant { DivisionType = typeof(Aviation),  Name = "Штурмовик",     Code = "aircraft",      Type = typeof(Aircraft) },
+
+            new UnitVariant { DivisionType = typeof(Engineers), Name = "Мостоукладчик", Code = "bridgebuilder",      Type = typeof(BridgeBuilder) }
         };
 
         public static List<UnitVariant> GetAvailableUnitsForDivision(Type divisionType)

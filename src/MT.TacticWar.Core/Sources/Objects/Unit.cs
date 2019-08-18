@@ -1,4 +1,5 @@
-﻿using MT.TacticWar.Core.Landscape;
+﻿using System;
+using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Objects
 {
@@ -57,9 +58,11 @@ namespace MT.TacticWar.Core.Objects
             if (Health < 0) Health = 0;
         }
 
-        public void Repair()
+        public int Repair(int medkit)
         {
-            Health = HealthMax;
+            medkit = Math.Min(medkit, HealthMax - Health);
+            Health += medkit;
+            return medkit;
         }
 
         public void Shoot(int supply)
@@ -68,9 +71,16 @@ namespace MT.TacticWar.Core.Objects
             if (SupplyCurrent < 0) SupplyCurrent = 0;
         }
 
-        public void Equip()
+        public int Equip(int weapon)
         {
-            SupplyCurrent = Parameters.Supply;
+            weapon = Math.Min(weapon, Parameters.Supply - SupplyCurrent);
+            SupplyCurrent += weapon;
+            return weapon;
+        }
+
+        /// <summary>Активировать функции юнита. Например, лечение, построение мостов и т.п.</summary>
+        public virtual void Activate(Mission mission)
+        {
         }
 
         public virtual int GetPowerAnti(Division enemy)

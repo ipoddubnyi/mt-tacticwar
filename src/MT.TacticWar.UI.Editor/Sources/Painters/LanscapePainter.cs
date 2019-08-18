@@ -63,7 +63,7 @@ namespace MT.TacticWar.UI.Editor.Painters
             if (map[x, y].Occupied)
             {
                 var obj = map[x, y].Object;
-                map.SetCell(x, y, cell);
+                map.SetCell(cell);
                 map.OccupateCell(obj);
 
                 graphics.DrawCell(cell);
@@ -74,7 +74,7 @@ namespace MT.TacticWar.UI.Editor.Painters
             }
             else
             {
-                map.SetCell(x, y, cell);
+                map.SetCell(cell);
                 graphics.DrawCell(cell);
             }
         }

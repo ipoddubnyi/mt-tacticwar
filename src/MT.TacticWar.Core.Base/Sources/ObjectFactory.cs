@@ -13,7 +13,8 @@ namespace MT.TacticWar.Core.Base.Objects
             new DivisionVariant { Name = "Малый флот",      Code = "ship",      Type = typeof(Ship) },
             new DivisionVariant { Name = "Большой флот",    Code = "navy",      Type = typeof(Navy) },
             new DivisionVariant { Name = "Артиллерия",      Code = "artillery", Type = typeof(Artillery) },
-            new DivisionVariant { Name = "Авиация",         Code = "aviation",  Type = typeof(Aviation) }
+            new DivisionVariant { Name = "Авиация",         Code = "aviation",  Type = typeof(Aviation) },
+            new DivisionVariant { Name = "Стройбат",        Code = "engineers", Type = typeof(Engineers) }
         };
 
         public static readonly List<BuildingVariant> Buildings = new List<BuildingVariant>()
