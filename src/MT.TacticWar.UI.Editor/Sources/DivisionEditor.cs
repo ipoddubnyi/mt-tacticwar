@@ -11,9 +11,9 @@ namespace MT.TacticWar.UI.Editor
 
         public Coordinates Position => division.Position;
         public string Type => division.Type;
-        public Player Player { get; private set; }
-        public int Id { get; private set; }
-        public string Name { get; private set; }
+        public Player Player { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public List<Unit> Units => division.Units;
 
         public DivisionEditor(Division division)
@@ -22,21 +22,6 @@ namespace MT.TacticWar.UI.Editor
             Player = division.Player;
             Id = division.Id;
             Name = division.Name;
-        }
-
-        public void SetPlayer(Player player)
-        {
-            Player = player;
-        }
-
-        public void SetId(int id)
-        {
-            Id = id;
-        }
-
-        public void SetName(string name)
-        {
-            Name = name;
         }
 
         public string GetDivisionCode()

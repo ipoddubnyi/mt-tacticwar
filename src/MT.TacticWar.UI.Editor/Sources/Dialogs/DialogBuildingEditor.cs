@@ -66,14 +66,14 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
         }
 
-        private void btnOk_Click(object sender, EventArgs e)
+        private void BtnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateEntries())
                 DialogResult = DialogResult.None;
 
-            Building.SetPlayer(comboBuildingPlayer.SelectedItem as Player);
-            Building.SetId((int)numBuildingId.Value);
-            Building.SetName(txtBuildingName.Text);
+            Building.Player = comboBuildingPlayer.SelectedItem as Player;
+            Building.Id = (int)numBuildingId.Value;
+            Building.Name = txtBuildingName.Text;
             Building.Security = Security;
         }
 

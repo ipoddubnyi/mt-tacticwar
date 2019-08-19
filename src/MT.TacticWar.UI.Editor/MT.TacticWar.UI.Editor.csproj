@@ -85,6 +85,24 @@
       <DependentUpon>DialogPlayers.cs</DependentUpon>
     </Compile>
     <Compile Include="Sources\BuildingEditor.cs" />
+    <Compile Include="Sources\Dialogs\DialogScriptEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogScriptEditor.Designer.cs">
+      <DependentUpon>DialogScriptEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogScriptList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogScriptList.Designer.cs">
+      <DependentUpon>DialogScriptList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogScriptParamInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogScriptParamInput.Designer.cs">
+      <DependentUpon>DialogScriptParamInput.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sources\DivisionEditor.cs" />
     <Compile Include="Sources\IObjectEditor.cs" />
     <Compile Include="Sources\MissionEditor.cs" />
@@ -122,6 +140,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogPlayers.resx">
       <DependentUpon>DialogPlayers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Dialogs\DialogScriptEditor.resx">
+      <DependentUpon>DialogScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Dialogs\DialogScriptList.resx">
+      <DependentUpon>DialogScriptList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Dialogs\DialogScriptParamInput.resx">
+      <DependentUpon>DialogScriptParamInput.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

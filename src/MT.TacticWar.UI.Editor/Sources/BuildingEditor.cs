@@ -11,9 +11,19 @@ namespace MT.TacticWar.UI.Editor
 
         public Coordinates Position => building.Position;
         public string Type => building.Type;
-        public Player Player { get; private set; }
-        public int Id { get; private set; }
-        public string Name { get; private set; }
+        private Player player;
+        public Player Player
+        {
+            get => player;
+            set
+            {
+                player = value;
+                if (null != Security)
+                    Security.Player = player;
+            }
+        }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public DivisionEditor Security { get; set; }
 
         public BuildingEditor(Building building)
@@ -25,23 +35,6 @@ namespace MT.TacticWar.UI.Editor
 
             if (building.IsSecured)
                 Security = new DivisionEditor(building.SecurityDivision);
-        }
-
-        public void SetPlayer(Player player)
-        {
-            Player = player;
-            if (null != Security)
-                Security.SetPlayer(player);
-        }
-
-        public void SetId(int id)
-        {
-            Id = id;
-        }
-
-        public void SetName(string name)
-        {
-            Name = name;
         }
 
         public string GetBuildingCode()

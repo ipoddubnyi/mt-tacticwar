@@ -72,6 +72,7 @@
             this.btnObjectUpdate = new System.Windows.Forms.Button();
             this.btnObjectNewDivision = new System.Windows.Forms.Button();
             this.PanelEditor = new System.Windows.Forms.Panel();
+            this.btnMissionScripts = new System.Windows.Forms.Button();
             this.Menu.SuspendLayout();
             this.Status.SuspendLayout();
             this.TabControlLeft.SuspendLayout();
@@ -303,7 +304,7 @@
             this.txtMapVersion.Location = new System.Drawing.Point(9, 379);
             this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4);
             this.txtMapVersion.Name = "txtMapVersion";
-            this.txtMapVersion.Size = new System.Drawing.Size(192, 22);
+            this.txtMapVersion.Size = new System.Drawing.Size(250, 22);
             this.txtMapVersion.TabIndex = 5;
             this.txtMapVersion.Text = "1.0";
             // 
@@ -344,7 +345,7 @@
             this.txtMapDescription.Multiline = true;
             this.txtMapDescription.Name = "txtMapDescription";
             this.txtMapDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMapDescription.Size = new System.Drawing.Size(192, 246);
+            this.txtMapDescription.Size = new System.Drawing.Size(250, 246);
             this.txtMapDescription.TabIndex = 3;
             // 
             // lblMapName
@@ -372,12 +373,13 @@
             this.txtMapName.Location = new System.Drawing.Point(9, 37);
             this.txtMapName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMapName.Name = "txtMapName";
-            this.txtMapName.Size = new System.Drawing.Size(192, 22);
+            this.txtMapName.Size = new System.Drawing.Size(250, 22);
             this.txtMapName.TabIndex = 1;
             this.txtMapName.Text = "Карта местности";
             // 
             // TabMissionInfo
             // 
+            this.TabMissionInfo.Controls.Add(this.btnMissionScripts);
             this.TabMissionInfo.Controls.Add(this.txtMissionVersion);
             this.TabMissionInfo.Controls.Add(this.lblMissionVersion);
             this.TabMissionInfo.Controls.Add(this.btnMissionPlayers);
@@ -400,7 +402,7 @@
             this.txtMissionVersion.Location = new System.Drawing.Point(9, 329);
             this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4);
             this.txtMissionVersion.Name = "txtMissionVersion";
-            this.txtMissionVersion.Size = new System.Drawing.Size(192, 22);
+            this.txtMissionVersion.Size = new System.Drawing.Size(247, 22);
             this.txtMissionVersion.TabIndex = 5;
             this.txtMissionVersion.Text = "1.0";
             // 
@@ -421,7 +423,7 @@
             this.btnMissionPlayers.Location = new System.Drawing.Point(9, 372);
             this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4);
             this.btnMissionPlayers.Name = "btnMissionPlayers";
-            this.btnMissionPlayers.Size = new System.Drawing.Size(195, 28);
+            this.btnMissionPlayers.Size = new System.Drawing.Size(247, 28);
             this.btnMissionPlayers.TabIndex = 6;
             this.btnMissionPlayers.Text = "Игроки";
             this.btnMissionPlayers.UseVisualStyleBackColor = true;
@@ -443,7 +445,7 @@
             this.txtMissionName.Location = new System.Drawing.Point(9, 37);
             this.txtMissionName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMissionName.Name = "txtMissionName";
-            this.txtMissionName.Size = new System.Drawing.Size(192, 22);
+            this.txtMissionName.Size = new System.Drawing.Size(247, 22);
             this.txtMissionName.TabIndex = 1;
             // 
             // txtMissionBriefing
@@ -455,7 +457,7 @@
             this.txtMissionBriefing.Multiline = true;
             this.txtMissionBriefing.Name = "txtMissionBriefing";
             this.txtMissionBriefing.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMissionBriefing.Size = new System.Drawing.Size(192, 198);
+            this.txtMissionBriefing.Size = new System.Drawing.Size(247, 198);
             this.txtMissionBriefing.TabIndex = 3;
             // 
             // lblMissionBriefing
@@ -562,6 +564,18 @@
             this.PanelEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseMove);
             this.PanelEditor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseUp);
             // 
+            // btnMissionScripts
+            // 
+            this.btnMissionScripts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMissionScripts.Location = new System.Drawing.Point(9, 407);
+            this.btnMissionScripts.Name = "btnMissionScripts";
+            this.btnMissionScripts.Size = new System.Drawing.Size(247, 28);
+            this.btnMissionScripts.TabIndex = 7;
+            this.btnMissionScripts.Text = "Скрипты";
+            this.btnMissionScripts.UseVisualStyleBackColor = true;
+            this.btnMissionScripts.Click += new System.EventHandler(this.BtnMissionScripts_Click);
+            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -647,6 +661,7 @@
         private System.Windows.Forms.TextBox txtMissionVersion;
         private System.Windows.Forms.Label lblMissionVersion;
         private System.Windows.Forms.TextBox txtObjectStatus;
+        private System.Windows.Forms.Button btnMissionScripts;
     }
 }
 

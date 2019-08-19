@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
@@ -18,6 +19,14 @@ namespace MT.TacticWar.Core.Base.Scripts
         public ISituation Execute(Mission mission)
         {
             return new MessageSituation(text);
+        }
+
+        public List<ScriptArgument> GetArguments()
+        {
+            return new List<ScriptArgument>()
+            {
+                new ScriptArgument { Name = "сообщение", Value = text }
+            };
         }
     }
 }

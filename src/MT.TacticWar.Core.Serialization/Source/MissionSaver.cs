@@ -112,9 +112,9 @@ namespace MT.TacticWar.Core.Serialization
             };
 
             mis.Players = MissionPlayers(mission);
-            //m.Types
-            //m.Zones
-            //m.Scripts
+            //mis.Types = 
+            //mis.Zones = 
+            mis.Scripts = MissionScripts(mission.Scripts);
 
             // TODO: отрефакторить создание папки
             var dirPath = Path.GetDirectoryName(filePath);
@@ -232,21 +232,48 @@ namespace MT.TacticWar.Core.Serialization
             }
 
             return zones.ToArray();
-        }
+        }*/
 
-        private static Script[] LoadMissionScripts(SerialMission mis)
+        private static SerialScript[] MissionScripts(Script[] scs)
         {
-            var scripts = new List<Script>();
-            foreach (var sc in mis.Scripts)
+            var scripts = new List<SerialScript>();
+            foreach (var sc in scs)
             {
-                var script = new Script(
-                    ScriptFactory.CreateCondition(sc.Condition.Type, sc.Condition.GetArguments()),
-                    ScriptFactory.CreateStatement(sc.Statement.Type, sc.Statement.GetArguments())
-                );
+                var script = new SerialScript()
+                {
+                    Description = sc.Description
+                };
+
+                script.Condition = new SerialScriptEntry()
+                {
+                    Type = ScriptFactory.GetScriptConditionCode(sc.Condition),
+                    Arguments = MissionScriptArguments(sc.Condition.GetArguments())
+                };
+
+                script.Statement = new SerialScriptEntry()
+                {
+                    Type = ScriptFactory.GetScriptStatementCode(sc.Statement),
+                    Arguments = MissionScriptArguments(sc.Statement.GetArguments())
+                };
+
                 scripts.Add(script);
             }
 
             return scripts.ToArray();
-        }*/
+        }
+
+        private static SerialScriptArgument[] MissionScriptArguments(List<ScriptArgument> args)
+        {
+            var arguments = new List<SerialScriptArgument>();
+            foreach (var arg in args)
+            {
+                arguments.Add(new SerialScriptArgument()
+                {
+                    Comment = arg.Name,
+                    Value = arg.Value
+                });
+            }
+            return arguments.ToArray();
+        }
     }
 }

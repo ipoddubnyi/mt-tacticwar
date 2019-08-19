@@ -427,22 +427,31 @@ namespace MT.TacticWar.UI.Editor
 
         private void MenuMapOpen_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog())
+            try
             {
-                dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                dialog.RestoreDirectory = true;
-
-                if (DialogResult.OK == dialog.ShowDialog())
+                using (var dialog = new OpenFileDialog())
                 {
-                    FilePathMap = dialog.FileName;
-                    SelectedMap = new MapEditor(MissionLoader.LoadMap(dialog.FileName));
+                    dialog.InitialDirectory = Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                        "missions");
+                    dialog.RestoreDirectory = true;
 
-                    ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
-                    graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
-                    graphicsPreview = new GameGraphics(PanelElementPreview.CreateGraphics(), CellSize);
+                    if (DialogResult.OK == dialog.ShowDialog())
+                    {
+                        FilePathMap = dialog.FileName;
+                        SelectedMap = new MapEditor(MissionLoader.LoadMap(dialog.FileName));
 
-                    UpdateUI(SelectedMap.Schema);
+                        ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
+                        graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
+                        graphicsPreview = new GameGraphics(PanelElementPreview.CreateGraphics(), CellSize);
+
+                        UpdateUI(SelectedMap.Schema);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -488,7 +497,9 @@ namespace MT.TacticWar.UI.Editor
 
                 using (var dialog = new SaveFileDialog())
                 {
-                    dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                    dialog.InitialDirectory = Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                        "missions");
                     dialog.RestoreDirectory = true;
 
                     if (DialogResult.OK != dialog.ShowDialog())
@@ -574,17 +585,26 @@ namespace MT.TacticWar.UI.Editor
                 return;
             }
 
-            using (var dialog = new OpenFileDialog())
+            try
             {
-                dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                dialog.RestoreDirectory = true;
-
-                if (DialogResult.OK == dialog.ShowDialog())
+                using (var dialog = new OpenFileDialog())
                 {
-                    FilePathMission = dialog.FileName;
-                    SelectedMission = new MissionEditor(MissionLoader.LoadMission(dialog.FileName, SelectedMap));
-                    UpdateUI(SelectedMap.Schema, true);
+                    dialog.InitialDirectory = Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                        "missions");
+                    dialog.RestoreDirectory = true;
+
+                    if (DialogResult.OK == dialog.ShowDialog())
+                    {
+                        FilePathMission = dialog.FileName;
+                        SelectedMission = new MissionEditor(MissionLoader.LoadMission(dialog.FileName, SelectedMap));
+                        UpdateUI(SelectedMap.Schema, true);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -630,7 +650,9 @@ namespace MT.TacticWar.UI.Editor
 
                 using (var dialog = new SaveFileDialog())
                 {
-                    dialog.InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                    dialog.InitialDirectory = Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                        "missions");
                     dialog.RestoreDirectory = true;
 
                     if (DialogResult.OK != dialog.ShowDialog())
@@ -865,6 +887,17 @@ namespace MT.TacticWar.UI.Editor
                 {
                     SelectedMission.SetPlayers(dialog.Players);
                     DrawAll();
+                }
+            }
+        }
+
+        private void BtnMissionScripts_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new DialogScriptList(SelectedMission.Scripts))
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    SelectedMission.SetScripts(dialog.Scripts);
                 }
             }
         }

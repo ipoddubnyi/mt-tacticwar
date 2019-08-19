@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
@@ -19,6 +20,14 @@ namespace MT.TacticWar.Core.Base.Scripts
         {
             var player = mission.Players[winnerId];
             return new GameOverSituation(player);
+        }
+
+        public List<ScriptArgument> GetArguments()
+        {
+            return new List<ScriptArgument>()
+            {
+                new ScriptArgument { Name = "победитель", Value = winnerId.ToString() }
+            };
         }
     }
 }

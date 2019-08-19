@@ -316,7 +316,7 @@
             <action type="gameover" c="win" value="1" />
         </script-->
 
-        <!--script desc="Сообщение">
+        <script desc="Сообщение">
             <condition type="unitcount">
                 <argument comment="player">0</argument>
                 <argument comment="count">0</argument>
@@ -324,8 +324,8 @@
             <statement type="message">
                 <argument comment="text">Победа!</argument>
             </statement>
-        </script-->
-        <!--script desc="Победа игрока 1">
+        </script>
+        <script desc="Победа игрока 1">
             <condition type="unitcount">
                 <argument comment="player">0</argument>
                 <argument comment="count">0</argument>
@@ -333,7 +333,7 @@
             <statement type="gameover">
                 <argument comment="winner">1</argument>
             </statement>
-        </script-->
+        </script>
         <!--script desc="Игрок 0 достиг зоны 10">
             <condition type="playerinzone">
                 <argument comment="player">0</argument>

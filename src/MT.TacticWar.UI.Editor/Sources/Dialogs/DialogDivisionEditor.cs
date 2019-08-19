@@ -68,14 +68,14 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
         }
 
-        private void btnOk_Click(object sender, EventArgs e)
+        private void BtnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateEntries())
                 DialogResult = DialogResult.None;
 
-            Division.SetPlayer(comboDivisionPlayer.SelectedItem as Player);
-            Division.SetId((int)numDivisionId.Value);
-            Division.SetName(txtDivisionName.Text);
+            Division.Player = comboDivisionPlayer.SelectedItem as Player;
+            Division.Id = (int)numDivisionId.Value;
+            Division.Name = txtDivisionName.Text;
         }
 
         private bool ValidateEntries()

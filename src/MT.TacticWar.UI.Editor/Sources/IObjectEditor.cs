@@ -4,12 +4,11 @@ namespace MT.TacticWar.UI.Editor
 {
     public interface IObjectEditor
     {
-        string Name { get; }
+        Player Player { get; set; }
+        int Id { get; set; }
+        string Name { get; set; }
         Coordinates Position { get; }
 
-        void SetPlayer(Player player);
-        void SetId(int id);
-        void SetName(string name);
         void Destroy();
     }
 }

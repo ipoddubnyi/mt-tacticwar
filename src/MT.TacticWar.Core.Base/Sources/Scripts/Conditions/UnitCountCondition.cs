@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
@@ -25,6 +26,15 @@ namespace MT.TacticWar.Core.Base.Scripts
                 count += div.Units.Count;
 
             return count > unitCount;
+        }
+
+        public List<ScriptArgument> GetArguments()
+        {
+            return new List<ScriptArgument>()
+            {
+                new ScriptArgument { Name = "игрок", Value = playerId.ToString() },
+                new ScriptArgument { Name = "кол-во юнитов", Value = unitCount.ToString() }
+            };
         }
     }
 }

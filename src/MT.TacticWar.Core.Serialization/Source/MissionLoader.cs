@@ -266,14 +266,9 @@ namespace MT.TacticWar.Core.Serialization
         private static Script[] LoadMissionScripts(SerialMission mis)
         {
             var scripts = new List<Script>();
+
             foreach (var sc in mis.Scripts)
-            {
-                var script = new Script(
-                    ScriptFactory.CreateCondition(sc.Condition.Type, sc.Condition.GetArguments()),
-                    ScriptFactory.CreateStatement(sc.Statement.Type, sc.Statement.GetArguments())
-                );
-                scripts.Add(script);
-            }
+                scripts.Add(sc.Create());
 
             return scripts.ToArray();
         }

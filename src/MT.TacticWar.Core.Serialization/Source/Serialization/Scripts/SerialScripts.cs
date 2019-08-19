@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
+using MT.TacticWar.Core.Base.Scripts;
+using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Serialization
 {
@@ -14,5 +16,14 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlElement("statement")]
         public SerialScriptEntry Statement { get; set; }
+
+        public Script Create()
+        {
+            return new Script(
+                    Description,
+                    ScriptFactory.CreateCondition(Condition.Type, Condition.GetArguments()),
+                    ScriptFactory.CreateStatement(Statement.Type, Statement.GetArguments())
+                );
+        }
     }
 }

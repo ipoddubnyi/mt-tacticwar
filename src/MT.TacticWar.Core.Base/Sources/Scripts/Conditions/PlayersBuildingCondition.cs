@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
@@ -27,6 +28,15 @@ namespace MT.TacticWar.Core.Base.Scripts
             }
 
             return false;
+        }
+
+        public List<ScriptArgument> GetArguments()
+        {
+            return new List<ScriptArgument>()
+            {
+                new ScriptArgument { Name = "игрок", Value = playerId.ToString() },
+                new ScriptArgument { Name = "строение", Value = buildingId.ToString() }
+            };
         }
     }
 }
