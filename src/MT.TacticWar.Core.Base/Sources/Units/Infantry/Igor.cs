@@ -1,8 +1,10 @@
-﻿using MT.TacticWar.Core.Landscape;
+﻿using MT.TacticWar.Core.Base.Objects;
+using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
+    [Unit("Лейтенант", typeof(Infantry))]
     public class Igor : Unit
     {
         public Igor(int id, Division division, string name = null,

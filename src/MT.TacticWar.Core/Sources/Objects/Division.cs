@@ -8,7 +8,6 @@ namespace MT.TacticWar.Core.Objects
     {
         public Player Player { get; protected set; }
         public int Id { get; protected set; }
-        public virtual string Type => "Подразделение";
         public string Name { get; protected set; }
         public Coordinates Position { get; set; }
         public List<Unit> Units { get; protected set; }
@@ -20,6 +19,7 @@ namespace MT.TacticWar.Core.Objects
         public int Experience { get; protected set; }
         public int SupplyCurrent { get; protected set; }
         public int StepsCurrent { get; protected set; }
+        public string Type => GetBranchName(GetType());
 
         public UnitParameters Parameters { get; protected set; }
 
@@ -339,6 +339,15 @@ namespace MT.TacticWar.Core.Objects
             int yMax = Position.Y + Parameters.RadiusAttack;
 
             return pt.X >= xMin && pt.X <= xMax && pt.Y >= yMin && pt.Y <= yMax;
+        }
+
+        //
+
+        public static string GetBranchName(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(DivisionAttribute), false);
+            var branch = attributes[0] as DivisionAttribute;
+            return branch?.Name;
         }
     }
 }

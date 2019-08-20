@@ -1,7 +1,9 @@
-﻿using MT.TacticWar.Core.Objects;
+﻿using MT.TacticWar.Core.Base.Objects;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
+    [Unit("БМП", typeof(Vehicle))]
     public class IFV : Unit
     {
         public IFV(int id, Division division, string name = null,

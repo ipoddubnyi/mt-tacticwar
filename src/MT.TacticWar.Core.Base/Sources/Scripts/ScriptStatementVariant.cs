@@ -5,9 +5,7 @@ namespace MT.TacticWar.Core.Base.Scripts
 {
     public struct ScriptStatementVariant
     {
-        public string Name;
         public string Code;
-        public string[] Params;
         public Type Type;
 
         public IStatement Create(params string[] args)
@@ -17,7 +15,7 @@ namespace MT.TacticWar.Core.Base.Scripts
 
         public override string ToString()
         {
-            return Name;
+            return Script.GetScriptName(Type);
         }
     }
 }

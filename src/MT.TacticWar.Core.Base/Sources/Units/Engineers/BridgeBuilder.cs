@@ -1,10 +1,11 @@
-﻿using MT.TacticWar.Core.Base.Landscape;
-using MT.TacticWar.Core.Base.Landscape.Summer;
+﻿using MT.TacticWar.Core.Base.Landscape.Summer;
+using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
+    [Unit("Мостоукладчик", typeof(Engineers))]
     public class BridgeBuilder : Unit
     {
         private const int BridgeCost = 500;

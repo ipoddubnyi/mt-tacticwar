@@ -43,6 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Sources\Common\Coordinates.cs" />
+    <Compile Include="Sources\Attributes\BuildingAttribute.cs" />
+    <Compile Include="Sources\Attributes\SchemaAttribute.cs" />
+    <Compile Include="Sources\Attributes\CellAttribute.cs" />
+    <Compile Include="Sources\Attributes\UnitAttribute.cs" />
+    <Compile Include="Sources\Attributes\ScriptArgumentAttribute.cs" />
+    <Compile Include="Sources\Attributes\ScriptAttribute.cs" />
+    <Compile Include="Sources\Attributes\DivisionAttribute.cs" />
     <Compile Include="Sources\Fog.cs" />
     <Compile Include="Sources\Extensions.cs" />
     <Compile Include="Sources\Common\MoveType.cs" />

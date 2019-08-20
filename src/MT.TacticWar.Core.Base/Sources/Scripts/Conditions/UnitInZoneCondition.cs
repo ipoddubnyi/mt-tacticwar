@@ -40,9 +40,9 @@ namespace MT.TacticWar.Core.Base.Scripts
         {
             return new List<ScriptArgument>()
             {
-                new ScriptArgument { Name = "игрок", Value = playerId.ToString() },
-                new ScriptArgument { Name = "юнит", Value = unitId.ToString() },
-                new ScriptArgument { Name = "зона", Value = zoneId.ToString() }
+                new ScriptArgument { Name = "Игрок", Value = playerId.ToString() },
+                new ScriptArgument { Name = "Юнит", Value = unitId.ToString() },
+                new ScriptArgument { Name = "Зона", Value = zoneId.ToString() }
             };
         }
     }

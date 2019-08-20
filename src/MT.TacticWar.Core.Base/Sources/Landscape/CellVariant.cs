@@ -5,8 +5,6 @@ namespace MT.TacticWar.Core.Base.Landscape
 {
     public struct CellVariant
     {
-        public Type SchemaType;
-        public string Name;
         public char Code;
         public Type Type;
 
@@ -15,9 +13,14 @@ namespace MT.TacticWar.Core.Base.Landscape
             return (Cell)Activator.CreateInstance(Type, x, y);
         }
 
+        public Type GetSchemaType()
+        {
+            return Cell.GetSchemaType(Type);
+        }
+
         public override string ToString()
         {
-            return Name;
+            return Cell.GetCellType(Type);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace MT.TacticWar.Core.Base.Scripts
         {
             return new List<ScriptArgument>()
             {
-                new ScriptArgument { Name = "номер шага", Value = cycleCount.ToString() }
+                new ScriptArgument { Name = "Номер шага", Value = cycleCount.ToString() }
             };
         }
     }

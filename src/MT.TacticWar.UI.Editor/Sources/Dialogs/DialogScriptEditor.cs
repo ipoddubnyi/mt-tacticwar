@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using MT.TacticWar.Core.Base.Scripts;
 using MT.TacticWar.Core.Scripts;
@@ -9,34 +8,17 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 {
     public partial class DialogScriptEditor : Form
     {
-        /*class ParamValue
-        {
-            public string Name { get; set; }
-            public string Value { get; set; }
-
-            public ParamValue(string name, string value = "")
-            {
-                Name = name;
-                Value = value;
-            }
-
-            public override string ToString()
-            {
-                return $"{Name}: {Value}";
-            }
-        }*/
-
         public Script Script { get; private set; }
 
-        private List<ScriptArgument> conditionParameters;
-        private List<ScriptArgument> statementParameters;
+        private ScriptArgument[] conditionParameters;
+        private ScriptArgument[] statementParameters;
 
         public DialogScriptEditor(Script script = null)
         {
             InitializeComponent();
 
-            conditionParameters = new List<ScriptArgument>();
-            statementParameters = new List<ScriptArgument>();
+            conditionParameters = new ScriptArgument[0];
+            statementParameters = new ScriptArgument[0];
 
             comboConditionType.DataSource = null;
             comboConditionType.Items.Clear();
@@ -70,13 +52,8 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                     }
                 }
 
-                var args = new ScriptArgument[script.Condition.GetArguments().Count];
-                script.Condition.GetArguments().CopyTo(args);
-                conditionParameters = args.ToList();
-
-                args = new ScriptArgument[script.Statement.GetArguments().Count];
-                script.Statement.GetArguments().CopyTo(args);
-                statementParameters = args.ToList();
+                conditionParameters = ScriptArgument.GetArguments(script.Condition);
+                statementParameters = ScriptArgument.GetArguments(script.Statement);
             }
 
             ListConditionParamsRefresh();
@@ -107,11 +84,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != comboConditionType.SelectedItem)
             {
                 var condition = (ScriptConditionVariant)comboConditionType.SelectedItem;
-
-                conditionParameters.Clear();
-                foreach (var param in condition.Params)
-                    conditionParameters.Add(new ScriptArgument(param));
-
+                conditionParameters = ScriptArgument.GetArguments(condition.Type);
                 ListConditionParamsRefresh();
             }
         }
@@ -121,11 +94,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != comboStatementType.SelectedItem)
             {
                 var statement = (ScriptStatementVariant)comboStatementType.SelectedItem;
-
-                statementParameters.Clear();
-                foreach (var param in statement.Params)
-                    statementParameters.Add(new ScriptArgument(param));
-
+                statementParameters = ScriptArgument.GetArguments(statement.Type);
                 ListStatementParamsRefresh();
             }
         }
@@ -174,8 +143,8 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
             Script = new Script(
                     txtDescription.Text,
-                    condition.Create(ParametersToArray(conditionParameters)),
-                    statement.Create(ParametersToArray(statementParameters))
+                    condition.Create(GetParametersValues(conditionParameters)),
+                    statement.Create(GetParametersValues(statementParameters))
                 );
         }
 
@@ -202,7 +171,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             return true;
         }
 
-        private string[] ParametersToArray(List<ScriptArgument> parameters)
+        private string[] GetParametersValues(ScriptArgument[] parameters)
         {
             var result = new List<string>();
 

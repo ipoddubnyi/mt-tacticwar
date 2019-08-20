@@ -2,12 +2,11 @@
 
 namespace MT.TacticWar.Core.Base.Objects
 {
+    [Building("Аэродром")]
     public class Airfield : Building
     {
         private const int MaxRadiusActive = 0;
         private const int MaxRadiusView = 1;
-
-        public override string Type => "Аэродром";
 
         public Airfield(Player player, int id, string name, int x, int y, int health, Division security) :
             base(player, id, name, x, y, health, MaxRadiusActive, MaxRadiusView, security)

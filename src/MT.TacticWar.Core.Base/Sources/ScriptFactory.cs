@@ -8,28 +8,13 @@ namespace MT.TacticWar.Core.Base.Scripts
     {
         public static readonly List<ScriptConditionVariant> Conditions = new List<ScriptConditionVariant>()
         {
-            new ScriptConditionVariant {
-                Name = "Количество юнитов",
-                Code = "unitcount",
-                Params = new [] { "Игрок (id)", "Количество юнитов" },
-                Type = typeof(UnitCountCondition)
-            }
+            new ScriptConditionVariant { Code = "unitcount",    Type = typeof(UnitCountCondition) }
         };
 
         public static readonly List<ScriptStatementVariant> Statements = new List<ScriptStatementVariant>()
         {
-            new ScriptStatementVariant {
-                Name = "Завершение игры",
-                Code = "gameover",
-                Params = new [] { "Игрок-победитель (id)" },
-                Type = typeof(GameOverStatement)
-            },
-            new ScriptStatementVariant {
-                Name = "Показать сообщение",
-                Code = "message",
-                Params = new [] { "Текст сообщения" },
-                Type = typeof(MessageStatement)
-            }
+            new ScriptStatementVariant { Code = "gameover",     Type = typeof(GameOverStatement) },
+            new ScriptStatementVariant { Code = "message",      Type = typeof(MessageStatement) }
         };
 
         public static string GetScriptConditionCode(ICondition condition)

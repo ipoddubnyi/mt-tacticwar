@@ -1,7 +1,9 @@
-﻿using MT.TacticWar.Core.Landscape;
+﻿using MT.TacticWar.Core.Base.Landscape.Schemas;
+using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Winter
 {
+    [Cell("Зимний лес", typeof(WinterSchema))]
     public class WinterForest : Cell, ILand, IForest
     {
         public const int DefaultPassCost = 4;

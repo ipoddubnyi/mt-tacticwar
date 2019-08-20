@@ -1,4 +1,5 @@
-﻿using MT.TacticWar.Core.Objects;
+﻿using System;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Landscape
 {
@@ -24,6 +25,22 @@ namespace MT.TacticWar.Core.Landscape
             Passable = true;
             PassCost = passcost;
             Object = null;
+        }
+
+        //
+
+        public static string GetCellType(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(CellAttribute), false);
+            var cell = attributes[0] as CellAttribute;
+            return cell?.Name;
+        }
+
+        public static Type GetSchemaType(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(CellAttribute), false);
+            var cell = attributes[0] as CellAttribute;
+            return cell?.SchemaType;
         }
     }
 }

@@ -126,5 +126,21 @@ namespace MT.TacticWar.Core.Objects
         {
             return Name;
         }
+
+        //
+
+        public static string GetUnitType(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(UnitAttribute), false);
+            var un = attributes[0] as UnitAttribute;
+            return un?.Name;
+        }
+
+        public static Type GetDivisionType(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(UnitAttribute), false);
+            var un = attributes[0] as UnitAttribute;
+            return un?.DivisionType;
+        }
     }
 }

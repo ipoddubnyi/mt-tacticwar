@@ -1,11 +1,10 @@
-﻿using MT.TacticWar.Core.Landscape;
-using System;
+﻿using System;
+using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape
 {
     public struct SchemaVariant
     {
-        public string Name;
         public string Code;
         public Type Type;
 
@@ -16,7 +15,7 @@ namespace MT.TacticWar.Core.Base.Landscape
 
         public override string ToString()
         {
-            return Name;
+            return Schema.GetSchemaName(Type);
         }
     }
 }

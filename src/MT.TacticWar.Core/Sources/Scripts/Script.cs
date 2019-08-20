@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace MT.TacticWar.Core.Scripts
 {
     public class Script
@@ -17,6 +18,15 @@ namespace MT.TacticWar.Core.Scripts
         public override string ToString()
         {
             return Description;
+        }
+
+        //
+
+        public static string GetScriptName(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(ScriptAttribute), false);
+            var script = attributes[0] as ScriptAttribute;
+            return script?.Name;
         }
     }
 }

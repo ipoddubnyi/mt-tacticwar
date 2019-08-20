@@ -11,28 +11,28 @@ namespace MT.TacticWar.Core.Base.Landscape
     {
         public static readonly List<SchemaVariant> Schemas = new List<SchemaVariant>()
         {
-            new SchemaVariant { Name = "Лето", Code = "summer", Type = typeof(SummerSchema) },
-            new SchemaVariant { Name = "Зима", Code = "winter", Type = typeof(WinterSchema) }
+            new SchemaVariant { Code = "summer", Type = typeof(SummerSchema) },
+            new SchemaVariant { Code = "winter", Type = typeof(WinterSchema) }
         };
 
         public static readonly List<CellVariant> Cells = new List<CellVariant>()
         {
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Поле",     Code = '-', Type = typeof(Field) },
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Дорога",   Code = '#', Type = typeof(Road) },
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Вода",     Code = '~', Type = typeof(Water) },
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Лес",      Code = '*', Type = typeof(Forest) },
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Песок",    Code = ':', Type = typeof(Sand) },
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Камни",    Code = 'o', Type = typeof(Stones) },
-            new CellVariant { SchemaType = typeof(SummerSchema), Name = "Мост",     Code = '+', Type = typeof(Bridge) },
+            new CellVariant { Code = '-', Type = typeof(Field) },
+            new CellVariant { Code = '#', Type = typeof(Road) },
+            new CellVariant { Code = '~', Type = typeof(Water) },
+            new CellVariant { Code = '*', Type = typeof(Forest) },
+            new CellVariant { Code = ':', Type = typeof(Sand) },
+            new CellVariant { Code = 'o', Type = typeof(Stones) },
+            new CellVariant { Code = '+', Type = typeof(Bridge) },
 
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Поле",     Code = '-', Type = typeof(Snow) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Дорога",   Code = '#', Type = typeof(Road) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Вода",     Code = '~', Type = typeof(ColdWater) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Лес",      Code = '*', Type = typeof(WinterForest) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Песок",    Code = ':', Type = typeof(Sand) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Камни",    Code = 'o', Type = typeof(Stones) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Мост",     Code = '+', Type = typeof(Bridge) },
-            new CellVariant { SchemaType = typeof(WinterSchema), Name = "Лёд",      Code = '≈', Type = typeof(Ice) }
+            new CellVariant { Code = '-', Type = typeof(Snow) },
+            //new CellVariant { Code = '#', Type = typeof(Road) },
+            new CellVariant { Code = '~', Type = typeof(ColdWater) },
+            new CellVariant { Code = '*', Type = typeof(WinterForest) },
+            //new CellVariant { Code = ':', Type = typeof(Sand) },
+            //new CellVariant { Code = 'o', Type = typeof(Stones) },
+            //new CellVariant { Code = '+', Type = typeof(Bridge) },
+            new CellVariant { Code = '≈', Type = typeof(Ice) }
         };
 
         public static List<CellVariant> GetAvailableCellsForSchema(Schema schema)
@@ -40,7 +40,7 @@ namespace MT.TacticWar.Core.Base.Landscape
             var list = new List<CellVariant>();
             foreach (var cell in Cells)
             {
-                if (cell.SchemaType.Equals(schema.GetType()))
+                if (cell.GetSchemaType().Equals(schema.GetType()))
                     list.Add(cell);
             }
             return list;
@@ -72,7 +72,7 @@ namespace MT.TacticWar.Core.Base.Landscape
         {
             foreach (var c in Cells)
             {
-                if (!c.SchemaType.Equals(schema.GetType()))
+                if (!c.GetSchemaType().Equals(schema.GetType()))
                     continue;
 
                 if (c.Code == code)
@@ -86,7 +86,7 @@ namespace MT.TacticWar.Core.Base.Landscape
         {
             foreach (var c in Cells)
             {
-                if (!c.SchemaType.Equals(schema.GetType()))
+                if (!c.GetSchemaType().Equals(schema.GetType()))
                     continue;
 
                 if (c.Type.Equals(cell.GetType()))

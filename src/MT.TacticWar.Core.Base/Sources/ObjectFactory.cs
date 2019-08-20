@@ -8,28 +8,28 @@ namespace MT.TacticWar.Core.Base.Objects
     {
         public static readonly List<DivisionVariant> Divisions = new List<DivisionVariant>()
         {
-            new DivisionVariant { Name = "Пехота",          Code = "infantry",  Type = typeof(Infantry) },
-            new DivisionVariant { Name = "Бронетехника",    Code = "vehicle",   Type = typeof(Vehicle) },
-            new DivisionVariant { Name = "Малый флот",      Code = "ship",      Type = typeof(Ship) },
-            new DivisionVariant { Name = "Большой флот",    Code = "navy",      Type = typeof(Navy) },
-            new DivisionVariant { Name = "Артиллерия",      Code = "artillery", Type = typeof(Artillery) },
-            new DivisionVariant { Name = "Авиация",         Code = "aviation",  Type = typeof(Aviation) },
-            new DivisionVariant { Name = "Стройбат",        Code = "engineers", Type = typeof(Engineers) }
+            new DivisionVariant { Code = "infantry",  Type = typeof(Infantry) },
+            new DivisionVariant { Code = "vehicle",   Type = typeof(Vehicle) },
+            new DivisionVariant { Code = "ship",      Type = typeof(Ship) },
+            new DivisionVariant { Code = "navy",      Type = typeof(Navy) },
+            new DivisionVariant { Code = "artillery", Type = typeof(Artillery) },
+            new DivisionVariant { Code = "aviation",  Type = typeof(Aviation) },
+            new DivisionVariant { Code = "engineers", Type = typeof(Engineers) }
         };
 
         public static readonly List<BuildingVariant> Buildings = new List<BuildingVariant>()
         {
-            new BuildingVariant { Name = "Завод",           Code = "factory",       Type = typeof(Factory) },
-            new BuildingVariant { Name = "Казармы",         Code = "barracks",      Type = typeof(Barracks) },
-            new BuildingVariant { Name = "Склад",           Code = "storehouse",    Type = typeof(Storehouse) },
-            new BuildingVariant { Name = "Радар",           Code = "radar",         Type = typeof(Radar) },
-            new BuildingVariant { Name = "Аэродром",        Code = "airfield",      Type = typeof(Airfield) },
-            new BuildingVariant { Name = "Порт",            Code = "port",          Type = typeof(Port) },
-            new BuildingVariant { Name = "Верфь",           Code = "shipyard",      Type = typeof(Shipyard) },
+            new BuildingVariant { Code = "factory",       Type = typeof(Factory) },
+            new BuildingVariant { Code = "barracks",      Type = typeof(Barracks) },
+            new BuildingVariant { Code = "storehouse",    Type = typeof(Storehouse) },
+            new BuildingVariant { Code = "radar",         Type = typeof(Radar) },
+            new BuildingVariant { Code = "airfield",      Type = typeof(Airfield) },
+            new BuildingVariant { Code = "port",          Type = typeof(Port) },
+            new BuildingVariant { Code = "shipyard",      Type = typeof(Shipyard) },
 
-            new BuildingVariant { Name = "Городской дом",   Code = "house",         Type = typeof(CityHouse) },
-            new BuildingVariant { Name = "Сельский дом",    Code = "hut",           Type = typeof(VillageHut) },
-            new BuildingVariant { Name = "Церковь",         Code = "church",        Type = typeof(Church) }
+            new BuildingVariant { Code = "house",         Type = typeof(CityHouse) },
+            new BuildingVariant { Code = "hut",           Type = typeof(VillageHut) },
+            new BuildingVariant { Code = "church",        Type = typeof(Church) }
         };
 
         public static string GetDivisionCode(Division division)

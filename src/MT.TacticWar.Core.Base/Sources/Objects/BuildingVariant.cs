@@ -5,7 +5,6 @@ namespace MT.TacticWar.Core.Base.Objects
 {
     public struct BuildingVariant
     {
-        public string Name;
         public string Code;
         public Type Type;
 
@@ -16,7 +15,7 @@ namespace MT.TacticWar.Core.Base.Objects
 
         public override string ToString()
         {
-            return Name;
+            return Building.GetBuildingType(Type);
         }
     }
 }

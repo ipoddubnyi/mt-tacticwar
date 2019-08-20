@@ -7,8 +7,6 @@ namespace MT.TacticWar.Core.Base.Units
 {
     public struct UnitVariant
     {
-        public Type DivisionType;
-        public string Name;
         public string Code;
         public Type Type;
 
@@ -25,9 +23,14 @@ namespace MT.TacticWar.Core.Base.Units
                 );
         }
 
+        public Type GetDivisionType()
+        {
+            return Unit.GetDivisionType(Type);
+        }
+
         public override string ToString()
         {
-            return Name;
+            return Unit.GetUnitType(Type);
         }
     }
 }

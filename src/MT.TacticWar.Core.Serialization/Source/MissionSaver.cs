@@ -247,13 +247,13 @@ namespace MT.TacticWar.Core.Serialization
                 script.Condition = new SerialScriptEntry()
                 {
                     Type = ScriptFactory.GetScriptConditionCode(sc.Condition),
-                    Arguments = MissionScriptArguments(sc.Condition.GetArguments())
+                    Arguments = MissionScriptArguments(ScriptArgument.GetArguments(sc.Condition))
                 };
 
                 script.Statement = new SerialScriptEntry()
                 {
                     Type = ScriptFactory.GetScriptStatementCode(sc.Statement),
-                    Arguments = MissionScriptArguments(sc.Statement.GetArguments())
+                    Arguments = MissionScriptArguments(ScriptArgument.GetArguments(sc.Statement))
                 };
 
                 scripts.Add(script);
@@ -262,7 +262,7 @@ namespace MT.TacticWar.Core.Serialization
             return scripts.ToArray();
         }
 
-        private static SerialScriptArgument[] MissionScriptArguments(List<ScriptArgument> args)
+        private static SerialScriptArgument[] MissionScriptArguments(IEnumerable<ScriptArgument> args)
         {
             var arguments = new List<SerialScriptArgument>();
             foreach (var arg in args)
