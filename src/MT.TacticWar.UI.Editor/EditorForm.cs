@@ -80,7 +80,7 @@ namespace MT.TacticWar.UI.Editor
             node = new TreeNode("Ландшафт");
             node.Expand();
 
-            var cells = LandscapeFactory.GetAvailableCellsForSchema(schema);
+            var cells = LandscapeFactory.GetSchemaCellTypes(schema);
             foreach (var cell in cells)
             {
                 var subnode = new TreeNode(cell.ToString())
@@ -96,12 +96,12 @@ namespace MT.TacticWar.UI.Editor
             {
                 Tag = new TreeViewNodeSelector(() => { DrawUnpassableShow(); })
             };
-            var subnode2 = new TreeNode("Непроходимая зона")
+            var subnode2 = new TreeNode("Непроходимая ячейка")
             {
                 Tag = new TreeViewNodeSelector(() => { SelectDrawPassability(false); })
             };
             node.Nodes.Add(subnode2);
-            subnode2 = new TreeNode("Проходимая зона")
+            subnode2 = new TreeNode("Проходимая ячейка")
             {
                 Tag = new TreeViewNodeSelector(() => { SelectDrawPassability(true); })
             };
@@ -136,6 +136,24 @@ namespace MT.TacticWar.UI.Editor
             node.Expand();
             TreeViewElements.Nodes.Add(node);
 
+            node = new TreeNode("Зоны")
+            {
+                Tag = new TreeViewNodeSelector(SelectDrawZone)
+            };
+            /*var subnode2 = new TreeNode("Рисовать зону")
+            {
+                Tag = new TreeViewNodeSelector(() => { SelectDrawZone(false); })
+            };
+            node.Nodes.Add(subnode2);
+            subnode2 = new TreeNode("Стереть зону")
+            {
+                Tag = new TreeViewNodeSelector(() => { SelectDrawZone(true); })
+            };
+            node.Nodes.Add(subnode2);*/
+
+            node.Expand();
+            TreeViewElements.Nodes.Add(node);
+
             // показать таб
             TabControlLeft.TabPages.Add(TabMissionInfo);
 
@@ -143,12 +161,12 @@ namespace MT.TacticWar.UI.Editor
             SetMissionInfo(SelectedMission);
         }
 
-        private void SelectDrawCellType(CellVariant cellvar)
+        private void SelectDrawCellType(CellCreator creator)
         {
-            var cell = cellvar.Create(1, 1);
-            //graphics.DrawCell(cell);
+            var code = creator.GetCellCode();
+            var cell = LandscapeFactory.CreateCell(SelectedMap.Schema, code, 1, 1);
             graphicsPreview.DrawCell(cell);
-            painter = new LanscapePainter(graphics, SelectedMap, SelectedMap.Schema, cellvar.Code);
+            painter = new LanscapePainter(graphics, SelectedMap, SelectedMap.Schema, code);
         }
 
         private void SelectDrawPassability(bool passable)
@@ -160,6 +178,12 @@ namespace MT.TacticWar.UI.Editor
         private void SelectShowObjectToolset()
         {
             panelObjectToolset.Visible = true;
+        }
+
+        private void SelectDrawZone()
+        {
+            DrawZonesShow();
+            panelZoneToolset.Visible = true;
         }
 
         private void SetMapInfo(MapEditor map)
@@ -179,7 +203,9 @@ namespace MT.TacticWar.UI.Editor
 
         private void DrawAll()
         {
-            graphics.DrawMap(SelectedMap);
+            if (null != SelectedMap)
+                graphics.DrawMap(SelectedMap);
+
             if (null != SelectedMission)
                 graphics.DrawPlayersObjects(SelectedMission.Players, null, null);
         }
@@ -208,6 +234,17 @@ namespace MT.TacticWar.UI.Editor
                     {
                         graphics.DrawCell(SelectedMap[x, y]);
                     }
+                }
+            }
+        }
+
+        private void DrawZonesShow()
+        {
+            foreach (var zone in SelectedMission.Zones)
+            {
+                foreach (var pt in zone.Points)
+                {
+                    graphics.DrawZone(zone.Id, pt.X, pt.Y);
                 }
             }
         }
@@ -254,8 +291,11 @@ namespace MT.TacticWar.UI.Editor
         private void TreeViewElements_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
             panelObjectToolset.Visible = false;
+            panelZoneToolset.Visible = false;
+            lblZoneStatus.Text = "-";
             painter = null;
-            DrawUnpassableHide();
+            //DrawUnpassableHide();
+            DrawAll();
         }
 
         private void TreeViewElements_AfterSelect(object sender, TreeViewEventArgs e)
@@ -414,7 +454,7 @@ namespace MT.TacticWar.UI.Editor
             {
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
-                    SelectedMap = new MapEditor(dialog.MapName, dialog.MapDescription, dialog.MapSizeWidth, dialog.MapSizeHeight, dialog.MapSchema.Code);
+                    SelectedMap = new MapEditor(dialog.MapName, dialog.MapDescription, dialog.MapSizeWidth, dialog.MapSizeHeight, dialog.MapSchema.GetCode());
 
                     ResizeControls(PanelEditor, SelectedMap.Width, SelectedMap.Height);
                     graphics = new GameGraphics(PanelEditor.CreateGraphics(), CellSize);
@@ -710,6 +750,11 @@ namespace MT.TacticWar.UI.Editor
 
         #endregion
 
+        private void MenuEditorRefresh_Click(object sender, EventArgs e)
+        {
+            DrawAll();
+        }
+
         //
 
         private void BtnObjectNewDivision_Click(object sender, EventArgs e)
@@ -900,6 +945,24 @@ namespace MT.TacticWar.UI.Editor
                     SelectedMission.SetScripts(dialog.Scripts);
                 }
             }
+        }
+
+        private void BtnZoneAdd_Click(object sender, EventArgs e)
+        {
+            var zoneId = (int)numZoneId.Value;
+            painter = new ZonePainter(graphics, SelectedMission, zoneId);
+            lblZoneStatus.Text = "Рисование";
+        }
+
+        private void BtnZoneRemove_Click(object sender, EventArgs e)
+        {
+            painter = new ZonePainter(graphics, SelectedMission, -1, true);
+            lblZoneStatus.Text = "Стирание";
+        }
+
+        private void NumZoneId_ValueChanged(object sender, EventArgs e)
+        {
+            BtnZoneAdd_Click(sender, e);
         }
     }
 }

@@ -1,42 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
+    [Script("Строение у игрока", Code = "playerbuilding")]
     public class PlayersBuildingCondition : ICondition
     {
-        private readonly int playerId;
-        private readonly int buildingId;
+        [ScriptArgument("Игрок", typeof(int))]
+        private int PlayerId { get; set; }
+
+        [ScriptArgument("Строение", typeof(int))]
+        private int BuildingId { get; set; }
 
         public PlayersBuildingCondition(params string[] args)
         {
             if (2 != args.Length)
                 throw new FormatException("Неверный формат условия.");
 
-            playerId = int.Parse(args[0]);
-            buildingId = int.Parse(args[1]);
+            PlayerId = int.Parse(args[0]);
+            BuildingId = int.Parse(args[1]);
         }
 
         public bool Check(Mission mission)
         {
-            var player = mission.Players.GetById(playerId);
+            var player = mission.Players.GetById(PlayerId);
             foreach (var bld in player.Buildings)
             {
-                if (bld.Id == buildingId)
+                if (bld.Id == BuildingId)
                     return true;
             }
 
             return false;
-        }
-
-        public List<ScriptArgument> GetArguments()
-        {
-            return new List<ScriptArgument>()
-            {
-                new ScriptArgument { Name = "Игрок", Value = playerId.ToString() },
-                new ScriptArgument { Name = "Строение", Value = buildingId.ToString() }
-            };
         }
     }
 }

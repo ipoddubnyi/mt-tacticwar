@@ -5,7 +5,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("Мостоукладчик", typeof(Engineers))]
+    [Unit("Мостоукладчик", typeof(Engineers), Code = "bridgebuilder")]
     public class BridgeBuilder : Unit
     {
         private const int BridgeCost = 500;

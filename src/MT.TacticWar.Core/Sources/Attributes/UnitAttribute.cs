@@ -9,9 +9,11 @@ namespace MT.TacticWar.Core
         {
             Name = name;
             DivisionType = divisionType;
+            Code = string.Empty;
         }
 
         public string Name { get; set; }
         public Type DivisionType { get; set; }
+        public string Code { get; set; }
     }
 }

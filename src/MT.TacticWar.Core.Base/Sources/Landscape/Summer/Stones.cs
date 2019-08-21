@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Summer
 {
-    [Cell("Камни", typeof(SummerSchema))]
+    [Cell("Камни", typeof(SummerSchema), Code = 'o')]
     public class Stones : Cell, ILand
     {
         public const int DefaultPassCost = 4;

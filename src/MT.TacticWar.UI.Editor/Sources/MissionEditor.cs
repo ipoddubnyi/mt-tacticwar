@@ -1,5 +1,6 @@
-﻿using MT.TacticWar.Core;
-using MT.TacticWar.Core.Landscape;
+﻿using System.Collections.Generic;
+using System.Linq;
+using MT.TacticWar.Core;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.UI.Editor
@@ -24,6 +25,11 @@ namespace MT.TacticWar.UI.Editor
         public void SetScripts(Script[] scripts)
         {
             Scripts = scripts;
+        }
+
+        public void SetZones(IEnumerable<Zone> zones)
+        {
+            Zones = zones.ToArray();
         }
     }
 }

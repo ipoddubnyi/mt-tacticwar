@@ -26,7 +26,7 @@ namespace MT.TacticWar.UI.Editor
 
         public string GetDivisionCode()
         {
-            return ObjectFactory.GetDivisionCode(division);
+            return Division.GetDivisionCode(division);
         }
 
         public void Destroy()
@@ -36,7 +36,7 @@ namespace MT.TacticWar.UI.Editor
 
         public Division CreateDivision(int x, int y)
         {
-            var code = ObjectFactory.GetDivisionCode(division);
+            var code = Division.GetDivisionCode(division);
             var newdivision = ObjectFactory.CreateDivision(code, Player, Id, Name, x, y);
             var units = new Unit[division.Units.Count];
             division.Units.CopyTo(units);

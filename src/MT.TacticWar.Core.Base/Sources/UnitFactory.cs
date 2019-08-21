@@ -1,74 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using MT.TacticWar.Core.Objects;
-using MT.TacticWar.Core.Base.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
     public static class UnitFactory
     {
-        public static readonly List<UnitVariant> Units = new List<UnitVariant>()
+        public static readonly List<UnitCreator> Units = new List<UnitCreator>()
         {
-            new UnitVariant { Code = "partizan",      Type = typeof(Partizan) },
-            new UnitVariant { Code = "soldier",       Type = typeof(Soldier) },
-            new UnitVariant { Code = "saboteur",      Type = typeof(Saboteur) },
-            new UnitVariant { Code = "igor",          Type = typeof(Igor) },
-            new UnitVariant { Code = "medic",         Type = typeof(Medic) },
+            new UnitCreator(typeof(Partizan)),
+            new UnitCreator(typeof(Soldier)),
+            new UnitCreator(typeof(Saboteur)),
+            new UnitCreator(typeof(Igor)),
+            new UnitCreator(typeof(Medic)),
 
-            new UnitVariant { Code = "ifv",           Type = typeof(IFV) },
-            new UnitVariant { Code = "tank",          Type = typeof(TankMiddle) },
-            new UnitVariant { Code = "tankheavy",     Type = typeof(TankHeavy) },
-            new UnitVariant { Code = "antiair",       Type = typeof(AntiAir) },
+            new UnitCreator(typeof(IFV)),
+            new UnitCreator(typeof(TankMiddle)),
+            new UnitCreator(typeof(TankHeavy)),
+            new UnitCreator(typeof(AntiAir)),
 
-            new UnitVariant { Code = "powerboat",     Type = typeof(Powerboat) },
+            new UnitCreator(typeof(Powerboat)),
 
-            new UnitVariant { Code = "battleship",    Type = typeof(Battleship) },
-            new UnitVariant { Code = "cruiser",       Type = typeof(Cruiser) },
+            new UnitCreator(typeof(Battleship)),
+            new UnitCreator(typeof(Cruiser)),
 
-            new UnitVariant { Code = "howitzer",      Type = typeof(Howitzer) },
+            new UnitCreator(typeof(Howitzer)),
 
-            new UnitVariant { Code = "aircraft",      Type = typeof(Aircraft) },
+            new UnitCreator(typeof(Aircraft)),
 
-            new UnitVariant { Code = "bridgebuilder", Type = typeof(BridgeBuilder) }
+            new UnitCreator(typeof(BridgeBuilder)),
         };
 
-        public static List<UnitVariant> GetAvailableUnitsForDivision(Type divisionType)
+        public static UnitCreator[] GetAvailableUnitsForDivision(Type divisionType)
         {
-            var list = new List<UnitVariant>();
+            var list = new List<UnitCreator>();
             foreach (var unit in Units)
             {
                 if (unit.GetDivisionType().Equals(divisionType))
                     list.Add(unit);
             }
-            return list;
+            return list.ToArray();
         }
 
-        public static Unit CreateUnit(Division division, int id, string unitType)
+        public static Unit CreateUnit(Division division, string code, int id)
         {
             foreach (var u in Units)
             {
                 if (!u.GetDivisionType().Equals(division.GetType()))
                     continue;
 
-                if (u.Code.Equals(unitType))
+                if (u.GetCode().Equals(code))
                     return u.Create(id, division);
             }
 
             return null;
-        }
-
-        public static string GetUnitCode(Division division, Unit unit)
-        {
-            foreach (var u in Units)
-            {
-                if (!u.GetDivisionType().Equals(division.GetType()))
-                    continue;
-
-                if (u.Type.Equals(unit.GetType()))
-                    return u.Code;
-            }
-
-            throw new Exception("Неизвестный тип юнита.");
         }
     }
 }

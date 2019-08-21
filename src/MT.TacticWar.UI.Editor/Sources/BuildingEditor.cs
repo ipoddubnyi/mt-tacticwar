@@ -39,7 +39,7 @@ namespace MT.TacticWar.UI.Editor
 
         public string GetBuildingCode()
         {
-            return ObjectFactory.GetBuildingCode(building);
+            return Building.GetBuildingCode(building);
         }
 
         public void Destroy()
@@ -49,7 +49,7 @@ namespace MT.TacticWar.UI.Editor
 
         public Building CreateBuilding(int x, int y)
         {
-            var code = ObjectFactory.GetBuildingCode(building);
+            var code = Building.GetBuildingCode(building);
             var security = Security?.CreateDivision(x, y);
             var newbuilding = ObjectFactory.CreateBuilding(
                 code, Player, Id, Name, x, y, building.Health, security

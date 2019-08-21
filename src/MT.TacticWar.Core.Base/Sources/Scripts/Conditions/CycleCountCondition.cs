@@ -1,32 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
+    [Script("Номер шага", Code = "cyclecount")]
     public class CycleCountCondition : ICondition
     {
-        private readonly int cycleCount;
+        [ScriptArgument("Номер шага", typeof(int))]
+        private int CycleCount { get; set; }
 
         public CycleCountCondition(params string[] args)
         {
             if (1 != args.Length)
                 throw new FormatException("Неверный формат условия.");
 
-            cycleCount = int.Parse(args[0]);
+            CycleCount = int.Parse(args[0]);
         }
 
         public bool Check(Mission mission)
         {
-            return mission.Cycles == cycleCount;
-        }
-
-        public List<ScriptArgument> GetArguments()
-        {
-            return new List<ScriptArgument>()
-            {
-                new ScriptArgument { Name = "Номер шага", Value = cycleCount.ToString() }
-            };
+            return mission.Cycles == CycleCount;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core
@@ -81,6 +82,43 @@ namespace MT.TacticWar.Core
             }
 
             return null;
+        }
+
+        public static Zone GetById(this IEnumerable<Zone> zones, int id)
+        {
+            foreach (var zone in zones)
+            {
+                if (zone.Id == id)
+                    return zone;
+            }
+
+            return null;
+        }
+
+        public static Zone GetAt(this IEnumerable<Zone> zones, Coordinates point)
+        {
+            foreach (var zone in zones)
+            {
+                if (zone.In(point))
+                    return zone;
+            }
+
+            return null;
+        }
+
+        public static IEnumerable<Zone> SetById(this IEnumerable<Zone> zones, Zone zone)
+        {
+            if (null != zones.GetById(zone.Id))
+                zones = zones.Where(zn => zn.Id != zone.Id).ToArray();
+
+            zones = zones.Append(zone);
+            var a = zones.ToArray();
+            return zones;
+        }
+
+        public static IEnumerable<Zone> Sort(this IEnumerable<Zone> zones)
+        {
+            return zones.OrderBy(z => z.Id);
         }
     }
 }

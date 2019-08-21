@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
-using MT.TacticWar.Core.Objects;
 
-namespace MT.TacticWar.Core.Base.Units
+namespace MT.TacticWar.Core.Objects
 {
-    public struct UnitVariant
+    public class UnitCreator
     {
-        public string Code;
         public Type Type;
+
+        public UnitCreator(Type type)
+        {
+            Type = type;
+        }
 
         public Unit Create(int id, Division division)
         {
@@ -26,6 +29,11 @@ namespace MT.TacticWar.Core.Base.Units
         public Type GetDivisionType()
         {
             return Unit.GetDivisionType(Type);
+        }
+
+        public string GetCode()
+        {
+            return Unit.GetUnitCode(Type);
         }
 
         public override string ToString()

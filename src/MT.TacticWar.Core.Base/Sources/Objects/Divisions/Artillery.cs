@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using MT.TacticWar.Core.Objects;
+﻿using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Objects
 {
-    [Division("Артиллерия")]
+    [Division("Артиллерия", Code = "artillery")]
     public class Artillery : Division, IArmored, ISupport
     {
         public Artillery(Player player, int id, string name, int x, int y) :

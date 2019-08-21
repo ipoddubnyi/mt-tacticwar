@@ -9,9 +9,11 @@ namespace MT.TacticWar.Core
         {
             Name = name;
             SchemaType = schemaType;
+            Code = 'C';
         }
 
         public string Name { get; set; }
         public Type SchemaType { get; set; }
+        public char Code { get; set; }
     }
 }

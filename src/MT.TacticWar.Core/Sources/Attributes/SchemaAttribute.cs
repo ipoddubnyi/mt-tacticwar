@@ -8,8 +8,10 @@ namespace MT.TacticWar.Core
         public SchemaAttribute(string name)
         {
             Name = name;
+            Code = string.Empty;
         }
 
         public string Name { get; set; }
+        public string Code { get; set; }
     }
 }

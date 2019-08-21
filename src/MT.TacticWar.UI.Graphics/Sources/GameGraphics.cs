@@ -316,7 +316,7 @@ namespace MT.TacticWar.UI.Graphics
         public void DrawFog(Fog fog)
         {
             var color = GetFogColor();
-            using (Brush brush = new SolidBrush(color))
+            using (var brush = new SolidBrush(color))
             {
                 for (int y = 0; y < fog.Height; y++)
                 {
@@ -332,6 +332,22 @@ namespace MT.TacticWar.UI.Graphics
         private Color GetFogColor()
         {
             return Color.FromArgb(96, Color.Black);
+        }
+
+        public void DrawZone(int id, int x, int y)
+        {
+            using (var drawFont = new Font("Consolas", 10))
+            {
+                using (var brush = new SolidBrush(Color.DeepPink))
+                {
+                    int left = x * CellSize;
+                    int top = y * CellSize;
+                    grf.FillRectangle(brush, left, top, CellSize, CellSize);
+
+                    brush.Color = Color.Black;
+                    grf.DrawString(id.ToString(), drawFont, brush, left, top);
+                }
+            }
         }
     }
 }

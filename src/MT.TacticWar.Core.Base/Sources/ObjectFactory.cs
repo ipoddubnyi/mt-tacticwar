@@ -6,59 +6,37 @@ namespace MT.TacticWar.Core.Base.Objects
 {
     public static class ObjectFactory
     {
-        public static readonly List<DivisionVariant> Divisions = new List<DivisionVariant>()
+        public static readonly List<DivisionCreator> Divisions = new List<DivisionCreator>()
         {
-            new DivisionVariant { Code = "infantry",  Type = typeof(Infantry) },
-            new DivisionVariant { Code = "vehicle",   Type = typeof(Vehicle) },
-            new DivisionVariant { Code = "ship",      Type = typeof(Ship) },
-            new DivisionVariant { Code = "navy",      Type = typeof(Navy) },
-            new DivisionVariant { Code = "artillery", Type = typeof(Artillery) },
-            new DivisionVariant { Code = "aviation",  Type = typeof(Aviation) },
-            new DivisionVariant { Code = "engineers", Type = typeof(Engineers) }
+            new DivisionCreator(typeof(Infantry)),
+            new DivisionCreator(typeof(Vehicle)),
+            new DivisionCreator(typeof(Ship)),
+            new DivisionCreator(typeof(Navy)),
+            new DivisionCreator(typeof(Artillery)),
+            new DivisionCreator(typeof(Aviation)),
+            new DivisionCreator(typeof(Engineers))
         };
 
-        public static readonly List<BuildingVariant> Buildings = new List<BuildingVariant>()
+        public static readonly List<BuildingCreator> Buildings = new List<BuildingCreator>()
         {
-            new BuildingVariant { Code = "factory",       Type = typeof(Factory) },
-            new BuildingVariant { Code = "barracks",      Type = typeof(Barracks) },
-            new BuildingVariant { Code = "storehouse",    Type = typeof(Storehouse) },
-            new BuildingVariant { Code = "radar",         Type = typeof(Radar) },
-            new BuildingVariant { Code = "airfield",      Type = typeof(Airfield) },
-            new BuildingVariant { Code = "port",          Type = typeof(Port) },
-            new BuildingVariant { Code = "shipyard",      Type = typeof(Shipyard) },
+            new BuildingCreator(typeof(Factory)),
+            new BuildingCreator(typeof(Barracks)),
+            new BuildingCreator(typeof(Storehouse)),
+            new BuildingCreator(typeof(Radar)),
+            new BuildingCreator(typeof(Airfield)),
+            new BuildingCreator(typeof(Port)),
+            new BuildingCreator(typeof(Shipyard)),
 
-            new BuildingVariant { Code = "house",         Type = typeof(CityHouse) },
-            new BuildingVariant { Code = "hut",           Type = typeof(VillageHut) },
-            new BuildingVariant { Code = "church",        Type = typeof(Church) }
+            new BuildingCreator(typeof(CityHouse)),
+            new BuildingCreator(typeof(VillageHut)),
+            new BuildingCreator(typeof(Church))
         };
-
-        public static string GetDivisionCode(Division division)
-        {
-            foreach (var div in Divisions)
-            {
-                if (div.Type.Equals(division.GetType()))
-                    return div.Code;
-            }
-
-            throw new Exception("Неизвестный тип подразделения.");
-        }
-
-        public static string GetBuildingCode(Building building)
-        {
-            foreach (var bld in Buildings)
-            {
-                if (bld.Type.Equals(building.GetType()))
-                    return bld.Code;
-            }
-
-            throw new Exception("Неизвестный тип строения.");
-        }
 
         public static Division CreateDivision(string code, Player player, int id, string name, int x, int y)
         {
             foreach (var div in Divisions)
             {
-                if (div.Code == code)
+                if (div.GetCode().Equals(code))
                     return div.Create(player, id, name, x, y);
             }
 
@@ -69,7 +47,7 @@ namespace MT.TacticWar.Core.Base.Objects
         {
             foreach (var bld in Buildings)
             {
-                if (bld.Code == code)
+                if (bld.GetCode().Equals(code))
                     return bld.Create(player, id, name, x, y, health, security);
             }
 
@@ -80,7 +58,7 @@ namespace MT.TacticWar.Core.Base.Objects
         {
             foreach (var div in Divisions)
             {
-                if (div.Code == code)
+                if (div.GetCode().Equals(code))
                     return div.Type.Equals(division.GetType());
             }
 

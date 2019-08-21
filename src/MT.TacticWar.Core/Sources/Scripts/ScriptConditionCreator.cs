@@ -1,19 +1,24 @@
 ﻿using System;
-using System.Globalization;
-using System.Reflection;
-using MT.TacticWar.Core.Objects;
-using MT.TacticWar.Core.Scripts;
 
-namespace MT.TacticWar.Core.Base.Scripts
+namespace MT.TacticWar.Core.Scripts
 {
-    public struct ScriptConditionVariant
+    public class ScriptConditionCreator
     {
-        public string Code;
         public Type Type;
+
+        public ScriptConditionCreator(Type type)
+        {
+            Type = type;
+        }
 
         public ICondition Create(params string[] args)
         {
             return (ICondition)Activator.CreateInstance(Type, args);
+        }
+
+        public string GetCode()
+        {
+            return Script.GetScriptCode(Type);
         }
 
         public override string ToString()

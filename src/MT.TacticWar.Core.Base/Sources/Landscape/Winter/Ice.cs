@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Winter
 {
-    [Cell("Лёд", typeof(WinterSchema))]
+    [Cell("Лёд", typeof(WinterSchema), Code = '≈')]
     public class Ice : Cell, ILand
     {
         // по льду надо передвигаться аккуратно

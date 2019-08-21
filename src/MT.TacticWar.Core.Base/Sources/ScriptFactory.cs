@@ -6,58 +6,34 @@ namespace MT.TacticWar.Core.Base.Scripts
 {
     public static class ScriptFactory
     {
-        public static readonly List<ScriptConditionVariant> Conditions = new List<ScriptConditionVariant>()
+        public static readonly List<ScriptConditionCreator> Conditions = new List<ScriptConditionCreator>()
         {
-            new ScriptConditionVariant { Code = "unitcount",    Type = typeof(UnitCountCondition) }
+            new ScriptConditionCreator(typeof(UnitCountCondition))
         };
 
-        public static readonly List<ScriptStatementVariant> Statements = new List<ScriptStatementVariant>()
+        public static readonly List<ScriptStatementCreator> Statements = new List<ScriptStatementCreator>()
         {
-            new ScriptStatementVariant { Code = "gameover",     Type = typeof(GameOverStatement) },
-            new ScriptStatementVariant { Code = "message",      Type = typeof(MessageStatement) }
+            new ScriptStatementCreator(typeof(GameOverStatement)),
+            new ScriptStatementCreator(typeof(MessageStatement))
         };
 
-        public static string GetScriptConditionCode(ICondition condition)
+        public static ICondition CreateCondition(string code, string[] arguments)
         {
             foreach (var c in Conditions)
             {
-                if (c.Type.Equals(condition.GetType()))
-                    return c.Code;
+                if (c.GetCode().Equals(code))
+                    return c.Create(arguments);
             }
 
             throw new Exception("Неизвестный тип условия.");
         }
 
-        public static string GetScriptStatementCode(IStatement statement)
+        public static IStatement CreateStatement(string code, string[] arguments)
         {
             foreach (var s in Statements)
             {
-                if (s.Type.Equals(statement.GetType()))
-                    return s.Code;
-            }
-
-            throw new Exception("Неизвестный тип действия.");
-        }
-
-        public static ICondition CreateCondition(string type, string[] arguments)
-        {
-            switch (type)
-            {
-                case "unitcount":
-                    return new UnitCountCondition(arguments);
-            }
-
-            throw new Exception("Неизвестный тип условия.");
-        }
-
-        public static IStatement CreateStatement(string type, string[] arguments)
-        {
-            switch (type)
-            {
-                case "gameover":
-                    return new GameOverStatement(arguments);
-                case "message":
-                    return new MessageStatement(arguments);
+                if (s.GetCode().Equals(code))
+                    return s.Create(arguments);
             }
 
             throw new Exception("Неизвестный тип выражения.");

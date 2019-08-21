@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 
-namespace MT.TacticWar.Core.Landscape
+namespace MT.TacticWar.Core
 {
     public class Map
     {
@@ -15,11 +16,6 @@ namespace MT.TacticWar.Core.Landscape
 
         public Cell this[int x, int y] => Field[x, y];
         public Cell this[Coordinates pt] => Field[pt.X, pt.Y];
-
-        /*public Map(int width, int height) :
-            this("Карта местности", "", width, height)
-        {
-        }*/
 
         public Map(string name, string description, int width, int height) :
             this(name, description, width, height, null)

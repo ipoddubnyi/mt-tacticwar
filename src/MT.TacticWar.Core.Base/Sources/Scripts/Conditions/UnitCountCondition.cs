@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
-    [Script("Количество юнитов у игрока")]
+    [Script("Количество юнитов у игрока", Code = "unitcount")]
     public class UnitCountCondition : ICondition
     {
         [ScriptArgument("Игрок", typeof(int))]

@@ -28,5 +28,22 @@ namespace MT.TacticWar.Core.Scripts
             var script = attributes[0] as ScriptAttribute;
             return script?.Name;
         }
+
+        public static string GetScriptCode(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(ScriptAttribute), false);
+            var script = attributes[0] as ScriptAttribute;
+            return script?.Code;
+        }
+
+        public static string GetScriptCode(ICondition condition)
+        {
+            return GetScriptCode(condition.GetType());
+        }
+
+        public static string GetScriptCode(IStatement statement)
+        {
+            return GetScriptCode(statement.GetType());
+        }
     }
 }

@@ -49,9 +49,9 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 comboDivisionType.Enabled = false;
 
                 var divCode = division.GetDivisionCode();
-                foreach (DivisionVariant div in comboDivisionType.Items)
+                foreach (DivisionCreator div in comboDivisionType.Items)
                 {
-                    if (div.Code.Equals(divCode))
+                    if (div.GetCode().Equals(divCode))
                         comboDivisionType.SelectedItem = div;
                 }
 
@@ -98,7 +98,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != comboDivisionType.SelectedItem)
             {
-                var div = (DivisionVariant)comboDivisionType.SelectedItem;
+                var div = (DivisionCreator)comboDivisionType.SelectedItem;
                 var units = UnitFactory.GetAvailableUnitsForDivision(div.Type);
                 listUnitsAll.Items.Clear();
                 foreach (var unit in units)
@@ -123,7 +123,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != listUnitsAll.SelectedItem)
             {
-                var uv = (UnitVariant)listUnitsAll.SelectedItem;
+                var uv = (UnitCreator)listUnitsAll.SelectedItem;
                 var unit = uv.Create((int)numUnitIdCommon.Value, Division);
                 unit.Update(
                     txtUnitNameCommon.Text,
@@ -170,7 +170,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != listUnitsAll.SelectedItem)
             {
-                var uv = (UnitVariant)listUnitsAll.SelectedItem;
+                var uv = (UnitCreator)listUnitsAll.SelectedItem;
                 var unit = uv.Create(0, Division);
                 numUnitIdCommon.Value = unit.Id;
                 txtUnitNameCommon.Text = unit.Name;

@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("БМП", typeof(Vehicle))]
+    [Unit("БМП", typeof(Vehicle), Code = "ifv")]
     public class IFV : Unit
     {
         public IFV(int id, Division division, string name = null,

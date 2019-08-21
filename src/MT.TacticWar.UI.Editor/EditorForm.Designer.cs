@@ -58,6 +58,7 @@
             this.lblMapDescription = new System.Windows.Forms.Label();
             this.txtMapName = new System.Windows.Forms.TextBox();
             this.TabMissionInfo = new System.Windows.Forms.TabPage();
+            this.btnMissionScripts = new System.Windows.Forms.Button();
             this.txtMissionVersion = new System.Windows.Forms.TextBox();
             this.lblMissionVersion = new System.Windows.Forms.Label();
             this.btnMissionPlayers = new System.Windows.Forms.Button();
@@ -72,7 +73,15 @@
             this.btnObjectUpdate = new System.Windows.Forms.Button();
             this.btnObjectNewDivision = new System.Windows.Forms.Button();
             this.PanelEditor = new System.Windows.Forms.Panel();
-            this.btnMissionScripts = new System.Windows.Forms.Button();
+            this.MenuEditor = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuEditorRefresh = new System.Windows.Forms.ToolStripMenuItem();
+            this.flowToolsRight = new System.Windows.Forms.FlowLayoutPanel();
+            this.panelZoneToolset = new System.Windows.Forms.Panel();
+            this.btnZoneRemove = new System.Windows.Forms.Button();
+            this.btnZoneAdd = new System.Windows.Forms.Button();
+            this.numZoneId = new System.Windows.Forms.NumericUpDown();
+            this.lblZoneId = new System.Windows.Forms.Label();
+            this.lblZoneStatus = new System.Windows.Forms.Label();
             this.Menu.SuspendLayout();
             this.Status.SuspendLayout();
             this.TabControlLeft.SuspendLayout();
@@ -84,6 +93,9 @@
             this.TabMapInfo.SuspendLayout();
             this.TabMissionInfo.SuspendLayout();
             this.panelObjectToolset.SuspendLayout();
+            this.flowToolsRight.SuspendLayout();
+            this.panelZoneToolset.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numZoneId)).BeginInit();
             this.SuspendLayout();
             // 
             // Menu
@@ -91,7 +103,8 @@
             this.Menu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuMap,
-            this.MenuMission});
+            this.MenuMission,
+            this.MenuEditor});
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -395,6 +408,18 @@
             this.TabMissionInfo.Text = "Миссия";
             this.TabMissionInfo.UseVisualStyleBackColor = true;
             // 
+            // btnMissionScripts
+            // 
+            this.btnMissionScripts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMissionScripts.Location = new System.Drawing.Point(9, 407);
+            this.btnMissionScripts.Name = "btnMissionScripts";
+            this.btnMissionScripts.Size = new System.Drawing.Size(247, 28);
+            this.btnMissionScripts.TabIndex = 7;
+            this.btnMissionScripts.Text = "Скрипты";
+            this.btnMissionScripts.UseVisualStyleBackColor = true;
+            this.btnMissionScripts.Click += new System.EventHandler(this.BtnMissionScripts_Click);
+            // 
             // txtMissionVersion
             // 
             this.txtMissionVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -471,14 +496,13 @@
             // 
             // panelObjectToolset
             // 
-            this.panelObjectToolset.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelObjectToolset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panelObjectToolset.Controls.Add(this.txtObjectStatus);
             this.panelObjectToolset.Controls.Add(this.btnObjectDelete);
             this.panelObjectToolset.Controls.Add(this.btnObjectNewBuilding);
             this.panelObjectToolset.Controls.Add(this.btnObjectUpdate);
             this.panelObjectToolset.Controls.Add(this.btnObjectNewDivision);
-            this.panelObjectToolset.Location = new System.Drawing.Point(1012, 32);
+            this.panelObjectToolset.Location = new System.Drawing.Point(268, 2);
             this.panelObjectToolset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelObjectToolset.Name = "panelObjectToolset";
             this.panelObjectToolset.Size = new System.Drawing.Size(223, 516);
@@ -564,24 +588,106 @@
             this.PanelEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseMove);
             this.PanelEditor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseUp);
             // 
-            // btnMissionScripts
+            // MenuEditor
             // 
-            this.btnMissionScripts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.MenuEditor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuEditorRefresh});
+            this.MenuEditor.Name = "MenuEditor";
+            this.MenuEditor.Size = new System.Drawing.Size(86, 26);
+            this.MenuEditor.Text = "&Редактор";
+            // 
+            // MenuEditorRefresh
+            // 
+            this.MenuEditorRefresh.Name = "MenuEditorRefresh";
+            this.MenuEditorRefresh.Size = new System.Drawing.Size(224, 26);
+            this.MenuEditorRefresh.Text = "Обновить";
+            this.MenuEditorRefresh.Click += new System.EventHandler(this.MenuEditorRefresh_Click);
+            // 
+            // flowToolsRight
+            // 
+            this.flowToolsRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMissionScripts.Location = new System.Drawing.Point(9, 407);
-            this.btnMissionScripts.Name = "btnMissionScripts";
-            this.btnMissionScripts.Size = new System.Drawing.Size(247, 28);
-            this.btnMissionScripts.TabIndex = 7;
-            this.btnMissionScripts.Text = "Скрипты";
-            this.btnMissionScripts.UseVisualStyleBackColor = true;
-            this.btnMissionScripts.Click += new System.EventHandler(this.BtnMissionScripts_Click);
+            this.flowToolsRight.Controls.Add(this.panelObjectToolset);
+            this.flowToolsRight.Controls.Add(this.panelZoneToolset);
+            this.flowToolsRight.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowToolsRight.Location = new System.Drawing.Point(741, 26);
+            this.flowToolsRight.Name = "flowToolsRight";
+            this.flowToolsRight.Size = new System.Drawing.Size(494, 521);
+            this.flowToolsRight.TabIndex = 6;
+            // 
+            // panelZoneToolset
+            // 
+            this.panelZoneToolset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelZoneToolset.Controls.Add(this.lblZoneStatus);
+            this.panelZoneToolset.Controls.Add(this.lblZoneId);
+            this.panelZoneToolset.Controls.Add(this.numZoneId);
+            this.panelZoneToolset.Controls.Add(this.btnZoneRemove);
+            this.panelZoneToolset.Controls.Add(this.btnZoneAdd);
+            this.panelZoneToolset.Location = new System.Drawing.Point(39, 2);
+            this.panelZoneToolset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelZoneToolset.Name = "panelZoneToolset";
+            this.panelZoneToolset.Size = new System.Drawing.Size(223, 516);
+            this.panelZoneToolset.TabIndex = 2;
+            this.panelZoneToolset.Visible = false;
+            // 
+            // btnZoneRemove
+            // 
+            this.btnZoneRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnZoneRemove.Location = new System.Drawing.Point(13, 111);
+            this.btnZoneRemove.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnZoneRemove.Name = "btnZoneRemove";
+            this.btnZoneRemove.Size = new System.Drawing.Size(198, 28);
+            this.btnZoneRemove.TabIndex = 3;
+            this.btnZoneRemove.Text = "Стирать";
+            this.btnZoneRemove.UseVisualStyleBackColor = true;
+            this.btnZoneRemove.Click += new System.EventHandler(this.BtnZoneRemove_Click);
+            // 
+            // btnZoneAdd
+            // 
+            this.btnZoneAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnZoneAdd.Location = new System.Drawing.Point(13, 79);
+            this.btnZoneAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnZoneAdd.Name = "btnZoneAdd";
+            this.btnZoneAdd.Size = new System.Drawing.Size(198, 28);
+            this.btnZoneAdd.TabIndex = 0;
+            this.btnZoneAdd.Text = "Рисовать";
+            this.btnZoneAdd.UseVisualStyleBackColor = true;
+            this.btnZoneAdd.Click += new System.EventHandler(this.BtnZoneAdd_Click);
+            // 
+            // numZoneId
+            // 
+            this.numZoneId.Location = new System.Drawing.Point(13, 51);
+            this.numZoneId.Name = "numZoneId";
+            this.numZoneId.Size = new System.Drawing.Size(198, 22);
+            this.numZoneId.TabIndex = 4;
+            this.numZoneId.ValueChanged += new System.EventHandler(this.NumZoneId_ValueChanged);
+            // 
+            // lblZoneId
+            // 
+            this.lblZoneId.AutoSize = true;
+            this.lblZoneId.Location = new System.Drawing.Point(10, 31);
+            this.lblZoneId.Name = "lblZoneId";
+            this.lblZoneId.Size = new System.Drawing.Size(92, 17);
+            this.lblZoneId.TabIndex = 5;
+            this.lblZoneId.Text = "Номер зоны:";
+            // 
+            // lblZoneStatus
+            // 
+            this.lblZoneStatus.AutoSize = true;
+            this.lblZoneStatus.Location = new System.Drawing.Point(22, 155);
+            this.lblZoneStatus.Name = "lblZoneStatus";
+            this.lblZoneStatus.Size = new System.Drawing.Size(13, 17);
+            this.lblZoneStatus.TabIndex = 6;
+            this.lblZoneStatus.Text = "-";
             // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1235, 572);
-            this.Controls.Add(this.panelObjectToolset);
+            this.Controls.Add(this.flowToolsRight);
             this.Controls.Add(this.TabControlLeft);
             this.Controls.Add(this.PanelEditor);
             this.Controls.Add(this.Status);
@@ -611,6 +717,10 @@
             this.TabMissionInfo.PerformLayout();
             this.panelObjectToolset.ResumeLayout(false);
             this.panelObjectToolset.PerformLayout();
+            this.flowToolsRight.ResumeLayout(false);
+            this.panelZoneToolset.ResumeLayout(false);
+            this.panelZoneToolset.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numZoneId)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -662,6 +772,15 @@
         private System.Windows.Forms.Label lblMissionVersion;
         private System.Windows.Forms.TextBox txtObjectStatus;
         private System.Windows.Forms.Button btnMissionScripts;
+        private System.Windows.Forms.ToolStripMenuItem MenuEditor;
+        private System.Windows.Forms.ToolStripMenuItem MenuEditorRefresh;
+        private System.Windows.Forms.FlowLayoutPanel flowToolsRight;
+        private System.Windows.Forms.Panel panelZoneToolset;
+        private System.Windows.Forms.Label lblZoneId;
+        private System.Windows.Forms.NumericUpDown numZoneId;
+        private System.Windows.Forms.Button btnZoneRemove;
+        private System.Windows.Forms.Button btnZoneAdd;
+        private System.Windows.Forms.Label lblZoneStatus;
     }
 }
 

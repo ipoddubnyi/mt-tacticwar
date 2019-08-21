@@ -32,7 +32,7 @@ namespace MT.TacticWar.Core.Serialization
         public SerialDivision(Division division)
         {
             Id = division.Id;
-            Type = ObjectFactory.GetDivisionCode(division);
+            Type = Division.GetDivisionCode(division);
             Name = division.Name;
             Position = new SerialPosition() { X = division.Position.X, Y = division.Position.Y };
 

@@ -4,46 +4,42 @@ using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
+    [Script("Юнит в зоне", Code = "unitinzone")]
     public class UnitInZoneCondition : ICondition
     {
-        private readonly int playerId;
-        private readonly int unitId;
-        private readonly int zoneId;
+        [ScriptArgument("Игрок", typeof(int))]
+        private int PlayerId { get; set; }
+
+        [ScriptArgument("Юнит", typeof(int))]
+        private int UnitId { get; set; }
+
+        [ScriptArgument("Зона", typeof(int))]
+        private int ZoneId { get; set; }
 
         public UnitInZoneCondition(params string[] args)
         {
             if (3 != args.Length)
                 throw new FormatException("Неверный формат условия.");
 
-            playerId = int.Parse(args[0]);
-            unitId = int.Parse(args[1]);
-            zoneId = int.Parse(args[2]);
+            PlayerId = int.Parse(args[0]);
+            UnitId = int.Parse(args[1]);
+            ZoneId = int.Parse(args[2]);
         }
 
         public bool Check(Mission mission)
         {
-            var unit = mission.Players.GetById(playerId).GetUnitById(unitId);
+            var unit = mission.Players.GetById(PlayerId).GetUnitById(UnitId);
             if (null != unit)
             {
                 var position = unit.Division.Position;
                 foreach (var zone in mission.Zones)
                 {
-                    if (zone.IsInZone(position))
+                    if (zone.In(position))
                         return true;
                 }
             }
 
             return false;
-        }
-
-        public List<ScriptArgument> GetArguments()
-        {
-            return new List<ScriptArgument>()
-            {
-                new ScriptArgument { Name = "Игрок", Value = playerId.ToString() },
-                new ScriptArgument { Name = "Юнит", Value = unitId.ToString() },
-                new ScriptArgument { Name = "Зона", Value = zoneId.ToString() }
-            };
         }
     }
 }

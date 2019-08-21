@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Serialization;
-using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Base.Units;
 using MT.TacticWar.Core.Objects;
 
@@ -110,8 +109,8 @@ namespace MT.TacticWar.Core.Serialization
         public SerialUnit(Unit unit)
         {
             Id = unit.Id;
-            Type = UnitFactory.GetUnitCode(unit.Division, unit);
-            DivisionType = ObjectFactory.GetDivisionCode(unit.Division);
+            Type = Unit.GetUnitCode(unit);
+            DivisionType = Division.GetDivisionCode(unit.Division);
 
             //
 

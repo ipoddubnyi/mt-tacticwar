@@ -1,4 +1,5 @@
-﻿
+﻿using System.Linq;
+
 namespace MT.TacticWar.Core
 {
     public class Zone
@@ -12,7 +13,7 @@ namespace MT.TacticWar.Core
             Points = points;
         }
 
-        public bool IsInZone(Coordinates pt)
+        public bool In(Coordinates pt)
         {
             foreach (var point in Points)
             {
@@ -20,6 +21,18 @@ namespace MT.TacticWar.Core
                     return true;
             }
             return false;
+        }
+
+        public void Add(Coordinates pt)
+        {
+            if (!In(pt))
+                Points = Points.Append(pt).ToArray();
+        }
+
+        public void Remove(Coordinates pt)
+        {
+            if (In(pt))
+                Points = Points.Where(point => !point.Equals(pt)).ToArray();
         }
     }
 }

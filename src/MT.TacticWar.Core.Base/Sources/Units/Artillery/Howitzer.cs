@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("Гаубица", typeof(Artillery))]
+    [Unit("Гаубица", typeof(Artillery), Code = "howitzer")]
     public class Howitzer : Unit
     {
         public Howitzer(int id, Division division, string name = null,

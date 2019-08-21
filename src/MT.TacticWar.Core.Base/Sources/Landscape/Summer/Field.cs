@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Summer
 {
-    [Cell("Поле", typeof(SummerSchema))]
+    [Cell("Поле", typeof(SummerSchema), Code = '-')]
     public class Field : Cell, ILand
     {
         public const int DefaultPassCost = 2;

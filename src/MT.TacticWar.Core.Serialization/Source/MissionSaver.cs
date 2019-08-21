@@ -36,7 +36,7 @@ namespace MT.TacticWar.Core.Serialization
             mp.Info = new SerialMapInfo() {
                 Name = name,
                 Description = descr,
-                Schema = LandscapeFactory.GetSchemaCode(map.Schema),
+                Schema = Schema.GetSchemaCode(map.Schema),
                 Size = new SerialSize() { Width = map.Width, Height = map.Height },
                 Version = version
             };
@@ -61,7 +61,7 @@ namespace MT.TacticWar.Core.Serialization
                 sb.Append("        ");
                 for (int x = 0; x < width; x++)
                 {
-                    sb.Append(LandscapeFactory.GetCellCode(schema, cells[x, y]));
+                    sb.Append(Cell.GetCellCode(cells[x, y]));
                 }
             }
             sb.Append(Environment.NewLine);
@@ -107,13 +107,13 @@ namespace MT.TacticWar.Core.Serialization
             mis.Info = new SerialMissionInfo()
             {
                 Name = name,
-                Description = brief,
+                Description = MissionBriefing(brief),
                 Version = version
             };
 
             mis.Players = MissionPlayers(mission);
             //mis.Types = 
-            //mis.Zones = 
+            mis.Zones = MissionZones(mission.Zones);
             mis.Scripts = MissionScripts(mission.Scripts);
 
             // TODO: отрефакторить создание папки
@@ -122,6 +122,22 @@ namespace MT.TacticWar.Core.Serialization
                 Directory.CreateDirectory(dirPath);
 
             SerialMission.Serialize(filePath, mis);
+        }
+
+        private static string MissionBriefing(string briefing)
+        {
+            var lines = briefing.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            var sb = new StringBuilder();
+            foreach (var line in lines)
+            {
+                sb.Append(Environment.NewLine);
+                sb.Append("        ");
+                sb.Append(line);
+            }
+            sb.Append(Environment.NewLine);
+            sb.Append("    ");
+            return sb.ToString();
         }
 
         private static SerialPlayer[] MissionPlayers(Mission mis)
@@ -214,25 +230,29 @@ namespace MT.TacticWar.Core.Serialization
             }
 
             return null;
-        }
+        }*/
 
-        private static Zone[] LoadMissionZones(SerialMission mis)
+        private static SerialZone[] MissionZones(Zone[] zns)
         {
-            var zones = new List<Zone>();
-            foreach (var zn in mis.Zones)
+            var zones = new List<SerialZone>();
+            foreach (var zn in zns.Sort())
             {
-                var points = new List<Coordinates>(zn.Points.Length);
+                var points = new List<SerialPosition>(zn.Points.Length);
                 foreach (var pt in zn.Points)
                 {
-                    points.Add(new Coordinates(pt.X, pt.Y));
+                    points.Add(new SerialPosition() { X = pt.X, Y = pt.Y });
                 }
 
-                var zone = new Zone(zn.Id, points.ToArray());
+                var zone = new SerialZone()
+                {
+                    Id = zn.Id,
+                    Points = points.ToArray()
+                };
                 zones.Add(zone);
             }
 
             return zones.ToArray();
-        }*/
+        }
 
         private static SerialScript[] MissionScripts(Script[] scs)
         {
@@ -246,13 +266,13 @@ namespace MT.TacticWar.Core.Serialization
 
                 script.Condition = new SerialScriptEntry()
                 {
-                    Type = ScriptFactory.GetScriptConditionCode(sc.Condition),
+                    Type = Script.GetScriptCode(sc.Condition),
                     Arguments = MissionScriptArguments(ScriptArgument.GetArguments(sc.Condition))
                 };
 
                 script.Statement = new SerialScriptEntry()
                 {
-                    Type = ScriptFactory.GetScriptStatementCode(sc.Statement),
+                    Type = Script.GetScriptCode(sc.Statement),
                     Arguments = MissionScriptArguments(ScriptArgument.GetArguments(sc.Statement))
                 };
 

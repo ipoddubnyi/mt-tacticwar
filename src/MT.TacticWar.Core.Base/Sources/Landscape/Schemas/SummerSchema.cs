@@ -2,9 +2,8 @@
 
 namespace MT.TacticWar.Core.Base.Landscape.Schemas
 {
-    [Schema("Лето")]
+    [Schema("Лето", Code = "summer")]
     public class SummerSchema : Schema
     {
-        public override string Name => "Лето";
     }
 }

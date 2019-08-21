@@ -32,20 +32,20 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             {
                 txtDescription.Text = script.Description;
 
-                var code = ScriptFactory.GetScriptConditionCode(script.Condition);
+                var code = Script.GetScriptCode(script.Condition);
                 foreach (var cond in ScriptFactory.Conditions)
                 {
-                    if (cond.Code.Equals(code))
+                    if (cond.GetCode().Equals(code))
                     {
                         comboConditionType.SelectedItem = cond;
                         break;
                     }
                 }
 
-                code = ScriptFactory.GetScriptStatementCode(script.Statement);
+                code = Script.GetScriptCode(script.Statement);
                 foreach (var st in ScriptFactory.Statements)
                 {
-                    if (st.Code.Equals(code))
+                    if (st.GetCode().Equals(code))
                     {
                         comboStatementType.SelectedItem = st;
                         break;
@@ -83,7 +83,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != comboConditionType.SelectedItem)
             {
-                var condition = (ScriptConditionVariant)comboConditionType.SelectedItem;
+                var condition = (ScriptConditionCreator)comboConditionType.SelectedItem;
                 conditionParameters = ScriptArgument.GetArguments(condition.Type);
                 ListConditionParamsRefresh();
             }
@@ -93,7 +93,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != comboStatementType.SelectedItem)
             {
-                var statement = (ScriptStatementVariant)comboStatementType.SelectedItem;
+                var statement = (ScriptStatementCreator)comboStatementType.SelectedItem;
                 statementParameters = ScriptArgument.GetArguments(statement.Type);
                 ListStatementParamsRefresh();
             }
@@ -138,8 +138,8 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (!ValidateEntries())
                 DialogResult = DialogResult.None;
 
-            var condition = (ScriptConditionVariant)comboConditionType.SelectedItem;
-            var statement = (ScriptStatementVariant)comboStatementType.SelectedItem;
+            var condition = (ScriptConditionCreator)comboConditionType.SelectedItem;
+            var statement = (ScriptStatementCreator)comboStatementType.SelectedItem;
 
             Script = new Script(
                     txtDescription.Text,

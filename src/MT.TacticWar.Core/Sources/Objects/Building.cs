@@ -78,5 +78,17 @@ namespace MT.TacticWar.Core.Objects
             var tp = attributes[0] as BuildingAttribute;
             return tp?.Name;
         }
+
+        public static string GetBuildingCode(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(BuildingAttribute), false);
+            var tp = attributes[0] as BuildingAttribute;
+            return tp?.Code;
+        }
+
+        public static string GetBuildingCode(Building building)
+        {
+            return GetBuildingCode(building.GetType());
+        }
     }
 }

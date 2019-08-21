@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Winter
 {
-    [Cell("Холодная вода", typeof(WinterSchema))]
+    [Cell("Холодная вода", typeof(WinterSchema), Code = '~')]
     public class ColdWater : Cell, IWater
     {
         public const int DefaultPassCost = 3;

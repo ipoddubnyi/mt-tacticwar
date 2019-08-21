@@ -3,10 +3,10 @@ using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
-    [Script("Показ сообщения")]
+    [Script("Показать сообщение", Code = "message")]
     public class MessageStatement : IStatement
     {
-        [ScriptArgument("Сообщение", typeof(int))]
+        [ScriptArgument("Сообщение", typeof(string))]
         private string Text { get; set; }
 
         public MessageStatement(params string[] args)

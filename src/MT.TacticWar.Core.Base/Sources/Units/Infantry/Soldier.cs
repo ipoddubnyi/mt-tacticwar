@@ -4,7 +4,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("Солдат", typeof(Infantry))]
+    [Unit("Солдат", typeof(Infantry), Code = "soldier")]
     public class Soldier : Unit
     {
         public Soldier(int id, Division division, string name = null,

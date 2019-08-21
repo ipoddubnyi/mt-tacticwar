@@ -2,7 +2,7 @@
 
 namespace MT.TacticWar.Core.Base.Objects
 {
-    [Building("Городской дом")]
+    [Building("Городской дом", Code = "house")]
     public class CityHouse : Building
     {
         private const int MaxRadiusActive = 0;

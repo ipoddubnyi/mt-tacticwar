@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("ЗРК", typeof(Vehicle))]
+    [Unit("ЗРК", typeof(Vehicle), Code = "antiair")]
     public class AntiAir : Unit
     {
         public AntiAir(int id, Division division, string name = null,

@@ -107,6 +107,7 @@
     <Compile Include="Sources\IObjectEditor.cs" />
     <Compile Include="Sources\MissionEditor.cs" />
     <Compile Include="Sources\Painters\BuildingPainter.cs" />
+    <Compile Include="Sources\Painters\ZonePainter.cs" />
     <Compile Include="Sources\Painters\PassabilityPainter.cs" />
     <Compile Include="Sources\Painters\LanscapePainter.cs" />
     <Compile Include="Sources\MapEditor.cs" />

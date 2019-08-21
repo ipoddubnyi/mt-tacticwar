@@ -41,7 +41,7 @@ namespace MT.TacticWar.Core.Serialization
         public SerialBuilding(Building building)
         {
             Id = building.Id;
-            Type = ObjectFactory.GetBuildingCode(building);
+            Type = Building.GetBuildingCode(building);
 
             Name = building.Name;
             Position = new SerialPosition() { X = building.Position.X, Y = building.Position.Y };

@@ -44,8 +44,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\Landscape\Schemas\WinterSchema.cs" />
     <Compile Include="Sources\Landscape\Schemas\SummerSchema.cs" />
-    <Compile Include="Sources\Landscape\SchemaVariant.cs" />
-    <Compile Include="Sources\Landscape\CellVariant.cs" />
     <Compile Include="Sources\Landscape\Custom\CustomCell.cs" />
     <Compile Include="Sources\Landscape\Winter\Snow.cs" />
     <Compile Include="Sources\Landscape\Summer\Stones.cs" />
@@ -69,9 +67,7 @@
     <Compile Include="Sources\Objects\Buildings\Radar.cs" />
     <Compile Include="Sources\Objects\Buildings\Factory.cs" />
     <Compile Include="Sources\Objects\Buildings\Storehouse.cs" />
-    <Compile Include="Sources\Objects\BuildingVariant.cs" />
     <Compile Include="Sources\Objects\Divisions\Engineers.cs" />
-    <Compile Include="Sources\Objects\DivisionVariant.cs" />
     <Compile Include="Sources\Objects\Divisions\Aviation.cs" />
     <Compile Include="Sources\Objects\Divisions\Navy.cs" />
     <Compile Include="Sources\Objects\Divisions\Ship.cs" />
@@ -83,13 +79,11 @@
     <Compile Include="Sources\Scripts\Conditions\PlayersBuildingCondition.cs" />
     <Compile Include="Sources\Scripts\Conditions\UnitInZoneCondition.cs" />
     <Compile Include="Sources\Scripts\Conditions\UnitCountCondition.cs" />
-    <Compile Include="Sources\Scripts\ScriptStatementVariant.cs" />
     <Compile Include="Sources\Scripts\Statements\MessageStatement.cs" />
     <Compile Include="Sources\Scripts\Situations\MessageSituation.cs" />
     <Compile Include="Sources\Scripts\Situations\GameOverSituation.cs" />
     <Compile Include="Sources\Scripts\Statements\GameOverStatement.cs" />
     <Compile Include="Sources\ScriptFactory.cs" />
-    <Compile Include="Sources\Scripts\ScriptConditionVariant.cs" />
     <Compile Include="Sources\Units\Artillery\Howitzer.cs" />
     <Compile Include="Sources\Units\Aviation\Aircraft.cs" />
     <Compile Include="Sources\Units\Custom\CustomUnit.cs" />
@@ -102,7 +96,6 @@
     <Compile Include="Sources\Units\Navy\Battleship.cs" />
     <Compile Include="Sources\UnitFactory.cs" />
     <Compile Include="Sources\Units\Ship\Powerboat.cs" />
-    <Compile Include="Sources\Units\UnitVariant.cs" />
     <Compile Include="Sources\Units\Vehicle\AntiAir.cs" />
     <Compile Include="Sources\Units\Vehicle\IFV.cs" />
     <Compile Include="Sources\Units\Vehicle\TankHeavy.cs" />

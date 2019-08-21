@@ -1,4 +1,4 @@
-﻿using MT.TacticWar.Core.Landscape;
+﻿using MT.TacticWar.Core;
 using MT.TacticWar.UI.Graphics;
 
 namespace MT.TacticWar.UI.Editor.Painters

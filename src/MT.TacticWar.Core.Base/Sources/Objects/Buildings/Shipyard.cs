@@ -2,7 +2,7 @@
 
 namespace MT.TacticWar.Core.Base.Objects
 {
-    [Building("Верфь")]
+    [Building("Верфь", Code = "shipyard")]
     public class Shipyard : Building
     {
         private const int MaxRadiusActive = 1;

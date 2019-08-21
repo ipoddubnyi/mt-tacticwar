@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using MT.TacticWar.Core.Base.Landscape;
+using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.UI.Editor.Dialogs
 {
@@ -13,7 +14,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         public int MapSizeWidth { get; private set; }
         public int MapSizeHeight { get; private set; }
-        public SchemaVariant MapSchema { get; private set; }
+        public SchemaCreator MapSchema { get; private set; }
         public string MapName { get; private set; }
         public string MapDescription { get; private set; }
 
@@ -81,7 +82,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
             MapSizeWidth = width;
             MapSizeHeight = height;
-            MapSchema = (SchemaVariant)comboMapSchema.SelectedItem;
+            MapSchema = (SchemaCreator)comboMapSchema.SelectedItem;
             MapName = txtMapName.Text;
             MapDescription = txtMapDescription.Text;
 

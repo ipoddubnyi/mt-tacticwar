@@ -223,7 +223,7 @@ namespace MT.TacticWar.Core.Serialization
 
         private static Unit CreateUnit(Division division, SerialUnit u, SerialMissionTypes types)
         {
-            var unit = UnitFactory.CreateUnit(division, u.Id, u.Type);
+            var unit = UnitFactory.CreateUnit(division, u.Type, u.Id);
             if (null != unit)
                 return u.Update(unit);
 

@@ -4,7 +4,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Objects
 {
-    [Division("Авиация")]
+    [Division("Авиация", Code = "aviation")]
     public class Aviation : Division, IAviation, ISupport
     {
         public Aviation(Player player, int id, string name, int x, int y) :

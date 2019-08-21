@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Summer
 {
-    [Cell("Мост", typeof(SummerSchema))]
+    [Cell("Мост", typeof(SummerSchema), Code = '+')]
     public class Bridge : Cell, ILand, IWater
     {
         public const int DefaultPassCost = 2;

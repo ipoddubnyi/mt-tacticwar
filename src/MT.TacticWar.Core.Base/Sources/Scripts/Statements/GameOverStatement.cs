@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
-    [Script("Конец игры")]
+    [Script("Завершить игру", Code = "gameover")]
     public class GameOverStatement : IStatement
     {
         [ScriptArgument("Победитель", typeof(int))]

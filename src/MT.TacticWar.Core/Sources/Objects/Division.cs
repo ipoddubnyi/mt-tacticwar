@@ -19,7 +19,7 @@ namespace MT.TacticWar.Core.Objects
         public int Experience { get; protected set; }
         public int SupplyCurrent { get; protected set; }
         public int StepsCurrent { get; protected set; }
-        public string Type => GetBranchName(GetType());
+        public string Type => GetDivisionType(GetType());
 
         public UnitParameters Parameters { get; protected set; }
 
@@ -343,11 +343,23 @@ namespace MT.TacticWar.Core.Objects
 
         //
 
-        public static string GetBranchName(Type type)
+        public static string GetDivisionType(Type type)
         {
             var attributes = type.GetCustomAttributes(typeof(DivisionAttribute), false);
             var branch = attributes[0] as DivisionAttribute;
             return branch?.Name;
+        }
+
+        public static string GetDivisionCode(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(DivisionAttribute), false);
+            var branch = attributes[0] as DivisionAttribute;
+            return branch?.Code;
+        }
+
+        public static string GetDivisionCode(Division division)
+        {
+            return GetDivisionCode(division.GetType());
         }
     }
 }

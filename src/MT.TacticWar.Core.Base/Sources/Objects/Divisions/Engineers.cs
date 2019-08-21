@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Objects
 {
-    [Division("Инженерные войска")]
+    [Division("Инженерные войска", Code = "engineers")]
     public class Engineers : Division, IArmored
     {
         public Engineers(Player player, int id, string name, int x, int y) :

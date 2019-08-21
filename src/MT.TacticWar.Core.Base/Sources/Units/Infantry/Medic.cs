@@ -4,7 +4,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("Врач", typeof(Infantry))]
+    [Unit("Врач", typeof(Infantry), Code = "medic")]
     public class Medic : Unit
     {
         private const int MedkitValue = 25;

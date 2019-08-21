@@ -50,9 +50,9 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 comboBuildingType.Enabled = false;
 
                 var bldCode = building.GetBuildingCode();
-                foreach (BuildingVariant bld in comboBuildingType.Items)
+                foreach (BuildingCreator bld in comboBuildingType.Items)
                 {
-                    if (bld.Code.Equals(bldCode))
+                    if (bld.GetCode().Equals(bldCode))
                         comboBuildingType.SelectedItem = bld;
                 }
 
@@ -91,7 +91,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             if (null != comboBuildingType.SelectedItem)
             {
-                var bld = (BuildingVariant)comboBuildingType.SelectedItem;
+                var bld = (BuildingCreator)comboBuildingType.SelectedItem;
                 var building = bld.Create(null, 0, "", -1, -1, 100, null);
                 Building = new BuildingEditor(building);
                 txtBuildingName.Text = building.Type;

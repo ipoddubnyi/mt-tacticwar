@@ -9,59 +9,48 @@ namespace MT.TacticWar.Core.Base.Landscape
 {
     public static class LandscapeFactory
     {
-        public static readonly List<SchemaVariant> Schemas = new List<SchemaVariant>()
+        public static readonly List<SchemaCreator> Schemas = new List<SchemaCreator>()
         {
-            new SchemaVariant { Code = "summer", Type = typeof(SummerSchema) },
-            new SchemaVariant { Code = "winter", Type = typeof(WinterSchema) }
+            new SchemaCreator(typeof(SummerSchema)),
+            new SchemaCreator(typeof(WinterSchema))
         };
 
-        public static readonly List<CellVariant> Cells = new List<CellVariant>()
+        public static readonly List<CellCreator> Cells = new List<CellCreator>()
         {
-            new CellVariant { Code = '-', Type = typeof(Field) },
-            new CellVariant { Code = '#', Type = typeof(Road) },
-            new CellVariant { Code = '~', Type = typeof(Water) },
-            new CellVariant { Code = '*', Type = typeof(Forest) },
-            new CellVariant { Code = ':', Type = typeof(Sand) },
-            new CellVariant { Code = 'o', Type = typeof(Stones) },
-            new CellVariant { Code = '+', Type = typeof(Bridge) },
+            new CellCreator(typeof(SummerSchema), typeof(Field)),
+            new CellCreator(typeof(SummerSchema), typeof(Road)),
+            new CellCreator(typeof(SummerSchema), typeof(Water)),
+            new CellCreator(typeof(SummerSchema), typeof(Forest)),
+            new CellCreator(typeof(SummerSchema), typeof(Sand)),
+            new CellCreator(typeof(SummerSchema), typeof(Stones)),
+            new CellCreator(typeof(SummerSchema), typeof(Bridge)),
 
-            new CellVariant { Code = '-', Type = typeof(Snow) },
-            //new CellVariant { Code = '#', Type = typeof(Road) },
-            new CellVariant { Code = '~', Type = typeof(ColdWater) },
-            new CellVariant { Code = '*', Type = typeof(WinterForest) },
-            //new CellVariant { Code = ':', Type = typeof(Sand) },
-            //new CellVariant { Code = 'o', Type = typeof(Stones) },
-            //new CellVariant { Code = '+', Type = typeof(Bridge) },
-            new CellVariant { Code = '≈', Type = typeof(Ice) }
+            new CellCreator(typeof(WinterSchema), typeof(Snow)),
+            new CellCreator(typeof(WinterSchema), typeof(Road)),
+            new CellCreator(typeof(WinterSchema), typeof(ColdWater)),
+            new CellCreator(typeof(WinterSchema), typeof(WinterForest)),
+            new CellCreator(typeof(WinterSchema), typeof(Sand)),
+            new CellCreator(typeof(WinterSchema), typeof(Stones)),
+            new CellCreator(typeof(WinterSchema), typeof(Bridge)),
+            new CellCreator(typeof(WinterSchema), typeof(Ice))
         };
 
-        public static List<CellVariant> GetAvailableCellsForSchema(Schema schema)
+        public static CellCreator[] GetSchemaCellTypes(Schema schema)
         {
-            var list = new List<CellVariant>();
+            var list = new List<CellCreator>();
             foreach (var cell in Cells)
             {
-                if (cell.GetSchemaType().Equals(schema.GetType()))
+                if (cell.SchemaType.Equals(schema.GetType()))
                     list.Add(cell);
             }
-            return list;
+            return list.ToArray();
         }
-
-        public static string GetSchemaCode(Schema schema)
-        {
-            foreach (var sch in Schemas)
-            {
-                if (sch.Type.Equals(schema.GetType()))
-                    return sch.Code;
-            }
-
-            throw new Exception("Неизвестный тип схемы.");
-        }
-
+        
         public static Schema CreateSchema(string code)
         {
             foreach (var sch in Schemas)
             {
-                if (sch.Code == code)
+                if (sch.GetCode().Equals(code))
                     return sch.Create();
             }
 
@@ -72,28 +61,14 @@ namespace MT.TacticWar.Core.Base.Landscape
         {
             foreach (var c in Cells)
             {
-                if (!c.GetSchemaType().Equals(schema.GetType()))
+                if (!c.SchemaType.Equals(schema.GetType()))
                     continue;
 
-                if (c.Code == code)
+                if (c.GetCellCode().Equals(code))
                     return c.Create(x, y);
             }
 
             throw new Exception("Неизвестный тип схемы ландшафта.");
-        }
-
-        public static char GetCellCode(Schema schema, Cell cell)
-        {
-            foreach (var c in Cells)
-            {
-                if (!c.GetSchemaType().Equals(schema.GetType()))
-                    continue;
-
-                if (c.Type.Equals(cell.GetType()))
-                    return c.Code;
-            }
-
-            throw new Exception("Неизвестный тип ячейки.");
         }
     }
 }

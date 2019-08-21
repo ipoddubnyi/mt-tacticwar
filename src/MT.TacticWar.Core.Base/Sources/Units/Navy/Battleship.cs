@@ -3,7 +3,7 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("Линкор", typeof(Navy))]
+    [Unit("Линкор", typeof(Navy), Code = "battleship")]
     public class Battleship : Unit
     {
         public Battleship(int id, Division division, string name = null,

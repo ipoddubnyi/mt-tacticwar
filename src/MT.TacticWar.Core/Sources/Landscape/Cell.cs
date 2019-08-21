@@ -36,6 +36,18 @@ namespace MT.TacticWar.Core.Landscape
             return cell?.Name;
         }
 
+        public static char GetCellCode(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(CellAttribute), false);
+            var cell = attributes[0] as CellAttribute;
+            return cell.Code;
+        }
+
+        public static char GetCellCode(Cell cell)
+        {
+            return GetCellCode(cell.GetType());
+        }
+
         public static Type GetSchemaType(Type type)
         {
             var attributes = type.GetCustomAttributes(typeof(CellAttribute), false);
