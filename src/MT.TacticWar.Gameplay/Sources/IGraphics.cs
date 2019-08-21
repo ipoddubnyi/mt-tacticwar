@@ -32,5 +32,9 @@ namespace MT.TacticWar.Gameplay
         void DrawBuilding(Building building, bool selected);
 
         void DrawFog(Fog fog);
+
+        void DrawZone(int id, int x, int y);
+
+        void DrawGate(int id, int x, int y);
     }
 }

@@ -338,6 +338,22 @@ namespace MT.TacticWar.UI.Graphics
         {
             using (var drawFont = new Font("Consolas", 10))
             {
+                using (var brush = new SolidBrush(Color.Cyan))
+                {
+                    int left = x * CellSize;
+                    int top = y * CellSize;
+                    grf.FillRectangle(brush, left, top, CellSize, CellSize);
+
+                    brush.Color = Color.Black;
+                    grf.DrawString(id.ToString(), drawFont, brush, left, top);
+                }
+            }
+        }
+
+        public void DrawGate(int id, int x, int y)
+        {
+            using (var drawFont = new Font("Consolas", 10))
+            {
                 using (var brush = new SolidBrush(Color.DeepPink))
                 {
                     int left = x * CellSize;

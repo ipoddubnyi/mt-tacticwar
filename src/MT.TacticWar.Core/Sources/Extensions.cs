@@ -120,5 +120,27 @@ namespace MT.TacticWar.Core
         {
             return zones.OrderBy(z => z.Id);
         }
+
+        public static Gate GetById(this IEnumerable<Gate> gates, int id)
+        {
+            foreach (var gate in gates)
+            {
+                if (gate.Id == id)
+                    return gate;
+            }
+
+            return null;
+        }
+
+        public static Gate GetAt(this IEnumerable<Gate> gates, Coordinates point)
+        {
+            foreach (var gate in gates)
+            {
+                if (gate.Equals(point))
+                    return gate;
+            }
+
+            return null;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using MT.TacticWar.Core.Base.Landscape;
 using MT.TacticWar.Core.Base.Objects;
@@ -16,18 +17,41 @@ namespace MT.TacticWar.Core.Serialization
 {
     public class MissionSaver
     {
-        /*public static Mission LoadGame(string misFolderPath)
+        public static void SaveGame(string gameName, string mapFileName, string misFileName,
+            Mission mission, string versionMap, string versionMission)
         {
-            var infoPath = Path.Combine(misFolderPath, ".info");
+            var missionsFolder = Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                        "missions");
+            var gameFolder = Path.Combine(missionsFolder, gameName);
+            var infoPath = Path.Combine(gameFolder, ".info");
 
-            var info = SerialFileInfo.Deserialize(infoPath);
-            var mapPath = Path.Combine(misFolderPath, info.Map.Path);
-            var misPath = Path.Combine(misFolderPath, info.Mission.Path);
+            var mapPath = Path.Combine(gameFolder, mapFileName);
+            var misPath = Path.Combine(gameFolder, misFileName);
+            var info = new SerialFileInfo
+            {
+                Map = new SerialFileInfoType
+                {
+                    Version = versionMap,
+                    Path = ""
+                },
+                Mission = new SerialFileInfoType
+                {
+                    Version = versionMission,
+                    Path = ""
+                }
+            };
 
-            var map = LoadMap(mapPath);
-            var mis = LoadMission(misPath, map);
-            return mis;
-        }*/
+            SaveMap(mapPath, mission.Map, versionMap);
+            SaveMission(misPath, mission, versionMission);
+
+            SerialFileInfo.Serialize(infoPath, info);
+        }
+
+        public static void SaveMap(string filePath, Map map, string version)
+        {
+            SaveMap(filePath, map, map.Name, map.Description, version);
+        }
 
         public static void SaveMap(string filePath, Map map, string name, string descr, string version)
         {
@@ -86,19 +110,10 @@ namespace MT.TacticWar.Core.Serialization
             return sb.ToString();
         }
 
-        /*private static string MissionTextTrim(string text)
+        public static void SaveMission(string filePath, Mission mission, string version)
         {
-            var buffer = new StringBuilder();
-            using (TextReader sr = new StringReader(text))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    buffer.AppendLine(line.Trim());
-                }
-            }
-            return buffer.ToString().Trim();
-        }*/
+            SaveMission(filePath, mission, mission.Name, mission.Briefing, version);
+        }
 
         public static void SaveMission(string filePath, Mission mission, string name, string brief, string version)
         {

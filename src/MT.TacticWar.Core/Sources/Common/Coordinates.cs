@@ -38,7 +38,7 @@ namespace MT.TacticWar.Core
 
         public override bool Equals(object obj)
         {
-            return obj is Coordinates ? Equals(obj) : false;
+            return obj is Coordinates ? Equals(obj as Coordinates) : false;
         }
 
         public override int GetHashCode()

@@ -66,6 +66,12 @@
     <Compile Include="Sources\Dialogs\DialogDivisionEditor.Designer.cs">
       <DependentUpon>DialogDivisionEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sources\Dialogs\DialogMissionCompile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogMissionCompile.Designer.cs">
+      <DependentUpon>DialogMissionCompile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sources\Dialogs\DialogMissionNew.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +113,7 @@
     <Compile Include="Sources\IObjectEditor.cs" />
     <Compile Include="Sources\MissionEditor.cs" />
     <Compile Include="Sources\Painters\BuildingPainter.cs" />
+    <Compile Include="Sources\Painters\GatePainter.cs" />
     <Compile Include="Sources\Painters\ZonePainter.cs" />
     <Compile Include="Sources\Painters\PassabilityPainter.cs" />
     <Compile Include="Sources\Painters\LanscapePainter.cs" />
@@ -132,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogDivisionEditor.resx">
       <DependentUpon>DialogDivisionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Dialogs\DialogMissionCompile.resx">
+      <DependentUpon>DialogMissionCompile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogMissionNew.resx">
       <DependentUpon>DialogMissionNew.cs</DependentUpon>

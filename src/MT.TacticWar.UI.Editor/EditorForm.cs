@@ -140,17 +140,13 @@ namespace MT.TacticWar.UI.Editor
             {
                 Tag = new TreeViewNodeSelector(SelectDrawZone)
             };
-            /*var subnode2 = new TreeNode("Рисовать зону")
-            {
-                Tag = new TreeViewNodeSelector(() => { SelectDrawZone(false); })
-            };
-            node.Nodes.Add(subnode2);
-            subnode2 = new TreeNode("Стереть зону")
-            {
-                Tag = new TreeViewNodeSelector(() => { SelectDrawZone(true); })
-            };
-            node.Nodes.Add(subnode2);*/
+            node.Expand();
+            TreeViewElements.Nodes.Add(node);
 
+            node = new TreeNode("Ворота")
+            {
+                Tag = new TreeViewNodeSelector(SelectDrawGate)
+            };
             node.Expand();
             TreeViewElements.Nodes.Add(node);
 
@@ -182,8 +178,14 @@ namespace MT.TacticWar.UI.Editor
 
         private void SelectDrawZone()
         {
-            DrawZonesShow();
             panelZoneToolset.Visible = true;
+            DrawZonesShow();
+        }
+
+        private void SelectDrawGate()
+        {
+            panelGateToolset.Visible = true;
+            DrawGatesShow();
         }
 
         private void SetMapInfo(MapEditor map)
@@ -199,6 +201,7 @@ namespace MT.TacticWar.UI.Editor
         {
             txtMissionName.Text = mission.Name;
             txtMissionBriefing.Text = mission.Briefing;
+            GatePlayersRefresh();
         }
 
         private void DrawAll()
@@ -208,6 +211,12 @@ namespace MT.TacticWar.UI.Editor
 
             if (null != SelectedMission)
                 graphics.DrawPlayersObjects(SelectedMission.Players, null, null);
+
+            if (panelZoneToolset.Visible)
+                DrawZonesShow();
+
+            if (panelGateToolset.Visible)
+                DrawGatesShow();
         }
 
         private void DrawUnpassableShow()
@@ -249,6 +258,21 @@ namespace MT.TacticWar.UI.Editor
             }
         }
 
+        private void DrawGatesShow()
+        {
+            if (null == comboGatePlayer.SelectedItem)
+                return;
+
+            var player = comboGatePlayer.SelectedItem as Player;
+            //foreach (var player in SelectedMission.Players)
+            {
+                foreach (var gate in player.Gates)
+                {
+                    graphics.DrawGate(gate.Id, gate.X, gate.Y);
+                }
+            }
+        }
+
         private bool ResizeControls(Panel gameMap, int mapWidth, int mapHeight)
         {
             int widthOld = gameMap.Width;
@@ -284,15 +308,15 @@ namespace MT.TacticWar.UI.Editor
 
         private void PanelEditor_Paint(object sender, PaintEventArgs e)
         {
-            if (null != SelectedMap)
-                DrawAll();
+            DrawAll();
         }
 
         private void TreeViewElements_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
             panelObjectToolset.Visible = false;
             panelZoneToolset.Visible = false;
-            lblZoneStatus.Text = "-";
+            panelGateToolset.Visible = false;
+            StatusStatus.Text = "";
             painter = null;
             //DrawUnpassableHide();
             DrawAll();
@@ -723,7 +747,39 @@ namespace MT.TacticWar.UI.Editor
 
         private void MenuMissionCompile_Click(object sender, EventArgs e)
         {
-            //
+            try
+            {
+                if (!ValidateSaveMap())
+                    return;
+
+                if (!ValidateSaveMission())
+                    return;
+
+                using (var dialog = new DialogMissionCompile(SelectedMission))
+                {
+                    if (DialogResult.OK != dialog.ShowDialog())
+                        return;
+
+                    MissionSaver.SaveGame(
+                        dialog.GameName,
+                        dialog.MapFileName,
+                        dialog.MissionFileName,
+                        SelectedMission,
+                        txtMapVersion.Text,
+                        txtMissionVersion.Text
+                    );
+
+                    MessageBox.Show(
+                        "Миссия успешно собрана.",
+                        "Сохранение",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Сохранение", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private bool ValidateSaveMission()
@@ -931,9 +987,19 @@ namespace MT.TacticWar.UI.Editor
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
                     SelectedMission.SetPlayers(dialog.Players);
+                    GatePlayersRefresh();
                     DrawAll();
                 }
             }
+        }
+
+        private void GatePlayersRefresh()
+        {
+            // TODO: отрефакторить
+            comboGatePlayer.DataSource = null;
+            comboGatePlayer.Items.Clear();
+            comboGatePlayer.DataSource = SelectedMission.Players;
+            comboGatePlayer.SelectedIndex = 0;
         }
 
         private void BtnMissionScripts_Click(object sender, EventArgs e)
@@ -951,18 +1017,42 @@ namespace MT.TacticWar.UI.Editor
         {
             var zoneId = (int)numZoneId.Value;
             painter = new ZonePainter(graphics, SelectedMission, zoneId);
-            lblZoneStatus.Text = "Рисование";
+            StatusStatus.Text = "Рисование зон";
         }
 
         private void BtnZoneRemove_Click(object sender, EventArgs e)
         {
             painter = new ZonePainter(graphics, SelectedMission, -1, true);
-            lblZoneStatus.Text = "Стирание";
+            StatusStatus.Text = "Стирание зон";
         }
 
         private void NumZoneId_ValueChanged(object sender, EventArgs e)
         {
             BtnZoneAdd_Click(sender, e);
+        }
+
+        private void BtnGateAdd_Click(object sender, EventArgs e)
+        {
+            var gateId = (int)numGateId.Value;
+            painter = new GatePainter(graphics, SelectedMission, comboGatePlayer.SelectedItem as Player, gateId);
+            StatusStatus.Text = "Рисование ворот";
+        }
+
+        private void BtnGateRemove_Click(object sender, EventArgs e)
+        {
+            painter = new GatePainter(graphics, SelectedMission, null, -1, true);
+            StatusStatus.Text = "Стирание ворот";
+        }
+
+        private void ComboGatePlayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DrawAll();
+            BtnGateAdd_Click(sender, e);
+        }
+
+        private void NumGateId_ValueChanged(object sender, EventArgs e)
+        {
+            BtnGateAdd_Click(sender, e);
         }
     }
 }

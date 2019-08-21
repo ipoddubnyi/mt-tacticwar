@@ -41,7 +41,11 @@
             this.MenuMissionSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuMissionSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.MenuMissionCompile = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuEditor = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuEditorRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.Status = new System.Windows.Forms.StatusStrip();
+            this.StatusStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusSeparator1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusCoordinates = new System.Windows.Forms.ToolStripStatusLabel();
             this.TabControlLeft = new System.Windows.Forms.TabControl();
             this.TabEditor = new System.Windows.Forms.TabPage();
@@ -73,15 +77,19 @@
             this.btnObjectUpdate = new System.Windows.Forms.Button();
             this.btnObjectNewDivision = new System.Windows.Forms.Button();
             this.PanelEditor = new System.Windows.Forms.Panel();
-            this.MenuEditor = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuEditorRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.flowToolsRight = new System.Windows.Forms.FlowLayoutPanel();
             this.panelZoneToolset = new System.Windows.Forms.Panel();
+            this.lblZoneId = new System.Windows.Forms.Label();
+            this.numZoneId = new System.Windows.Forms.NumericUpDown();
             this.btnZoneRemove = new System.Windows.Forms.Button();
             this.btnZoneAdd = new System.Windows.Forms.Button();
-            this.numZoneId = new System.Windows.Forms.NumericUpDown();
-            this.lblZoneId = new System.Windows.Forms.Label();
-            this.lblZoneStatus = new System.Windows.Forms.Label();
+            this.panelGateToolset = new System.Windows.Forms.Panel();
+            this.comboGatePlayer = new System.Windows.Forms.ComboBox();
+            this.lblGatePlayer = new System.Windows.Forms.Label();
+            this.lblGateId = new System.Windows.Forms.Label();
+            this.numGateId = new System.Windows.Forms.NumericUpDown();
+            this.btnGateRemove = new System.Windows.Forms.Button();
+            this.btnGateAdd = new System.Windows.Forms.Button();
             this.Menu.SuspendLayout();
             this.Status.SuspendLayout();
             this.TabControlLeft.SuspendLayout();
@@ -96,6 +104,8 @@
             this.flowToolsRight.SuspendLayout();
             this.panelZoneToolset.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numZoneId)).BeginInit();
+            this.panelGateToolset.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numGateId)).BeginInit();
             this.SuspendLayout();
             // 
             // Menu
@@ -108,7 +118,7 @@
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.Menu.Size = new System.Drawing.Size(1235, 30);
+            this.Menu.Size = new System.Drawing.Size(1235, 28);
             this.Menu.TabIndex = 0;
             this.Menu.Text = "Меню";
             // 
@@ -120,7 +130,7 @@
             this.MenuMapSave,
             this.MenuMapSaveAs});
             this.MenuMap.Name = "MenuMap";
-            this.MenuMap.Size = new System.Drawing.Size(63, 26);
+            this.MenuMap.Size = new System.Drawing.Size(63, 24);
             this.MenuMap.Text = "&Карта";
             // 
             // MenuMapNew
@@ -161,53 +171,70 @@
             this.MenuMissionSeparator,
             this.MenuMissionCompile});
             this.MenuMission.Name = "MenuMission";
-            this.MenuMission.Size = new System.Drawing.Size(76, 26);
+            this.MenuMission.Size = new System.Drawing.Size(76, 24);
             this.MenuMission.Text = "&Миссия";
             // 
             // MenuMissionNew
             // 
             this.MenuMissionNew.Name = "MenuMissionNew";
-            this.MenuMissionNew.Size = new System.Drawing.Size(211, 26);
+            this.MenuMissionNew.Size = new System.Drawing.Size(224, 26);
             this.MenuMissionNew.Text = "Создать";
             this.MenuMissionNew.Click += new System.EventHandler(this.MenuMissionNew_Click);
             // 
             // MenuMissionOpen
             // 
             this.MenuMissionOpen.Name = "MenuMissionOpen";
-            this.MenuMissionOpen.Size = new System.Drawing.Size(211, 26);
+            this.MenuMissionOpen.Size = new System.Drawing.Size(224, 26);
             this.MenuMissionOpen.Text = "Открыть";
             this.MenuMissionOpen.Click += new System.EventHandler(this.MenuMissionOpen_Click);
             // 
             // MenuMissionSave
             // 
             this.MenuMissionSave.Name = "MenuMissionSave";
-            this.MenuMissionSave.Size = new System.Drawing.Size(211, 26);
+            this.MenuMissionSave.Size = new System.Drawing.Size(224, 26);
             this.MenuMissionSave.Text = "Сохранить";
             this.MenuMissionSave.Click += new System.EventHandler(this.MenuMissionSave_Click);
             // 
             // MenuMissionSaveAs
             // 
             this.MenuMissionSaveAs.Name = "MenuMissionSaveAs";
-            this.MenuMissionSaveAs.Size = new System.Drawing.Size(211, 26);
+            this.MenuMissionSaveAs.Size = new System.Drawing.Size(224, 26);
             this.MenuMissionSaveAs.Text = "Сохранить как";
             this.MenuMissionSaveAs.Click += new System.EventHandler(this.MenuMissionSaveAs_Click);
             // 
             // MenuMissionSeparator
             // 
             this.MenuMissionSeparator.Name = "MenuMissionSeparator";
-            this.MenuMissionSeparator.Size = new System.Drawing.Size(208, 6);
+            this.MenuMissionSeparator.Size = new System.Drawing.Size(221, 6);
             // 
             // MenuMissionCompile
             // 
             this.MenuMissionCompile.Name = "MenuMissionCompile";
-            this.MenuMissionCompile.Size = new System.Drawing.Size(211, 26);
-            this.MenuMissionCompile.Text = "Скомпилировать";
+            this.MenuMissionCompile.Size = new System.Drawing.Size(224, 26);
+            this.MenuMissionCompile.Text = "Собрать";
             this.MenuMissionCompile.Click += new System.EventHandler(this.MenuMissionCompile_Click);
+            // 
+            // MenuEditor
+            // 
+            this.MenuEditor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuEditorRefresh});
+            this.MenuEditor.Name = "MenuEditor";
+            this.MenuEditor.Size = new System.Drawing.Size(86, 24);
+            this.MenuEditor.Text = "&Редактор";
+            // 
+            // MenuEditorRefresh
+            // 
+            this.MenuEditorRefresh.Name = "MenuEditorRefresh";
+            this.MenuEditorRefresh.Size = new System.Drawing.Size(161, 26);
+            this.MenuEditorRefresh.Text = "Обновить";
+            this.MenuEditorRefresh.Click += new System.EventHandler(this.MenuEditorRefresh_Click);
             // 
             // Status
             // 
             this.Status.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.Status.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StatusStatus,
+            this.StatusSeparator1,
             this.StatusCoordinates});
             this.Status.Location = new System.Drawing.Point(0, 550);
             this.Status.Name = "Status";
@@ -215,6 +242,18 @@
             this.Status.Size = new System.Drawing.Size(1235, 22);
             this.Status.TabIndex = 2;
             this.Status.Text = "statusStrip1";
+            // 
+            // StatusStatus
+            // 
+            this.StatusStatus.Name = "StatusStatus";
+            this.StatusStatus.Size = new System.Drawing.Size(0, 16);
+            // 
+            // StatusSeparator1
+            // 
+            this.StatusSeparator1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.StatusSeparator1.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.StatusSeparator1.Name = "StatusSeparator1";
+            this.StatusSeparator1.Size = new System.Drawing.Size(4, 16);
             // 
             // StatusCoordinates
             // 
@@ -267,16 +306,16 @@
             // 
             this.SplitContainerLeft.Panel2.Controls.Add(this.PanelElementPreview);
             this.SplitContainerLeft.Size = new System.Drawing.Size(268, 499);
-            this.SplitContainerLeft.SplitterDistance = 373;
+            this.SplitContainerLeft.SplitterDistance = 374;
             this.SplitContainerLeft.TabIndex = 2;
             // 
             // TreeViewElements
             // 
             this.TreeViewElements.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TreeViewElements.Location = new System.Drawing.Point(0, 0);
-            this.TreeViewElements.Margin = new System.Windows.Forms.Padding(4);
+            this.TreeViewElements.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TreeViewElements.Name = "TreeViewElements";
-            this.TreeViewElements.Size = new System.Drawing.Size(266, 371);
+            this.TreeViewElements.Size = new System.Drawing.Size(266, 372);
             this.TreeViewElements.TabIndex = 0;
             this.TreeViewElements.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.TreeViewElements_BeforeSelect);
             this.TreeViewElements.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewElements_AfterSelect);
@@ -286,9 +325,9 @@
             this.PanelElementPreview.BackColor = System.Drawing.SystemColors.Control;
             this.PanelElementPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelElementPreview.Location = new System.Drawing.Point(0, 0);
-            this.PanelElementPreview.Margin = new System.Windows.Forms.Padding(4);
+            this.PanelElementPreview.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.PanelElementPreview.Name = "PanelElementPreview";
-            this.PanelElementPreview.Size = new System.Drawing.Size(266, 120);
+            this.PanelElementPreview.Size = new System.Drawing.Size(266, 119);
             this.PanelElementPreview.TabIndex = 1;
             // 
             // TabMapInfo
@@ -315,9 +354,9 @@
             this.txtMapVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMapVersion.Location = new System.Drawing.Point(9, 379);
-            this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtMapVersion.Name = "txtMapVersion";
-            this.txtMapVersion.Size = new System.Drawing.Size(250, 22);
+            this.txtMapVersion.Size = new System.Drawing.Size(249, 22);
             this.txtMapVersion.TabIndex = 5;
             this.txtMapVersion.Text = "1.0";
             // 
@@ -358,7 +397,7 @@
             this.txtMapDescription.Multiline = true;
             this.txtMapDescription.Name = "txtMapDescription";
             this.txtMapDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMapDescription.Size = new System.Drawing.Size(250, 246);
+            this.txtMapDescription.Size = new System.Drawing.Size(249, 246);
             this.txtMapDescription.TabIndex = 3;
             // 
             // lblMapName
@@ -386,7 +425,7 @@
             this.txtMapName.Location = new System.Drawing.Point(9, 37);
             this.txtMapName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMapName.Name = "txtMapName";
-            this.txtMapName.Size = new System.Drawing.Size(250, 22);
+            this.txtMapName.Size = new System.Drawing.Size(249, 22);
             this.txtMapName.TabIndex = 1;
             this.txtMapName.Text = "Карта местности";
             // 
@@ -413,6 +452,7 @@
             this.btnMissionScripts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMissionScripts.Location = new System.Drawing.Point(9, 407);
+            this.btnMissionScripts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnMissionScripts.Name = "btnMissionScripts";
             this.btnMissionScripts.Size = new System.Drawing.Size(247, 28);
             this.btnMissionScripts.TabIndex = 7;
@@ -425,7 +465,7 @@
             this.txtMissionVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMissionVersion.Location = new System.Drawing.Point(9, 329);
-            this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4);
+            this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtMissionVersion.Name = "txtMissionVersion";
             this.txtMissionVersion.Size = new System.Drawing.Size(247, 22);
             this.txtMissionVersion.TabIndex = 5;
@@ -434,7 +474,7 @@
             // lblMissionVersion
             // 
             this.lblMissionVersion.AutoSize = true;
-            this.lblMissionVersion.Location = new System.Drawing.Point(6, 308);
+            this.lblMissionVersion.Location = new System.Drawing.Point(5, 308);
             this.lblMissionVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMissionVersion.Name = "lblMissionVersion";
             this.lblMissionVersion.Size = new System.Drawing.Size(60, 17);
@@ -446,7 +486,7 @@
             this.btnMissionPlayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMissionPlayers.Location = new System.Drawing.Point(9, 372);
-            this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4);
+            this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnMissionPlayers.Name = "btnMissionPlayers";
             this.btnMissionPlayers.Size = new System.Drawing.Size(247, 28);
             this.btnMissionPlayers.TabIndex = 6;
@@ -502,7 +542,7 @@
             this.panelObjectToolset.Controls.Add(this.btnObjectNewBuilding);
             this.panelObjectToolset.Controls.Add(this.btnObjectUpdate);
             this.panelObjectToolset.Controls.Add(this.btnObjectNewDivision);
-            this.panelObjectToolset.Location = new System.Drawing.Point(268, 2);
+            this.panelObjectToolset.Location = new System.Drawing.Point(461, 2);
             this.panelObjectToolset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelObjectToolset.Name = "panelObjectToolset";
             this.panelObjectToolset.Size = new System.Drawing.Size(223, 516);
@@ -515,11 +555,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtObjectStatus.Location = new System.Drawing.Point(13, 155);
+            this.txtObjectStatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtObjectStatus.Multiline = true;
             this.txtObjectStatus.Name = "txtObjectStatus";
             this.txtObjectStatus.ReadOnly = true;
             this.txtObjectStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtObjectStatus.Size = new System.Drawing.Size(198, 344);
+            this.txtObjectStatus.Size = new System.Drawing.Size(199, 344);
             this.txtObjectStatus.TabIndex = 4;
             // 
             // btnObjectDelete
@@ -529,7 +570,7 @@
             this.btnObjectDelete.Location = new System.Drawing.Point(13, 111);
             this.btnObjectDelete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnObjectDelete.Name = "btnObjectDelete";
-            this.btnObjectDelete.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectDelete.Size = new System.Drawing.Size(197, 28);
             this.btnObjectDelete.TabIndex = 3;
             this.btnObjectDelete.Text = "Удалить";
             this.btnObjectDelete.UseVisualStyleBackColor = true;
@@ -542,7 +583,7 @@
             this.btnObjectNewBuilding.Location = new System.Drawing.Point(13, 47);
             this.btnObjectNewBuilding.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnObjectNewBuilding.Name = "btnObjectNewBuilding";
-            this.btnObjectNewBuilding.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectNewBuilding.Size = new System.Drawing.Size(197, 28);
             this.btnObjectNewBuilding.TabIndex = 1;
             this.btnObjectNewBuilding.Text = "+ Строение";
             this.btnObjectNewBuilding.UseVisualStyleBackColor = true;
@@ -555,7 +596,7 @@
             this.btnObjectUpdate.Location = new System.Drawing.Point(13, 79);
             this.btnObjectUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnObjectUpdate.Name = "btnObjectUpdate";
-            this.btnObjectUpdate.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectUpdate.Size = new System.Drawing.Size(197, 28);
             this.btnObjectUpdate.TabIndex = 2;
             this.btnObjectUpdate.Text = "Изменить";
             this.btnObjectUpdate.UseVisualStyleBackColor = true;
@@ -568,7 +609,7 @@
             this.btnObjectNewDivision.Location = new System.Drawing.Point(13, 15);
             this.btnObjectNewDivision.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnObjectNewDivision.Name = "btnObjectNewDivision";
-            this.btnObjectNewDivision.Size = new System.Drawing.Size(198, 28);
+            this.btnObjectNewDivision.Size = new System.Drawing.Size(197, 28);
             this.btnObjectNewDivision.TabIndex = 0;
             this.btnObjectNewDivision.Text = "+ Подразделение";
             this.btnObjectNewDivision.UseVisualStyleBackColor = true;
@@ -578,7 +619,7 @@
             // 
             this.PanelEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelEditor.Location = new System.Drawing.Point(309, 37);
-            this.PanelEditor.Margin = new System.Windows.Forms.Padding(4);
+            this.PanelEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.PanelEditor.Name = "PanelEditor";
             this.PanelEditor.Size = new System.Drawing.Size(391, 350);
             this.PanelEditor.TabIndex = 5;
@@ -588,47 +629,53 @@
             this.PanelEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseMove);
             this.PanelEditor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PanelEditor_MouseUp);
             // 
-            // MenuEditor
-            // 
-            this.MenuEditor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuEditorRefresh});
-            this.MenuEditor.Name = "MenuEditor";
-            this.MenuEditor.Size = new System.Drawing.Size(86, 26);
-            this.MenuEditor.Text = "&Редактор";
-            // 
-            // MenuEditorRefresh
-            // 
-            this.MenuEditorRefresh.Name = "MenuEditorRefresh";
-            this.MenuEditorRefresh.Size = new System.Drawing.Size(224, 26);
-            this.MenuEditorRefresh.Text = "Обновить";
-            this.MenuEditorRefresh.Click += new System.EventHandler(this.MenuEditorRefresh_Click);
-            // 
             // flowToolsRight
             // 
             this.flowToolsRight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowToolsRight.AutoSize = true;
+            this.flowToolsRight.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowToolsRight.Controls.Add(this.panelObjectToolset);
             this.flowToolsRight.Controls.Add(this.panelZoneToolset);
+            this.flowToolsRight.Controls.Add(this.panelGateToolset);
             this.flowToolsRight.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowToolsRight.Location = new System.Drawing.Point(741, 26);
+            this.flowToolsRight.Location = new System.Drawing.Point(548, 26);
+            this.flowToolsRight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowToolsRight.Name = "flowToolsRight";
-            this.flowToolsRight.Size = new System.Drawing.Size(494, 521);
+            this.flowToolsRight.Size = new System.Drawing.Size(687, 520);
             this.flowToolsRight.TabIndex = 6;
             // 
             // panelZoneToolset
             // 
             this.panelZoneToolset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelZoneToolset.Controls.Add(this.lblZoneStatus);
             this.panelZoneToolset.Controls.Add(this.lblZoneId);
             this.panelZoneToolset.Controls.Add(this.numZoneId);
             this.panelZoneToolset.Controls.Add(this.btnZoneRemove);
             this.panelZoneToolset.Controls.Add(this.btnZoneAdd);
-            this.panelZoneToolset.Location = new System.Drawing.Point(39, 2);
+            this.panelZoneToolset.Location = new System.Drawing.Point(232, 2);
             this.panelZoneToolset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelZoneToolset.Name = "panelZoneToolset";
-            this.panelZoneToolset.Size = new System.Drawing.Size(223, 516);
+            this.panelZoneToolset.Size = new System.Drawing.Size(223, 226);
             this.panelZoneToolset.TabIndex = 2;
             this.panelZoneToolset.Visible = false;
+            // 
+            // lblZoneId
+            // 
+            this.lblZoneId.AutoSize = true;
+            this.lblZoneId.Location = new System.Drawing.Point(11, 31);
+            this.lblZoneId.Name = "lblZoneId";
+            this.lblZoneId.Size = new System.Drawing.Size(60, 17);
+            this.lblZoneId.TabIndex = 0;
+            this.lblZoneId.Text = "Id зоны:";
+            // 
+            // numZoneId
+            // 
+            this.numZoneId.Location = new System.Drawing.Point(13, 50);
+            this.numZoneId.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.numZoneId.Name = "numZoneId";
+            this.numZoneId.Size = new System.Drawing.Size(197, 22);
+            this.numZoneId.TabIndex = 1;
+            this.numZoneId.ValueChanged += new System.EventHandler(this.NumZoneId_ValueChanged);
             // 
             // btnZoneRemove
             // 
@@ -637,7 +684,7 @@
             this.btnZoneRemove.Location = new System.Drawing.Point(13, 111);
             this.btnZoneRemove.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnZoneRemove.Name = "btnZoneRemove";
-            this.btnZoneRemove.Size = new System.Drawing.Size(198, 28);
+            this.btnZoneRemove.Size = new System.Drawing.Size(197, 28);
             this.btnZoneRemove.TabIndex = 3;
             this.btnZoneRemove.Text = "Стирать";
             this.btnZoneRemove.UseVisualStyleBackColor = true;
@@ -650,37 +697,94 @@
             this.btnZoneAdd.Location = new System.Drawing.Point(13, 79);
             this.btnZoneAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnZoneAdd.Name = "btnZoneAdd";
-            this.btnZoneAdd.Size = new System.Drawing.Size(198, 28);
-            this.btnZoneAdd.TabIndex = 0;
+            this.btnZoneAdd.Size = new System.Drawing.Size(197, 28);
+            this.btnZoneAdd.TabIndex = 2;
             this.btnZoneAdd.Text = "Рисовать";
             this.btnZoneAdd.UseVisualStyleBackColor = true;
             this.btnZoneAdd.Click += new System.EventHandler(this.BtnZoneAdd_Click);
             // 
-            // numZoneId
+            // panelGateToolset
             // 
-            this.numZoneId.Location = new System.Drawing.Point(13, 51);
-            this.numZoneId.Name = "numZoneId";
-            this.numZoneId.Size = new System.Drawing.Size(198, 22);
-            this.numZoneId.TabIndex = 4;
-            this.numZoneId.ValueChanged += new System.EventHandler(this.NumZoneId_ValueChanged);
+            this.panelGateToolset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelGateToolset.Controls.Add(this.comboGatePlayer);
+            this.panelGateToolset.Controls.Add(this.lblGatePlayer);
+            this.panelGateToolset.Controls.Add(this.lblGateId);
+            this.panelGateToolset.Controls.Add(this.numGateId);
+            this.panelGateToolset.Controls.Add(this.btnGateRemove);
+            this.panelGateToolset.Controls.Add(this.btnGateAdd);
+            this.panelGateToolset.Location = new System.Drawing.Point(3, 2);
+            this.panelGateToolset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelGateToolset.Name = "panelGateToolset";
+            this.panelGateToolset.Size = new System.Drawing.Size(223, 226);
+            this.panelGateToolset.TabIndex = 3;
+            this.panelGateToolset.Visible = false;
             // 
-            // lblZoneId
+            // comboGatePlayer
             // 
-            this.lblZoneId.AutoSize = true;
-            this.lblZoneId.Location = new System.Drawing.Point(10, 31);
-            this.lblZoneId.Name = "lblZoneId";
-            this.lblZoneId.Size = new System.Drawing.Size(92, 17);
-            this.lblZoneId.TabIndex = 5;
-            this.lblZoneId.Text = "Номер зоны:";
+            this.comboGatePlayer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboGatePlayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboGatePlayer.FormattingEnabled = true;
+            this.comboGatePlayer.Location = new System.Drawing.Point(13, 49);
+            this.comboGatePlayer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboGatePlayer.Name = "comboGatePlayer";
+            this.comboGatePlayer.Size = new System.Drawing.Size(197, 24);
+            this.comboGatePlayer.TabIndex = 1;
+            this.comboGatePlayer.SelectedIndexChanged += new System.EventHandler(this.ComboGatePlayer_SelectedIndexChanged);
             // 
-            // lblZoneStatus
+            // lblGatePlayer
             // 
-            this.lblZoneStatus.AutoSize = true;
-            this.lblZoneStatus.Location = new System.Drawing.Point(22, 155);
-            this.lblZoneStatus.Name = "lblZoneStatus";
-            this.lblZoneStatus.Size = new System.Drawing.Size(13, 17);
-            this.lblZoneStatus.TabIndex = 6;
-            this.lblZoneStatus.Text = "-";
+            this.lblGatePlayer.AutoSize = true;
+            this.lblGatePlayer.Location = new System.Drawing.Point(9, 27);
+            this.lblGatePlayer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblGatePlayer.Name = "lblGatePlayer";
+            this.lblGatePlayer.Size = new System.Drawing.Size(50, 17);
+            this.lblGatePlayer.TabIndex = 0;
+            this.lblGatePlayer.Text = "Игрок:";
+            // 
+            // lblGateId
+            // 
+            this.lblGateId.AutoSize = true;
+            this.lblGateId.Location = new System.Drawing.Point(9, 85);
+            this.lblGateId.Name = "lblGateId";
+            this.lblGateId.Size = new System.Drawing.Size(65, 17);
+            this.lblGateId.TabIndex = 2;
+            this.lblGateId.Text = "Id ворот:";
+            // 
+            // numGateId
+            // 
+            this.numGateId.Location = new System.Drawing.Point(13, 103);
+            this.numGateId.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.numGateId.Name = "numGateId";
+            this.numGateId.Size = new System.Drawing.Size(197, 22);
+            this.numGateId.TabIndex = 3;
+            this.numGateId.ValueChanged += new System.EventHandler(this.NumGateId_ValueChanged);
+            // 
+            // btnGateRemove
+            // 
+            this.btnGateRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGateRemove.Location = new System.Drawing.Point(13, 174);
+            this.btnGateRemove.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnGateRemove.Name = "btnGateRemove";
+            this.btnGateRemove.Size = new System.Drawing.Size(197, 28);
+            this.btnGateRemove.TabIndex = 5;
+            this.btnGateRemove.Text = "Стирать";
+            this.btnGateRemove.UseVisualStyleBackColor = true;
+            this.btnGateRemove.Click += new System.EventHandler(this.BtnGateRemove_Click);
+            // 
+            // btnGateAdd
+            // 
+            this.btnGateAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGateAdd.Location = new System.Drawing.Point(13, 140);
+            this.btnGateAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnGateAdd.Name = "btnGateAdd";
+            this.btnGateAdd.Size = new System.Drawing.Size(197, 28);
+            this.btnGateAdd.TabIndex = 4;
+            this.btnGateAdd.Text = "Рисовать";
+            this.btnGateAdd.UseVisualStyleBackColor = true;
+            this.btnGateAdd.Click += new System.EventHandler(this.BtnGateAdd_Click);
             // 
             // EditorForm
             // 
@@ -693,8 +797,8 @@
             this.Controls.Add(this.Status);
             this.Controls.Add(this.Menu);
             this.MainMenuStrip = this.Menu;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(1061, 596);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MinimumSize = new System.Drawing.Size(1061, 595);
             this.Name = "EditorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TacticWar - Редактор миссий";
@@ -721,6 +825,9 @@
             this.panelZoneToolset.ResumeLayout(false);
             this.panelZoneToolset.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numZoneId)).EndInit();
+            this.panelGateToolset.ResumeLayout(false);
+            this.panelGateToolset.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numGateId)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -780,7 +887,15 @@
         private System.Windows.Forms.NumericUpDown numZoneId;
         private System.Windows.Forms.Button btnZoneRemove;
         private System.Windows.Forms.Button btnZoneAdd;
-        private System.Windows.Forms.Label lblZoneStatus;
+        private System.Windows.Forms.ToolStripStatusLabel StatusStatus;
+        private System.Windows.Forms.ToolStripStatusLabel StatusSeparator1;
+        private System.Windows.Forms.Panel panelGateToolset;
+        private System.Windows.Forms.Label lblGateId;
+        private System.Windows.Forms.NumericUpDown numGateId;
+        private System.Windows.Forms.Button btnGateRemove;
+        private System.Windows.Forms.Button btnGateAdd;
+        private System.Windows.Forms.ComboBox comboGatePlayer;
+        private System.Windows.Forms.Label lblGatePlayer;
     }
 }
 

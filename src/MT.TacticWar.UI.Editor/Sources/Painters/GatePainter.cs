@@ -1,51 +1,44 @@
-﻿using System.Collections.Generic;
-using MT.TacticWar.Core;
+﻿using MT.TacticWar.Core;
 using MT.TacticWar.UI.Graphics;
 
 namespace MT.TacticWar.UI.Editor.Painters
 {
-    class ZonePainter : IPainter
+    class GatePainter : IPainter
     {
         private readonly GameGraphics graphics;
         private readonly MissionEditor mission;
-        private int zoneId;
+        private Player player;
+        private int gateId;
         private bool clear;
-        private Zone zone;
 
-        private bool active; // непрерывное рисование
         private int x;
         private int y;
 
-        public ZonePainter(GameGraphics graphics, MissionEditor mission, int zoneId, bool clear = false)
+        public GatePainter(GameGraphics graphics, MissionEditor mission, Player player, int gateId, bool clear = false)
         {
             Stop();
             this.graphics = graphics;
             this.mission = mission;
-            this.zoneId = zoneId;
+            this.player = player;
+            this.gateId = gateId;
             this.clear = clear;
-
-            zone = mission.Zones.GetById(this.zoneId);
-            if (null == zone)
-                zone = new Zone(this.zoneId, new Coordinates[0]);
         }
 
         public void Start(int x, int y)
         {
             this.x = x;
             this.y = y;
-            active = true;
         }
 
         public void Stop()
         {
-            active = false;
             x = -1;
             y = -1;
         }
 
         public bool IsActive()
         {
-            return active;
+            return false;
         }
 
         public bool TryMove(int x, int y)
@@ -71,25 +64,35 @@ namespace MT.TacticWar.UI.Editor.Painters
             {
                 PaintClear();
                 PaintAdd();
-                graphics.DrawZone(zoneId, x, y);
+                graphics.DrawGate(gateId, x, y);
             }
         }
 
         private void PaintClear()
         {
             var point = new Coordinates(x, y);
-            var old = mission.Zones.GetAt(point);
-            if (null != old)
+            foreach (var player in mission.Players)
             {
-                old.Remove(point);
-                mission.SetZones(mission.Zones.SetById(old));
+                var old = player.Gates.GetAt(point);
+                if (null != old)
+                {
+                    player.Gates.Remove(old);
+                    break;
+                }
             }
         }
 
         private void PaintAdd()
         {
-            zone.Add(new Coordinates(x, y));
-            mission.SetZones(mission.Zones.SetById(zone));
+            var old = player.Gates.GetById(gateId);
+            if (null != old)
+            {
+                player.Gates.Remove(old);
+                graphics.DrawCell(mission.Map[old.X, old.Y]);
+            }
+
+            var gate = new Gate(gateId, x, y);
+            player.Gates.Add(gate);
         }
     }
 }
