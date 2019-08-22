@@ -168,5 +168,34 @@ namespace MT.TacticWar.UI.Editor.Dialogs
         {
             MessageBox.Show(message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        private void BtnApply_Click(object sender, EventArgs e)
+        {
+            if (null != listPlayers.SelectedItem)
+            {
+                var player = listPlayers.SelectedItem as Player;
+                int index = players.IndexOf(player);
+
+                var playernew = new Player(
+                    player.Id,
+                    txtName.Text,
+                    (int)numTeam.Value,
+                    btnColor.BackColor.Name.ToLower(),
+                    player.Rank,
+                    (int)numMoney.Value,
+                    player.AI == Core.Players.PlayerIntelligence.AI
+                );
+
+                playernew.Divisions = player.Divisions;
+                playernew.Buildings = player.Buildings;
+                playernew.Gates = player.Gates;
+
+                players.Remove(player);
+                players.Insert(index, playernew);
+
+                UpdateList();
+                listPlayers.SelectedItem = playernew;
+            }
+        }
     }
 }

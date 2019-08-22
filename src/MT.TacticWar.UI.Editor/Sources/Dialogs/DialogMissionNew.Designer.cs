@@ -33,15 +33,15 @@
             this.txtMissionName = new System.Windows.Forms.TextBox();
             this.lblMissionBriefing = new System.Windows.Forms.Label();
             this.txtMissionBriefing = new System.Windows.Forms.TextBox();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(283, 145);
-            this.btnOk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnOk.Location = new System.Drawing.Point(283, 151);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(4);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(100, 28);
             this.btnOk.TabIndex = 6;
@@ -63,7 +63,7 @@
             // 
             this.txtMissionName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMissionName.Location = new System.Drawing.Point(119, 10);
-            this.txtMissionName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMissionName.Margin = new System.Windows.Forms.Padding(4);
             this.txtMissionName.Name = "txtMissionName";
             this.txtMissionName.Size = new System.Drawing.Size(264, 22);
             this.txtMissionName.TabIndex = 8;
@@ -88,22 +88,36 @@
             this.txtMissionBriefing.Multiline = true;
             this.txtMissionBriefing.Name = "txtMissionBriefing";
             this.txtMissionBriefing.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMissionBriefing.Size = new System.Drawing.Size(264, 101);
+            this.txtMissionBriefing.Size = new System.Drawing.Size(264, 95);
             this.txtMissionBriefing.TabIndex = 10;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(46, 151);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(100, 28);
+            this.btnCancel.TabIndex = 11;
+            this.btnCancel.Text = "Отмена";
+            this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // DialogMissionNew
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 188);
+            this.CancelButton = this.btnCancel;
+            this.ClientSize = new System.Drawing.Size(433, 194);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.txtMissionBriefing);
             this.Controls.Add(this.lblMissionBriefing);
             this.Controls.Add(this.txtMissionName);
             this.Controls.Add(this.lblMissionName);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DialogMissionNew";
@@ -121,5 +135,6 @@
         private System.Windows.Forms.TextBox txtMissionName;
         private System.Windows.Forms.Label lblMissionBriefing;
         private System.Windows.Forms.TextBox txtMissionBriefing;
+        private System.Windows.Forms.Button btnCancel;
     }
 }

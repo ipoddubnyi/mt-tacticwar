@@ -33,12 +33,12 @@ namespace MT.TacticWar.Core.Serialization
                 Map = new SerialFileInfoType
                 {
                     Version = versionMap,
-                    Path = ""
+                    Path = mapFileName
                 },
                 Mission = new SerialFileInfoType
                 {
                     Version = versionMission,
-                    Path = ""
+                    Path = misFileName
                 }
             };
 
@@ -182,7 +182,7 @@ namespace MT.TacticWar.Core.Serialization
 
             player.Divisions = MissionPlayerDivisions(pl, types);
             player.Buildings = MissionPlayerBuildings(pl);
-            player.Gates = MissionPlayerGates(pl);
+            player.Gates = MissionPlayerGates(pl.Gates);
 
             return player;
         }
@@ -207,10 +207,10 @@ namespace MT.TacticWar.Core.Serialization
             return buildings.ToArray();
         }
 
-        private static SerialGate[] MissionPlayerGates(Player pl)
+        private static SerialGate[] MissionPlayerGates(IEnumerable<Gate> gts)
         {
             var gates = new List<SerialGate>();
-            foreach (var gate in pl.Gates)
+            foreach (var gate in gts.Sort())
             {
                 var gt = new SerialGate
                 {
@@ -247,11 +247,14 @@ namespace MT.TacticWar.Core.Serialization
             return null;
         }*/
 
-        private static SerialZone[] MissionZones(Zone[] zns)
+        private static SerialZone[] MissionZones(IEnumerable<Zone> zns)
         {
             var zones = new List<SerialZone>();
             foreach (var zn in zns.Sort())
             {
+                if (0 == zn.Points.Length)
+                    continue;
+
                 var points = new List<SerialPosition>(zn.Points.Length);
                 foreach (var pt in zn.Points)
                 {

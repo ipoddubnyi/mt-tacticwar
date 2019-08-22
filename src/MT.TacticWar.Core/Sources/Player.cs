@@ -32,6 +32,7 @@ namespace MT.TacticWar.Core
             AI = ai ? PlayerIntelligence.AI : PlayerIntelligence.Human;
             Divisions = new List<Division>();
             Buildings = new List<Building>();
+            Gates = new List<Gate>();
         }
 
         public Division GetDivisionAt(int x, int y)

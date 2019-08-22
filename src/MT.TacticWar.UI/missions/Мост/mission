@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<mission xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <info>
+    <name>Мост</name>
+    <desc>
+        
+    </desc>
+    <version>1.0</version>
+  </info>
+  <players>
+    <player id="0" name="Игрок 1" team="1" color="green" rank="0" money="0" ai="false">
+      <divisions>
+        <division id="0" type="infantry" name="Пехота">
+          <position x="3" y="23" />
+          <units>
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+          </units>
+        </division>
+        <division id="0" type="infantry" name="Пехота">
+          <position x="5" y="23" />
+          <units>
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+            <unit id="0" type="partizan" divtype="infantry" />
+          </units>
+        </division>
+      </divisions>
+      <buildings />
+      <gates>
+        <gate x="0" y="2" id="0" />
+        <gate x="0" y="3" id="1" />
+        <gate x="0" y="4" id="2" />
+        <gate x="0" y="5" id="3" />
+        <gate x="0" y="6" id="4" />
+      </gates>
+    </player>
+    <player id="1" name="Игрок 2" team="2" color="red" rank="0" money="0" ai="false">
+      <divisions>
+        <division id="0" type="artillery" name="Артиллерия">
+          <position x="20" y="0" />
+          <units>
+            <unit id="0" type="howitzer" divtype="artillery" />
+            <unit id="0" type="howitzer" divtype="artillery" />
+          </units>
+        </division>
+        <division id="0" type="artillery" name="Артиллерия">
+          <position x="20" y="1" />
+          <units>
+            <unit id="0" type="howitzer" divtype="artillery" />
+            <unit id="0" type="howitzer" divtype="artillery" />
+          </units>
+        </division>
+        <division id="0" type="artillery" name="Артиллерия">
+          <position x="20" y="2" />
+          <units>
+            <unit id="0" type="howitzer" divtype="artillery" />
+            <unit id="0" type="howitzer" divtype="artillery" />
+          </units>
+        </division>
+        <division id="0" type="infantry" name="Пехота">
+          <position x="1" y="6" />
+          <units>
+            <unit id="0" type="soldier" divtype="infantry" />
+            <unit id="0" type="soldier" divtype="infantry" />
+            <unit id="0" type="soldier" divtype="infantry" />
+          </units>
+        </division>
+        <division id="0" type="infantry" name="Пехота">
+          <position x="2" y="2" />
+          <units>
+            <unit id="0" type="soldier" divtype="infantry" />
+            <unit id="0" type="soldier" divtype="infantry" />
+            <unit id="0" type="soldier" divtype="infantry" />
+          </units>
+        </division>
+        <division id="0" type="infantry" name="Пехота">
+          <position x="4" y="4" />
+          <units>
+            <unit id="0" type="soldier" divtype="infantry" />
+            <unit id="0" type="soldier" divtype="infantry" />
+            <unit id="0" type="soldier" divtype="infantry" />
+          </units>
+        </division>
+      </divisions>
+      <buildings>
+        <building id="0" type="storehouse" name="Склад">
+          <position x="22" y="1" />
+        </building>
+      </buildings>
+      <gates>
+        <gate x="24" y="2" id="0" />
+        <gate x="24" y="3" id="1" />
+        <gate x="24" y="4" id="2" />
+        <gate x="24" y="5" id="3" />
+        <gate x="24" y="6" id="4" />
+      </gates>
+    </player>
+    <player id="2" name="Нейтральный" team="3" color="white" rank="0" money="0" ai="false">
+      <divisions />
+      <buildings>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="20" y="11" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="20" y="12" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="19" y="10" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="21" y="14" />
+        </building>
+        <building id="0" type="church" name="Церковь">
+          <position x="22" y="16" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="19" y="9" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="21" y="13" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="9" y="11" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="9" y="13" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="9" y="14" />
+        </building>
+        <building id="0" type="hut" name="Сельский дом">
+          <position x="10" y="16" />
+        </building>
+      </buildings>
+      <gates />
+    </player>
+  </players>
+  <zones>
+    <zone id="3">
+      <point x="22" y="14" />
+      <point x="22" y="15" />
+      <point x="22" y="16" />
+      <point x="21" y="16" />
+      <point x="21" y="15" />
+      <point x="21" y="14" />
+      <point x="21" y="13" />
+      <point x="21" y="11" />
+      <point x="21" y="12" />
+      <point x="20" y="12" />
+      <point x="20" y="11" />
+      <point x="20" y="10" />
+      <point x="19" y="10" />
+      <point x="19" y="9" />
+      <point x="20" y="9" />
+      <point x="18" y="9" />
+      <point x="18" y="10" />
+      <point x="18" y="11" />
+      <point x="19" y="11" />
+      <point x="19" y="12" />
+      <point x="19" y="13" />
+      <point x="20" y="13" />
+      <point x="20" y="14" />
+      <point x="20" y="15" />
+      <point x="20" y="16" />
+      <point x="22" y="13" />
+      <point x="22" y="12" />
+      <point x="21" y="10" />
+    </zone>
+  </zones>
+  <scripts />
+</mission>

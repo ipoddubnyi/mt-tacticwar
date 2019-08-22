@@ -99,6 +99,15 @@
     <None Include="missions\Вода\mission">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="missions\Мост\.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="missions\Мост\map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="missions\Мост\mission">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="missions\Тесты\.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

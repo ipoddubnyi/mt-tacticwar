@@ -4,6 +4,11 @@ namespace MT.TacticWar.Core.Landscape
 {
     public abstract class Schema
     {
+        public override string ToString()
+        {
+            return GetSchemaName(GetType());
+        }
+
         //
 
         public static string GetSchemaName(Type type)

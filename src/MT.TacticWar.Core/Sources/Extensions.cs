@@ -142,5 +142,10 @@ namespace MT.TacticWar.Core
 
             return null;
         }
+
+        public static IEnumerable<Gate> Sort(this IEnumerable<Gate> gates)
+        {
+            return gates.OrderBy(g => g.Id);
+        }
     }
 }
