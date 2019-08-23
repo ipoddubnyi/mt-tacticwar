@@ -3,12 +3,12 @@ using MT.TacticWar.Core.Landscape;
 
 namespace MT.TacticWar.Core.Base.Landscape.Summer
 {
-    [Cell("Поле", typeof(SummerSchema), Code = '.')]
-    public class Field : Cell, ILand
+    [Cell("Ж/д", typeof(SummerSchema), Code = '#')]
+    public class Railroad : Cell, ILand, IRails
     {
         public const int DefaultPassCost = 2;
 
-        public Field(int x, int y) :
+        public Railroad(int x, int y) :
             base(x, y, DefaultPassCost)
         {
         }

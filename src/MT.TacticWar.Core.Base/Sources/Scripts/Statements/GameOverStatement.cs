@@ -6,7 +6,7 @@ namespace MT.TacticWar.Core.Base.Scripts
     [Script("Завершить игру", Code = "gameover")]
     public class GameOverStatement : IStatement
     {
-        [ScriptArgument("Победитель", typeof(int))]
+        [ScriptArgument("Победитель")]
         private int WinnerId { get; set; }
 
         public GameOverStatement(params string[] args)

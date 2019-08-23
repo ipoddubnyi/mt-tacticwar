@@ -319,6 +319,7 @@
         <script desc="Сообщение">
             <condition type="unitcount">
                 <argument comment="player">0</argument>
+                <argument comment="Операция">=</argument>
                 <argument comment="count">0</argument>
             </condition>
             <statement type="message">
@@ -328,6 +329,7 @@
         <script desc="Победа игрока 1">
             <condition type="unitcount">
                 <argument comment="player">0</argument>
+                <argument comment="Операция">=</argument>
                 <argument comment="count">0</argument>
             </condition>
             <statement type="gameover">

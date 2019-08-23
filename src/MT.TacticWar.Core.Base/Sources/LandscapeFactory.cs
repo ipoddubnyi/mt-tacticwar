@@ -19,19 +19,23 @@ namespace MT.TacticWar.Core.Base.Landscape
         {
             new CellCreator(typeof(SummerSchema), typeof(Field)),
             new CellCreator(typeof(SummerSchema), typeof(Road)),
+            new CellCreator(typeof(SummerSchema), typeof(Railroad)),
             new CellCreator(typeof(SummerSchema), typeof(Water)),
             new CellCreator(typeof(SummerSchema), typeof(Forest)),
             new CellCreator(typeof(SummerSchema), typeof(Sand)),
             new CellCreator(typeof(SummerSchema), typeof(Stones)),
             new CellCreator(typeof(SummerSchema), typeof(Bridge)),
+            new CellCreator(typeof(SummerSchema), typeof(RailwayBridge)),
 
             new CellCreator(typeof(WinterSchema), typeof(Snow)),
             new CellCreator(typeof(WinterSchema), typeof(Road)),
+            new CellCreator(typeof(WinterSchema), typeof(Railroad)),
             new CellCreator(typeof(WinterSchema), typeof(ColdWater)),
             new CellCreator(typeof(WinterSchema), typeof(WinterForest)),
             new CellCreator(typeof(WinterSchema), typeof(Sand)),
             new CellCreator(typeof(WinterSchema), typeof(Stones)),
             new CellCreator(typeof(WinterSchema), typeof(Bridge)),
+            new CellCreator(typeof(WinterSchema), typeof(RailwayBridge)),
             new CellCreator(typeof(WinterSchema), typeof(Ice))
         };
 

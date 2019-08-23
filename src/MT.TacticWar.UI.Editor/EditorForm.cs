@@ -632,8 +632,8 @@ namespace MT.TacticWar.UI.Editor
                 {
                     int playersCount = 2;
                     var players = new Player[playersCount];
-                    players[0] = new Player(0, "Игрок 1", 1, "green", Core.Players.PlayerRank.Soldier, 0, false);
-                    players[1] = new Player(1, "Игрок 2", 2, "red", Core.Players.PlayerRank.Soldier, 0, false);
+                    players[0] = new Player(0, "Игрок 1", 1, "green", 50000);
+                    players[1] = new Player(1, "Игрок 2", 2, "red", 50000);
 
                     SelectedMission = new MissionEditor(dialog.MissionName, dialog.MissionBriefing, players, SelectedMap);
                     UpdateUI(SelectedMap.Schema, true);

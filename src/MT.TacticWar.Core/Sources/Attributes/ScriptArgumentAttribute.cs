@@ -5,18 +5,18 @@ namespace MT.TacticWar.Core
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class ScriptArgumentAttribute : Attribute
     {
-        public ScriptArgumentAttribute(string name, Type type)
+        public ScriptArgumentAttribute(string name)
         {
             Name = name;
-            Type = type;
+
+            CanBeEmpty = false;
+            Min = 0;
+            Max = 100;
         }
 
         public string Name { get; set; }
-        public Type Type { get; set; }
-
-        //
-
-        public bool IsString => typeof(string) == Type;
-        public bool IsInteger => typeof(int) == Type;
+        public bool CanBeEmpty { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
     }
 }

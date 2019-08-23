@@ -70,6 +70,13 @@ namespace MT.TacticWar.Core.Objects
             Player.Buildings.Remove(this);
         }
 
+        public int Repair(int medkit)
+        {
+            medkit = Math.Min(medkit, Unit.HealthMax - Health);
+            Health += medkit;
+            return medkit;
+        }
+
         //
 
         public static string GetBuildingType(Type type)

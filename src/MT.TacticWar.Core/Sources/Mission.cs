@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Scripts;
 
@@ -12,7 +11,7 @@ namespace MT.TacticWar.Core
         public string Briefing { get; protected set; }
         public Player[] Players { get; protected set; }
         public Player CurrentPlayer { get; protected set; }
-        public int Cycles { get; protected set; }
+        public int CycleNumber { get; protected set; }
         public Zone[] Zones { get; protected set; }
         public Script[] Scripts { get; protected set; }
         public Map Map { get; protected set; }
@@ -32,7 +31,7 @@ namespace MT.TacticWar.Core
             Briefing = briefing;
             Players = players;
             CurrentPlayer = Players[0];
-            Cycles = 0;
+            CycleNumber = 0;
             Zones = zones;
             Scripts = scripts;
             Map = map;
@@ -50,7 +49,7 @@ namespace MT.TacticWar.Core
                     if (i == Players.Length - 1)
                     {
                         CurrentPlayer = Players[0];
-                        Cycles += 1;
+                        CycleNumber += 1;
                     }
                     else
                     {
@@ -126,8 +125,8 @@ namespace MT.TacticWar.Core
 
             foreach (var script in Scripts)
             {
-                if (script.Condition.Check(this))
-                    Situations.Add(script.Statement.Execute(this));
+                if (script.Check(this))
+                    Situations.Add(script.Execute(this));
             }
         }
     }

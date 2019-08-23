@@ -11,16 +11,25 @@ namespace MT.TacticWar.Core.Serialization
         [XmlAttribute("desc")]
         public string Description { get; set; }
 
+        [XmlAttribute("repeat")]
+        public bool Repeatable { get; set; }
+
         [XmlElement("condition")]
         public SerialScriptEntry Condition { get; set; }
 
         [XmlElement("statement")]
         public SerialScriptEntry Statement { get; set; }
 
+        public SerialScript()
+        {
+            Repeatable = false;
+        }
+
         public Script Create()
         {
             return new Script(
                     Description,
+                    Repeatable,
                     ScriptFactory.CreateCondition(Condition.Type, Condition.GetArguments()),
                     ScriptFactory.CreateStatement(Statement.Type, Statement.GetArguments())
                 );

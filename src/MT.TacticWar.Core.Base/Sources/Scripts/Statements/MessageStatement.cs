@@ -6,7 +6,7 @@ namespace MT.TacticWar.Core.Base.Scripts
     [Script("Показать сообщение", Code = "message")]
     public class MessageStatement : IStatement
     {
-        [ScriptArgument("Сообщение", typeof(string))]
+        [ScriptArgument("Сообщение", CanBeEmpty = false)]
         private string Text { get; set; }
 
         public MessageStatement(params string[] args)

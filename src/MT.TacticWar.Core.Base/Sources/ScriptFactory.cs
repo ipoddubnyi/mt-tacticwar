@@ -8,13 +8,23 @@ namespace MT.TacticWar.Core.Base.Scripts
     {
         public static readonly List<ScriptConditionCreator> Conditions = new List<ScriptConditionCreator>()
         {
-            new ScriptConditionCreator(typeof(UnitCountCondition))
+            new ScriptConditionCreator(typeof(BuildingCountCondition)),
+            new ScriptConditionCreator(typeof(BuildingExistsCondition)),
+            new ScriptConditionCreator(typeof(CycleCountCondition)),
+            new ScriptConditionCreator(typeof(UnitCountCondition)),
+            new ScriptConditionCreator(typeof(UnitCountInZoneCondition)),
+            new ScriptConditionCreator(typeof(UnitExistsCondition)),
+            new ScriptConditionCreator(typeof(UnitInZoneCondition))
         };
 
         public static readonly List<ScriptStatementCreator> Statements = new List<ScriptStatementCreator>()
         {
             new ScriptStatementCreator(typeof(GameOverStatement)),
-            new ScriptStatementCreator(typeof(MessageStatement))
+            new ScriptStatementCreator(typeof(MessageStatement)),
+            new ScriptStatementCreator(typeof(MoveDivisionStatement)),
+            new ScriptStatementCreator(typeof(RepairBuildingStatement)),
+            new ScriptStatementCreator(typeof(RepairDivisionStatement)),
+            new ScriptStatementCreator(typeof(RepairUnitStatement))
         };
 
         public static ICondition CreateCondition(string code, string[] arguments)

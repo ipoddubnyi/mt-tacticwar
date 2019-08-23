@@ -8,7 +8,7 @@
     <version>1.0</version>
   </info>
   <players>
-    <player id="0" name="Игрок 1" team="1" color="green" rank="0" money="0" ai="false">
+    <player id="0" name="Игрок 1" team="1" color="green" money="50000" ai="false">
       <divisions>
         <division id="0" type="infantry" name="Пехота">
           <position x="3" y="23" />
@@ -32,6 +32,14 @@
             <unit id="0" type="partizan" divtype="infantry" />
           </units>
         </division>
+        <division id="0" type="train" name="Поезд">
+          <position x="1" y="3" />
+          <units>
+            <unit id="0" type="armoredcar" divtype="train" />
+            <unit id="0" type="armoredcar" divtype="train" />
+            <unit id="0" type="armoredcar" divtype="train" />
+          </units>
+        </division>
       </divisions>
       <buildings />
       <gates>
@@ -42,7 +50,7 @@
         <gate x="0" y="6" id="4" />
       </gates>
     </player>
-    <player id="1" name="Игрок 2" team="2" color="red" rank="0" money="0" ai="false">
+    <player id="1" name="Игрок 2" team="2" color="red" money="50000" ai="true">
       <divisions>
         <division id="0" type="artillery" name="Артиллерия">
           <position x="20" y="0" />
@@ -103,7 +111,7 @@
         <gate x="24" y="6" id="4" />
       </gates>
     </player>
-    <player id="2" name="Нейтральный" team="3" color="white" rank="0" money="0" ai="false">
+    <player id="2" name="Нейтральный" team="-1" color="white" money="0" ai="false">
       <divisions />
       <buildings>
         <building id="0" type="hut" name="Сельский дом">

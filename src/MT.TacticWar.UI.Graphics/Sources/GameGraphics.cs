@@ -113,9 +113,11 @@ namespace MT.TacticWar.UI.Graphics
         private Color GetCellColor(Cell cell)
         {
             if (cell is Field)
-                return /*(MapSchema.Winter == schema) ? Color.White :*/ Color.Green;
+                return Color.Green;
             if (cell is Road)
                 return Color.LightGray;
+            if (cell is Railroad)
+                return Color.Gray;
             if (cell is Water)
                 return Color.Blue;
             if (cell is ColdWater)
@@ -127,13 +129,15 @@ namespace MT.TacticWar.UI.Graphics
             if (cell is Snow)
                 return Color.White;
             if (cell is Sand)
-                return /*(MapSchema.Winter == schema) ? Color.LightYellow :*/ Color.Yellow;
+                return Color.Yellow;
             if (cell is Stones)
-                return /*(MapSchema.Winter == schema) ? Color.DimGray :*/ Color.Gray;
+                return Color.DimGray;
             if (cell is Ice)
                 return Color.LightBlue;
             if (cell is Bridge)
-                return Color.Brown;
+                return Color.Chocolate;
+            if (cell is RailwayBridge)
+                return Color.Sienna;
 
             return Color.Black;
         }

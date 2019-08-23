@@ -84,7 +84,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != comboConditionType.SelectedItem)
             {
                 var condition = (ScriptConditionCreator)comboConditionType.SelectedItem;
-                conditionParameters = ScriptArgument.GetArguments(condition.Type);
+                conditionParameters = ScriptArgument.GetArgumentsArray(condition.Type);
                 ListConditionParamsRefresh();
             }
         }
@@ -94,7 +94,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (null != comboStatementType.SelectedItem)
             {
                 var statement = (ScriptStatementCreator)comboStatementType.SelectedItem;
-                statementParameters = ScriptArgument.GetArguments(statement.Type);
+                statementParameters = ScriptArgument.GetArgumentsArray(statement.Type);
                 ListStatementParamsRefresh();
             }
         }
@@ -104,7 +104,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (listConditionParams.SelectedIndex >= 0)
             {
                 var param = conditionParameters[listConditionParams.SelectedIndex];
-                using (var dialog = new DialogScriptParamInput(param.Name, param.Value))
+                using (var dialog = new DialogScriptParamInput(param))
                 {
                     if (DialogResult.OK == dialog.ShowDialog())
                     {
@@ -121,7 +121,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             if (listStatementParams.SelectedIndex >= 0)
             {
                 var param = statementParameters[listStatementParams.SelectedIndex];
-                using (var dialog = new DialogScriptParamInput(param.Name, param.Value))
+                using (var dialog = new DialogScriptParamInput(param))
                 {
                     if (DialogResult.OK == dialog.ShowDialog())
                     {
@@ -143,6 +143,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
             Script = new Script(
                     txtDescription.Text,
+                    checkRepeat.Checked,
                     condition.Create(GetParametersValues(conditionParameters)),
                     statement.Create(GetParametersValues(statementParameters))
                 );

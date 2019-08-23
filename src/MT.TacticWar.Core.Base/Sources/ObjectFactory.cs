@@ -10,6 +10,7 @@ namespace MT.TacticWar.Core.Base.Objects
         {
             new DivisionCreator(typeof(Infantry)),
             new DivisionCreator(typeof(Vehicle)),
+            new DivisionCreator(typeof(Train)),
             new DivisionCreator(typeof(Ship)),
             new DivisionCreator(typeof(Navy)),
             new DivisionCreator(typeof(Artillery)),

@@ -13,7 +13,7 @@ namespace MT.TacticWar.Core
             Points = points;
         }
 
-        public bool In(Coordinates pt)
+        public bool Include(Coordinates pt)
         {
             foreach (var point in Points)
             {
@@ -25,13 +25,13 @@ namespace MT.TacticWar.Core
 
         public void Add(Coordinates pt)
         {
-            if (!In(pt))
+            if (!Include(pt))
                 Points = Points.Append(pt).ToArray();
         }
 
         public void Remove(Coordinates pt)
         {
-            if (In(pt))
+            if (Include(pt))
                 Points = Points.Where(point => !point.Equals(pt)).ToArray();
         }
     }

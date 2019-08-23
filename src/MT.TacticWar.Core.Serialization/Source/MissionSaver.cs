@@ -175,9 +175,8 @@ namespace MT.TacticWar.Core.Serialization
                 Name = pl.Name,
                 Team = pl.Team,
                 Color = pl.Color,
-                Rank = (int)pl.Rank,
                 Money = pl.Money,
-                AI = pl.AI == PlayerIntelligence.AI
+                AI = pl.AI
             };
 
             player.Divisions = MissionPlayerDivisions(pl, types);

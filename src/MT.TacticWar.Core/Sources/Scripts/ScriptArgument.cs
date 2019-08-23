@@ -4,15 +4,43 @@ using System.Reflection;
 
 namespace MT.TacticWar.Core.Scripts
 {
-    public struct ScriptArgument
+    public class ScriptArgument
     {
-        public string Name { get; set; }
+        private readonly ScriptArgumentAttribute attributes;
+
+        public string Name => attributes.Name;
+        public Type Type { get; private set; }
         public string Value { get; set; }
 
-        public ScriptArgument(string name, string value = "")
+        public ScriptArgument(ScriptArgumentAttribute attributes, Type type, string value = "")
         {
-            Name = name;
+            this.attributes = attributes;
+            Type = type;
             Value = value;
+        }
+
+        public bool Check()
+        {
+            return CheckPossible(Value);
+        }
+
+        public bool CheckPossible(string value)
+        {
+            if (Type.Equals(typeof(string)))
+                return attributes.CanBeEmpty ? true : !string.IsNullOrEmpty(value);
+
+            if (Type.Equals(typeof(int)))
+            {
+                if (int.TryParse(value, out var vint))
+                    return vint >= attributes.Min && vint <= attributes.Max;
+
+                return false;
+            }
+
+            if (Type.Equals(typeof(Operation)))
+                return Operation.TryConvertOperationType(value, out var vop);
+
+            return true;
         }
 
         public override string ToString()
@@ -22,17 +50,18 @@ namespace MT.TacticWar.Core.Scripts
 
         //
 
-        public static ScriptArgument[] GetArguments(Type conditionType)
+        public static ScriptArgument[] GetArgumentsArray(Type conditionType)
         {
             var arguments = new List<ScriptArgument>();
 
             var properties = conditionType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var property in properties)
             {
+                var type = property.PropertyType;
                 var attrs = property.GetCustomAttributes(typeof(ScriptArgumentAttribute), false);
-                foreach (ScriptArgumentAttribute col in attrs)
+                foreach (ScriptArgumentAttribute attr in attrs)
                 {
-                    arguments.Add(new ScriptArgument(col.Name));
+                    arguments.Add(new ScriptArgument(attr, type));
                 }
             }
 
@@ -46,11 +75,12 @@ namespace MT.TacticWar.Core.Scripts
             var properties = condition.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var property in properties)
             {
+                var type = property.PropertyType;
+                var value = property.GetValue(condition, null).ToString();
                 var attrs = property.GetCustomAttributes(typeof(ScriptArgumentAttribute), false);
-                foreach (ScriptArgumentAttribute col in attrs)
+                foreach (ScriptArgumentAttribute attr in attrs)
                 {
-                    var value = property.GetValue(condition, null).ToString();
-                    arguments.Add(new ScriptArgument(col.Name, value));
+                    arguments.Add(new ScriptArgument(attr, type, value));
                 }
             }
 
@@ -64,12 +94,13 @@ namespace MT.TacticWar.Core.Scripts
 
             var properties = statement.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var property in properties)
-            {
+        {
+                var type = property.PropertyType;
+                var value = property.GetValue(statement, null).ToString();
                 var attrs = property.GetCustomAttributes(typeof(ScriptArgumentAttribute), false);
-                foreach (ScriptArgumentAttribute col in attrs)
+                foreach (ScriptArgumentAttribute attr in attrs)
                 {
-                    var value = property.GetValue(statement, null).ToString();
-                    arguments.Add(new ScriptArgument(col.Name, value));
+                    arguments.Add(new ScriptArgument(attr, type, value));
                 }
             }
 

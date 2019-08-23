@@ -19,6 +19,8 @@ namespace MT.TacticWar.Core.Base.Units
             new UnitCreator(typeof(TankHeavy)),
             new UnitCreator(typeof(AntiAir)),
 
+            new UnitCreator(typeof(ArmoredCar)),
+
             new UnitCreator(typeof(Powerboat)),
 
             new UnitCreator(typeof(Battleship)),

@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Windows.Forms;
+using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.UI.Editor.Dialogs
 {
     public partial class DialogScriptParamInput : Form
     {
+        private ScriptArgument argument;
         public string Value => txtParamValue.Text;
 
-        public DialogScriptParamInput(string name, string value)
+        public DialogScriptParamInput(ScriptArgument argument)
         {
             InitializeComponent();
 
-            txtParamValue.Text = value;
+            this.argument = argument;
+            txtParamValue.Text = argument.Value;
         }
 
         private void ShowError(string message)
@@ -27,9 +30,9 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private bool ValidateEntries()
         {
-            if (0 == txtParamValue.Text.Length)
+            if (!argument.CheckPossible(txtParamValue.Text))
             {
-                ShowError("Значение не может быть пустым.");
+                ShowError("Значение не соответствует требованиям.");
                 return false;
             }
 

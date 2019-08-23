@@ -99,7 +99,7 @@ namespace MT.TacticWar.Core
         {
             foreach (var zone in zones)
             {
-                if (zone.In(point))
+                if (zone.Include(point))
                     return zone;
             }
 

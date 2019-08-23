@@ -143,15 +143,10 @@ namespace MT.TacticWar.Core.Serialization
 
         private static Player LoadMissionPlayer(SerialPlayer pl, SerialMissionTypes types)
         {
-            var player = new Player(
-                pl.Id,
-                pl.Name,
-                pl.Team,
-                pl.Color,
-                (PlayerRank)pl.Rank,
-                pl.Money,
-                pl.AI
-            );
+            var player = new Player(pl.Id, pl.Name, pl.Team, pl.Color, pl.Money)
+            {
+                AI = pl.AI
+            };
 
             player.Divisions = LoadMissionPlayerDivisions(pl, types, player);
             player.Buildings = LoadMissionPlayerBuildings(pl, player);

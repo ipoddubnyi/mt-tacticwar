@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Base.Scripts
@@ -7,13 +6,13 @@ namespace MT.TacticWar.Core.Base.Scripts
     [Script("Юнит в зоне", Code = "unitinzone")]
     public class UnitInZoneCondition : ICondition
     {
-        [ScriptArgument("Игрок", typeof(int))]
+        [ScriptArgument("Игрок")]
         private int PlayerId { get; set; }
 
-        [ScriptArgument("Юнит", typeof(int))]
+        [ScriptArgument("Юнит")]
         private int UnitId { get; set; }
 
-        [ScriptArgument("Зона", typeof(int))]
+        [ScriptArgument("Зона")]
         private int ZoneId { get; set; }
 
         public UnitInZoneCondition(params string[] args)
@@ -29,17 +28,14 @@ namespace MT.TacticWar.Core.Base.Scripts
         public bool Check(Mission mission)
         {
             var unit = mission.Players.GetById(PlayerId).GetUnitById(UnitId);
-            if (null != unit)
-            {
-                var position = unit.Division.Position;
-                foreach (var zone in mission.Zones)
-                {
-                    if (zone.In(position))
-                        return true;
-                }
-            }
+            if (null == unit)
+                return false;
 
-            return false;
+            var zone = mission.Zones.GetById(ZoneId);
+            if (null == zone)
+                return false;
+
+            return zone.Include(unit.Division.Position);
         }
     }
 }

@@ -10,9 +10,10 @@ namespace MT.TacticWar.Core
         public string Name { get; private set; }
         public int Team { get; private set; }
         public string Color { get; private set; }
+        public int Money { get; private set; }
+
         public PlayerRank Rank { get; private set; }        // уровень игрока. В зависимости от него игрок может формировать новые подразделения
-        public int Money { get; private set; }              // ресурсы, за которые игрок может ремонтировать войска и покупать новое вооружение
-        public PlayerIntelligence AI { get; private set; }
+        public bool AI { get; set; }
         public bool IsNeutral => -1 == Team;
 
         public List<Division> Divisions { get; set; }
@@ -20,16 +21,17 @@ namespace MT.TacticWar.Core
         public List<Gate> Gates { get; set; }               // ворота для выхода подкреплений
 
 
-        public Player(int id, string name, int team, string color, PlayerRank rank, int money, bool ai)
+        public Player(int id, string name, int team, string color, int money)
         {
             Id = id;
             Name = name;
             Team = team;
             Color = color;
-            Rank = rank;
             Money = money;
 
-            AI = ai ? PlayerIntelligence.AI : PlayerIntelligence.Human;
+            Rank = PlayerRank.Soldier;
+            AI = false;
+
             Divisions = new List<Division>();
             Buildings = new List<Building>();
             Gates = new List<Gate>();

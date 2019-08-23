@@ -273,11 +273,11 @@ namespace MT.TacticWar.Core.Objects
                 unit.Activate(mission);
         }
 
-        public void RepairUnits()
+        public void RepairUnits(int medkit = Unit.HealthMax)
         {
             foreach (var unit in Units)
             {
-                int medkit = Unit.HealthMax - unit.Health;
+                medkit = Math.Min(medkit, Unit.HealthMax - unit.Health);
 
                 if (!Player.CanBuy(medkit))
                     continue;

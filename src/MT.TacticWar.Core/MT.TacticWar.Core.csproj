@@ -50,6 +50,8 @@
     <Compile Include="Sources\Attributes\ScriptArgumentAttribute.cs" />
     <Compile Include="Sources\Attributes\ScriptAttribute.cs" />
     <Compile Include="Sources\Attributes\DivisionAttribute.cs" />
+    <Compile Include="Sources\Common\Operation.cs" />
+    <Compile Include="Sources\Common\OperationType.cs" />
     <Compile Include="Sources\Fog.cs" />
     <Compile Include="Sources\Extensions.cs" />
     <Compile Include="Sources\Common\MoveType.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="Sources\Landscape\CellCreator.cs" />
     <Compile Include="Sources\Landscape\IForest.cs" />
     <Compile Include="Sources\Landscape\ILand.cs" />
+    <Compile Include="Sources\Landscape\IRails.cs" />
     <Compile Include="Sources\Landscape\IWater.cs" />
     <None Include="Sources\Missions\MissionManage.md" />
     <Compile Include="Sources\Landscape\Schema.cs" />
@@ -92,7 +95,7 @@
     <Compile Include="Sources\Scripts\ScriptArgument.cs" />
     <Compile Include="Sources\Scripts\ScriptConditionCreator.cs" />
     <Compile Include="Sources\Scripts\ScriptStatementCreator.cs" />
-    <Compile Include="Sources\Zone.cs" />
+    <Compile Include="Sources\Common\Zone.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

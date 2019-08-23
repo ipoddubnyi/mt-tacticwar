@@ -6,7 +6,7 @@ namespace MT.TacticWar.Core.Base.Scripts
     [Script("Номер шага", Code = "cyclecount")]
     public class CycleCountCondition : ICondition
     {
-        [ScriptArgument("Номер шага", typeof(int))]
+        [ScriptArgument("Номер шага")]
         private int CycleCount { get; set; }
 
         public CycleCountCondition(params string[] args)
@@ -19,7 +19,7 @@ namespace MT.TacticWar.Core.Base.Scripts
 
         public bool Check(Mission mission)
         {
-            return mission.Cycles == CycleCount;
+            return mission.CycleNumber == CycleCount;
         }
     }
 }

@@ -28,19 +28,22 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             listPlayers.DataSource = new BindingSource(players, null);
         }
 
-        private void listPlayers_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListPlayers_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (null != listPlayers.SelectedItem)
             {
                 var player = listPlayers.SelectedItem as Player;
                 txtName.Text = player.Name;
+                numTeam.Enabled = !player.IsNeutral;
                 numTeam.Value = player.Team;
                 btnColor.BackColor = ColorTranslator.FromHtml(player.Color);
                 numMoney.Value = player.Money;
+                checkNeutral.Checked = player.IsNeutral;
+                checkAI.Checked = player.AI;
             }
         }
 
-        private void btnAddPlayer_Click(object sender, EventArgs e)
+        private void BtnAddPlayer_Click(object sender, EventArgs e)
         {
             if (4 == players.Count)
             {
@@ -49,13 +52,13 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
 
             int count = players.Count;
-            var player = new Player(count, $"Игрок {count + 1}", count + 1, "blue", Core.Players.PlayerRank.Soldier, 0, false);
+            var player = new Player(count, $"Игрок {count + 1}", count + 1, "blue", 50000);
             players.Add(player);
             UpdateList();
             listPlayers.SelectedItem = player;
         }
 
-        private void btnRemovePlayer_Click(object sender, EventArgs e)
+        private void BtnRemovePlayer_Click(object sender, EventArgs e)
         {
             if (null != listPlayers.SelectedItem)
             {
@@ -77,7 +80,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
         }
 
-        private void btnUpPlayer_Click(object sender, EventArgs e)
+        private void BtnUpPlayer_Click(object sender, EventArgs e)
         {
             if (null != listPlayers.SelectedItem)
             {
@@ -93,7 +96,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
         }
 
-        private void btnDownPlayer_Click(object sender, EventArgs e)
+        private void BtnDownPlayer_Click(object sender, EventArgs e)
         {
             if (null != listPlayers.SelectedItem)
             {
@@ -109,7 +112,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
         }
 
-        private void btnColor_Click(object sender, EventArgs e)
+        private void BtnColor_Click(object sender, EventArgs e)
         {
             if (DialogResult.OK == colorDialog.ShowDialog())
             {
@@ -117,7 +120,7 @@ namespace MT.TacticWar.UI.Editor.Dialogs
             }
         }
 
-        private void btnOk_Click(object sender, EventArgs e)
+        private void BtnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateEntries())
                 DialogResult = DialogResult.Cancel;
@@ -125,48 +128,32 @@ namespace MT.TacticWar.UI.Editor.Dialogs
 
         private bool ValidateEntries()
         {
-            /*if (!int.TryParse(txtSizeWidth.Text, out int width))
-            {
-                ShowError("Неверное значение ширины карты.");
-                return false;
-            }
-
-            if (width < WidthMin || width > WidthMax)
-            {
-                ShowError($"Ширины карты должна быть от {WidthMin} до {WidthMax}.");
-                return false;
-            }
-
-            if (!int.TryParse(txtSizeHeight.Text, out int height))
-            {
-                ShowError("Неверное значение высоты карты.");
-                return false;
-            }
-
-            if (height < HeightMin || height > HeightMax)
-            {
-                ShowError($"Высоты карты должна быть от {HeightMin} до {HeightMax}.");
-                return false;
-            }
-
-            if (0 == txtMapName.Text.Length)
-            {
-                ShowError("Название карты не может быть пустым.");
-                return false;
-            }
-
-            MapSizeWidth = width;
-            MapSizeHeight = height;
-            MapSchema = comboMapSchema.SelectedValue.ToString();
-            MapName = txtMapName.Text;
-            MapDescription = txtMapDescription.Text;*/
-
             return true;
         }
 
         private void ShowError(string message)
         {
             MessageBox.Show(message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void NumTeam_ValueChanged(object sender, EventArgs e)
+        {
+            checkNeutral.Checked = (-1 == numTeam.Value);
+        }
+
+        private void CheckNeutral_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkNeutral.Checked)
+            {
+                numTeam.Enabled = false;
+                numTeam.Value = -1;
+            }
+            else
+            {
+                numTeam.Enabled = true;
+                var player = listPlayers.SelectedItem as Player;
+                numTeam.Value = player.Id + 1;
+            }
         }
 
         private void BtnApply_Click(object sender, EventArgs e)
@@ -179,12 +166,12 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 var playernew = new Player(
                     player.Id,
                     txtName.Text,
-                    (int)numTeam.Value,
+                    checkNeutral.Checked ? -1 : (int)numTeam.Value,
                     btnColor.BackColor.Name.ToLower(),
-                    player.Rank,
-                    (int)numMoney.Value,
-                    player.AI == Core.Players.PlayerIntelligence.AI
-                );
+                    (int)numMoney.Value)
+                {
+                    AI = checkAI.Checked
+                };
 
                 playernew.Divisions = player.Divisions;
                 playernew.Buildings = player.Buildings;
