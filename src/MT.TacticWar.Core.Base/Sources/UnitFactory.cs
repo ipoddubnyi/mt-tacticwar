@@ -31,6 +31,8 @@ namespace MT.TacticWar.Core.Base.Units
             new UnitCreator(typeof(Aircraft)),
 
             new UnitCreator(typeof(BridgeBuilder)),
+            new UnitCreator(typeof(RoadBuilder)),
+            new UnitCreator(typeof(RailroadBuilder))
         };
 
         public static UnitCreator[] GetAvailableUnitsForDivision(Type divisionType)

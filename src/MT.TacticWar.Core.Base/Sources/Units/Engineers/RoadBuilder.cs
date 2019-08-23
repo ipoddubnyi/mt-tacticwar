@@ -5,20 +5,20 @@ using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Base.Units
 {
-    [Unit("Мостоукладчик", typeof(Engineers), Code = "bridgebuilder")]
-    public class BridgeBuilder : Unit
+    [Unit("Асфальтоукладчик", typeof(Engineers), Code = "asphaltbuilder")]
+    public class RoadBuilder : Unit
     {
-        private const int BridgeCost = 600;
+        private const int AsphaltCost = 200;
 
-        public BridgeBuilder(int id, Division division, string name = null,
+        public RoadBuilder(int id, Division division, string name = null,
             int experience = ExperienceRecruit, int health = HealthMax, int? supply = null) :
             base(id, division, name, experience, health, supply)
         {
             Parameters = new UnitParameters()
             {
                 Steps = 6,
-                Supply = 3000,
-                Cost = 2000,
+                Supply = 1200,
+                Cost = 1200,
 
                 RadiusAttack = 0,
                 RadiusView = 1,
@@ -36,7 +36,7 @@ namespace MT.TacticWar.Core.Base.Units
             };
 
             if (string.IsNullOrEmpty(name))
-                Name = "Мостоукладчик";
+                Name = "Асфальтоукладчик";
 
             if (!supply.HasValue)
                 SupplyCurrent = Parameters.Supply;
@@ -44,23 +44,24 @@ namespace MT.TacticWar.Core.Base.Units
 
         public override void Activate(Mission mission)
         {
-            if (mission.Map[Division.Position] is IWater)
+            var cell = mission.Map[Division.Position];
+            if (cell is ILand && !(cell is Road) && !(cell is Bridge) && !(cell is IRails))
             {
-                if (SupplyCurrent < BridgeCost)
+                if (SupplyCurrent < AsphaltCost)
                     return;
 
-                if (!Division.Player.CanBuy(BridgeCost))
+                if (!Division.Player.CanBuy(AsphaltCost))
                     return;
 
-                // TODO: добавить проверку, есть ли мост в текущей схеме
-                var bridge = new Bridge(Division.Position.X, Division.Position.Y)
+                // TODO: добавить проверку, есть ли дорога в текущей схеме
+                var road = new Road(Division.Position.X, Division.Position.Y)
                 {
                     Object = Division
                 };
-                mission.Map.SetCell(bridge);
+                mission.Map.SetCell(road);
 
-                SupplyCurrent -= BridgeCost;
-                Division.Player.Buy(BridgeCost, $"Возведение моста {bridge.Coordinates}");
+                SupplyCurrent -= AsphaltCost;
+                Division.Player.Buy(AsphaltCost, $"Строительство дороги {road.Coordinates}");
             }
         }
     }

@@ -97,6 +97,8 @@
     <Compile Include="Sources\Units\Artillery\Howitzer.cs" />
     <Compile Include="Sources\Units\Aviation\Aircraft.cs" />
     <Compile Include="Sources\Units\Custom\CustomUnit.cs" />
+    <Compile Include="Sources\Units\Engineers\RailroadBuilder.cs" />
+    <Compile Include="Sources\Units\Engineers\RoadBuilder.cs" />
     <Compile Include="Sources\Units\Infantry\Igor.cs" />
     <Compile Include="Sources\Units\Infantry\Partizan.cs" />
     <Compile Include="Sources\Units\Infantry\Saboteur.cs" />
