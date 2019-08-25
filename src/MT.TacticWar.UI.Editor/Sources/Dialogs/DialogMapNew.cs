@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using MT.TacticWar.Core.Base.Landscape;
-using MT.TacticWar.Core.Landscape;
+using MT.TacticWar.Core.Utils;
 
 namespace MT.TacticWar.UI.Editor.Dialogs
 {

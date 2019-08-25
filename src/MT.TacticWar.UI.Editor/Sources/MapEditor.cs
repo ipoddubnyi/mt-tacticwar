@@ -21,5 +21,15 @@ namespace MT.TacticWar.UI.Editor
             base(map.Name, map.Description, map.Width, map.Height, map.Schema, map.Field)
         {
         }
+
+        public void SetName(string name)
+        {
+            Name = name;
+        }
+
+        public void SetDescription(string description)
+        {
+            Description = description;
+        }
     }
 }

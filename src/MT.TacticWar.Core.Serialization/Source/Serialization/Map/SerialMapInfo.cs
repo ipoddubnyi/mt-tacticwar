@@ -18,5 +18,18 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlElement("schema")]
         public string Schema { get; set; }
+
+        public SerialMapInfo()
+        {
+        }
+
+        public SerialMapInfo(Map map, string version)
+        {
+            Name = map.Name;
+            Description = map.Description;
+            Schema = Landscape.Schema.GetSchemaCode(map.Schema);
+            Size = new SerialSize(map.Width, map.Height);
+            Version = version;
+        }
     }
 }

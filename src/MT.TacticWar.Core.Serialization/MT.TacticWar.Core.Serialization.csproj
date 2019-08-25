@@ -44,7 +44,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\MissionSaver.cs" />
     <Compile Include="Source\MissionLoader.cs" />
-    <Compile Include="Source\Serialization\Mission\SerialZone.cs" />
+    <Compile Include="Source\Serialization\Mission\SerialTypeUnit.cs" />
+    <Compile Include="Source\Serialization\Common\SerialZone.cs" />
     <Compile Include="Source\Serialization\Scripts\SerialScriptArgument.cs" />
     <Compile Include="Source\Serialization\Scripts\SerialScriptEntry.cs" />
     <Compile Include="Source\Serialization\Scripts\SerialScripts.cs" />

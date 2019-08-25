@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     public class SerialDivision
     {
         [XmlAttribute("id")]
@@ -33,14 +32,46 @@ namespace MT.TacticWar.Core.Serialization
         {
             Id = division.Id;
             Type = Division.GetDivisionCode(division);
+
             Name = division.Name;
-            Position = new SerialPosition() { X = division.Position.X, Y = division.Position.Y };
+            Position = new SerialPosition(division.Position);
+            Units = SerialUnit.CreateFrom(division.Units).ToArray();
+        }
 
-            var units = new List<SerialUnit>();
-            foreach (var unit in division.Units)
-                units.Add(new SerialUnit(unit));
+        public Division Create(Player player, SerialMissionTypes types)
+        {
+            var division = ObjectFactory.CreateDivision(Type, player, Id, Name, Position.X, Position.Y);
+            var units = SerialUnit.Create(Units, division, types);
+            division.CompleteWithUnits(units);
+            return division;
+        }
 
-            Units = units.ToArray();
+        public Division CreateSupport(SerialMissionTypes types)
+        {
+            var division = ObjectFactory.CreateDivisionSupport(Type, Id, Name);
+            var units = SerialUnit.Create(Units, division, types);
+            division.CompleteWithUnits(units);
+            return division;
+        }
+
+        public static IEnumerable<Division> Create(IEnumerable<SerialDivision> sdivisions,
+            Player player, SerialMissionTypes types)
+        {
+            foreach (var sdivision in sdivisions)
+                yield return sdivision.Create(player, types);
+        }
+
+        public static IEnumerable<Division> CreateSupport(IEnumerable<SerialDivision> sdivisions,
+            SerialMissionTypes types)
+        {
+            foreach (var sdivision in sdivisions)
+                yield return sdivision.CreateSupport(types);
+        }
+
+        public static IEnumerable<SerialDivision> CreateFrom(IEnumerable<Division> divisions)
+        {
+            foreach (var division in divisions)
+                yield return new SerialDivision(division);
         }
     }
 }

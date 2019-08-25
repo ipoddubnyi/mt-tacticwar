@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     public class SerialScriptArgument
     {
         [XmlAttribute("comment")]
@@ -11,5 +11,21 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlText]
         public string Value { get; set; }
+
+        public SerialScriptArgument()
+        {
+        }
+
+        public SerialScriptArgument(ScriptArgument argument)
+        {
+            Comment = argument.Name;
+            Value = argument.Value;
+        }
+
+        public static IEnumerable<SerialScriptArgument> CreateFrom(IEnumerable<ScriptArgument> arguments)
+        {
+            foreach (var argument in arguments)
+                yield return new SerialScriptArgument(argument);
+        }
     }
 }

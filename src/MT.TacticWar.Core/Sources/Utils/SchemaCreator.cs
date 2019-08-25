@@ -1,6 +1,7 @@
 ﻿using System;
+using MT.TacticWar.Core.Landscape;
 
-namespace MT.TacticWar.Core.Landscape
+namespace MT.TacticWar.Core.Utils
 {
     public class SchemaCreator
     {

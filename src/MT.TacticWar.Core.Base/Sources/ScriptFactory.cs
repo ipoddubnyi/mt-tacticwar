@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MT.TacticWar.Core.Scripts;
+using MT.TacticWar.Core.Utils;
 
 namespace MT.TacticWar.Core.Base.Scripts
 {
@@ -19,6 +20,7 @@ namespace MT.TacticWar.Core.Base.Scripts
 
         public static readonly List<ScriptStatementCreator> Statements = new List<ScriptStatementCreator>()
         {
+            new ScriptStatementCreator(typeof(AddSupportStatement)),
             new ScriptStatementCreator(typeof(GameOverStatement)),
             new ScriptStatementCreator(typeof(MessageStatement)),
             new ScriptStatementCreator(typeof(MoveDivisionStatement)),

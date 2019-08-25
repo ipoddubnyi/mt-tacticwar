@@ -1,9 +1,7 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     public class SerialFileInfoType
     {
         [XmlAttribute("version")]
@@ -11,5 +9,15 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlAttribute("path")]
         public string Path { get; set; }
+
+        public SerialFileInfoType()
+        {
+        }
+
+        public SerialFileInfoType(string version, string path)
+        {
+            Version = version;
+            Path = path;
+        }
     }
 }

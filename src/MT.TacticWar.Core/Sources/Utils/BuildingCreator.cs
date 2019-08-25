@@ -1,6 +1,7 @@
 ﻿using System;
+using MT.TacticWar.Core.Objects;
 
-namespace MT.TacticWar.Core.Objects
+namespace MT.TacticWar.Core.Utils
 {
     public class BuildingCreator
     {

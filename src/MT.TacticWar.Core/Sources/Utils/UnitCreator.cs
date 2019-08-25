@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
+using MT.TacticWar.Core.Objects;
 
-namespace MT.TacticWar.Core.Objects
+namespace MT.TacticWar.Core.Utils
 {
     public class UnitCreator
     {

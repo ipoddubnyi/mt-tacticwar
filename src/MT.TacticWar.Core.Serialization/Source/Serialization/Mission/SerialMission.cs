@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     [XmlRoot("mission")]
     public class SerialMission
     {
@@ -30,6 +30,32 @@ namespace MT.TacticWar.Core.Serialization
         {
             Zones = new SerialZone[0];
             Scripts = new SerialScript[0];
+        }
+
+        public SerialMission(Mission mission, string version)
+        {
+            Info = new SerialMissionInfo(mission, version);
+            Players = SerialPlayer.CreateFrom(mission.Players).ToArray();
+            //TODO: Types = 
+            Zones = SerialZone.CreateFrom(mission.Zones.SortById()).ToArray();
+            Scripts = SerialScript.CreateFrom(mission.Scripts).ToArray();
+        }
+
+        public Mission Create(Map map)
+        {
+            var players = SerialPlayer.Create(Players, Types).ToArray();
+            var zones = SerialZone.Create(Zones).ToArray();
+            var support = SerialDivision.CreateSupport(Types.Divisions, Types).ToArray();
+            var scripts = SerialScript.Create(Scripts).ToArray();
+            return new Mission(
+                Info.Name,
+                Info.GetTrimmedBriefing(),
+                players,
+                zones,
+                support,
+                scripts,
+                map
+            );
         }
 
         public static void Serialize(string filePath, SerialMission mission)

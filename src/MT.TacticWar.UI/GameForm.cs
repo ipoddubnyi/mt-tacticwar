@@ -279,6 +279,7 @@ namespace MT.TacticWar.UI
 
             if (ans == DialogResult.Yes)
             {
+                // проверка до перехода хода
                 var signal = GAME.AnalizeSituation();
                 if (!AnalizeSignals(signal))
                 {
@@ -292,6 +293,10 @@ namespace MT.TacticWar.UI
                         MessageBoxIcon.Information);
 
                     gameMap.Visible = true;
+
+                    // проверка после перехода хода
+                    signal = GAME.AnalizeSituation();
+                    AnalizeSignals(signal);
                 }
             }
         }

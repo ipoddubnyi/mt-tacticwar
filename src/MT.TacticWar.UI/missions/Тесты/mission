@@ -2,7 +2,7 @@
 <mission>
     <info>
         <name>Тест</name>
-        <desc>
+        <briefing>
             ОПЕРАТИВНАЯ ОБСТАНОВКА:
             Тест
 
@@ -13,7 +13,7 @@
             1. Тест.
             2. Тест.
             3. Тест.
-        </desc>
+        </briefing>
         <version>1.0</version>
     </info>
     
@@ -167,25 +167,9 @@
                     <units>
                         <unit type="tank">
                             <name>T-34</name>
-                            <health>50</health>
                             <experience>25</experience>
-                            <cost>1000</cost>
-
-                            <powerinf>20</powerinf>
-                            <powerarm>50</powerarm>
-                            <powerair>5</powerair>
-
-                            <armourinf>80</armourinf>
-                            <armourarm>20</armourarm>
-
+                            <health>50</health>
                             <supply>1700</supply>
-
-                            <radiusattack>0</radiusattack>
-                            <radiusview>1</radiusview>
-
-                            <steps>5</steps>
-                            <stepland>true</stepland>
-                            <stepaqua>false</stepaqua>
                         </unit>
                         <unit type="t3485">
                             <health>80</health>
@@ -304,6 +288,22 @@
                 <stepaqua>false</stepaqua>
             </unit>
         </units>
+        
+        <support>
+            <division id="9911" type="infantry" name="Разведгруппа">
+                <units>
+                    <unit type="saboteur">
+                        <name>Подрывник</name>
+                    </unit>
+                    <unit type="saboteur">
+                        <name>Снайпер</name>
+                    </unit>
+                    <unit type="saboteur">
+                        <name>Связист</name>
+                    </unit>
+                </units>
+            </division>
+        </support>
     </types>
     
     <scripts>
@@ -316,6 +316,24 @@
             <action type="gameover" c="win" value="1" />
         </script-->
 
+        <script desc="Сообщение о подкреплении">
+            <condition type="cyclecount">
+                <argument comment="Номер шага">2</argument>
+            </condition>
+            <statement type="message">
+                <argument comment="text">Прибыло подкрепление</argument>
+            </statement>
+        </script>
+        <script desc="Подкрепление">
+            <condition type="cyclecount">
+                <argument comment="Номер шага">2</argument>
+            </condition>
+            <statement type="addsupport">
+                <argument comment="Игрок">0</argument>
+                <argument comment="Подкрепление">9911</argument>
+                <argument comment="Ворота">0</argument>
+            </statement>
+        </script>
         <script desc="Сообщение">
             <condition type="unitcount">
                 <argument comment="player">0</argument>

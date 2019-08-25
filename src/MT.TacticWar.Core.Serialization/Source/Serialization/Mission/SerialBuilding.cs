@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using MT.TacticWar.Core.Base.Objects;
 using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     public class SerialBuilding
     {
         [XmlAttribute("id")]
@@ -44,9 +44,39 @@ namespace MT.TacticWar.Core.Serialization
             Type = Building.GetBuildingCode(building);
 
             Name = building.Name;
-            Position = new SerialPosition() { X = building.Position.X, Y = building.Position.Y };
+            Position = new SerialPosition(building.Position);
             Health = building.Health;
             Security = building.IsSecured ? (int?)building.SecurityDivision.Id : null;
+        }
+
+        public Building Create(Player player)
+        {
+            var security = Security.HasValue ?
+                player.Divisions.GetById(Security.Value) :
+                null;
+
+            return ObjectFactory.CreateBuilding(
+                Type,
+                player,
+                Id,
+                Name,
+                Position.X,
+                Position.Y,
+                Health ?? 100,
+                security
+            );
+        }
+
+        public static IEnumerable<Building> Create(IEnumerable<SerialBuilding> sbuildings, Player player)
+        {
+            foreach (var sbuilding in sbuildings)
+                yield return sbuilding.Create(player);
+        }
+
+        public static IEnumerable<SerialBuilding> CreateFrom(IEnumerable<Building> buildings)
+        {
+            foreach (var building in buildings)
+                yield return new SerialBuilding(building);
         }
     }
 }

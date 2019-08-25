@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MT.TacticWar.Core.Objects;
+using MT.TacticWar.Core.Utils;
 
 namespace MT.TacticWar.Core.Base.Objects
 {
@@ -42,6 +43,11 @@ namespace MT.TacticWar.Core.Base.Objects
             }
 
             throw new Exception("Неизвестный тип подразделения.");
+        }
+
+        public static Division CreateDivisionSupport(string code, int id, string name)
+        {
+            return CreateDivision(code, null, id, name, -1, -1);
         }
 
         public static Building CreateBuilding(string code, Player player, int id, string name, int x, int y, int health, Division security)

@@ -116,7 +116,7 @@ namespace MT.TacticWar.Core
             return zones;
         }
 
-        public static IEnumerable<Zone> Sort(this IEnumerable<Zone> zones)
+        public static IEnumerable<Zone> SortById(this IEnumerable<Zone> zones)
         {
             return zones.OrderBy(z => z.Id);
         }
@@ -143,7 +143,7 @@ namespace MT.TacticWar.Core
             return null;
         }
 
-        public static IEnumerable<Gate> Sort(this IEnumerable<Gate> gates)
+        public static IEnumerable<Gate> SortById(this IEnumerable<Gate> gates)
         {
             return gates.OrderBy(g => g.Id);
         }

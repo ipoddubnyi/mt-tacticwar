@@ -1,19 +1,20 @@
 ﻿using System;
+using MT.TacticWar.Core.Scripts;
 
-namespace MT.TacticWar.Core.Scripts
+namespace MT.TacticWar.Core.Utils
 {
-    public class ScriptStatementCreator
+    public class ScriptConditionCreator
     {
         public Type Type;
 
-        public ScriptStatementCreator(Type type)
+        public ScriptConditionCreator(Type type)
         {
             Type = type;
         }
 
-        public IStatement Create(params string[] args)
+        public ICondition Create(params string[] args)
         {
-            return (IStatement)Activator.CreateInstance(Type, args);
+            return (ICondition)Activator.CreateInstance(Type, args);
         }
 
         public string GetCode()

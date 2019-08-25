@@ -3,8 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Base.Objects;
-using MT.TacticWar.Core.Base.Units;
-using MT.TacticWar.Core.Objects;
+using MT.TacticWar.Core.Utils;
 
 namespace MT.TacticWar.UI.Editor.Dialogs
 {

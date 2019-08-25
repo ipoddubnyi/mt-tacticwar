@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Base.Landscape;
 using MT.TacticWar.Core.Landscape;
-using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Serialization;
+using MT.TacticWar.Core.Utils;
 using MT.TacticWar.UI.Editor.Dialogs;
 using MT.TacticWar.UI.Editor.Painters;
 using MT.TacticWar.UI.Graphics;
@@ -531,12 +526,13 @@ namespace MT.TacticWar.UI.Editor
 
                 if (!ValidateSaveMap())
                     return;
-                
+
+                SelectedMap.SetName(txtMapName.Text);
+                SelectedMap.SetDescription(txtMapDescription.Text);
+
                 MissionSaver.SaveMap(
                     FilePathMap,
                     SelectedMap,
-                    txtMapName.Text,
-                    txtMapDescription.Text,
                     txtMapVersion.Text
                 );
 
@@ -571,11 +567,12 @@ namespace MT.TacticWar.UI.Editor
 
                     FilePathMap = dialog.FileName;
 
+                    SelectedMap.SetName(txtMapName.Text);
+                    SelectedMap.SetDescription(txtMapDescription.Text);
+
                     MissionSaver.SaveMap(
                         FilePathMap,
                         SelectedMap,
-                        txtMapName.Text,
-                        txtMapDescription.Text,
                         txtMapVersion.Text
                     );
 
@@ -685,11 +682,12 @@ namespace MT.TacticWar.UI.Editor
                 if (!ValidateSaveMission())
                     return;
 
+                SelectedMission.SetName(txtMissionName.Text);
+                SelectedMission.SetBriefing(txtMissionBriefing.Text);
+
                 MissionSaver.SaveMission(
                     FilePathMission,
                     SelectedMission,
-                    txtMissionName.Text,
-                    txtMissionBriefing.Text,
                     txtMissionVersion.Text
                 );
 
@@ -724,11 +722,12 @@ namespace MT.TacticWar.UI.Editor
 
                     FilePathMission = dialog.FileName;
 
+                    SelectedMission.SetName(txtMissionName.Text);
+                    SelectedMission.SetBriefing(txtMissionBriefing.Text);
+
                     MissionSaver.SaveMission(
                         FilePathMission,
                         SelectedMission,
-                        txtMissionName.Text,
-                        txtMissionBriefing.Text,
                         txtMissionVersion.Text
                     );
 
@@ -761,11 +760,11 @@ namespace MT.TacticWar.UI.Editor
                         return;
 
                     MissionSaver.SaveGame(
+                        SelectedMission,
                         dialog.GameName,
                         dialog.MapFileName,
-                        dialog.MissionFileName,
-                        SelectedMission,
                         txtMapVersion.Text,
+                        dialog.MissionFileName,
                         txtMissionVersion.Text
                     );
 

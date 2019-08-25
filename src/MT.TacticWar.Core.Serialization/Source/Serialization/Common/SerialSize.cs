@@ -1,9 +1,7 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     public class SerialSize
     {
         [XmlAttribute("width")]
@@ -11,5 +9,15 @@ namespace MT.TacticWar.Core.Serialization
 
         [XmlAttribute("height")]
         public int Height { get; set; }
+
+        public SerialSize()
+        {
+        }
+
+        public SerialSize(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
     }
 }

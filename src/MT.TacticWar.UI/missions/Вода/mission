@@ -2,7 +2,7 @@
 <mission>
     <info>
         <name>Тест</name>
-        <desc>
+        <briefing>
             ОПЕРАТИВНАЯ ОБСТАНОВКА:
             Тест
 
@@ -13,7 +13,7 @@
             1. Тест.
             2. Тест.
             3. Тест.
-        </desc>
+        </briefing>
         <version>1.0</version>
     </info>
     

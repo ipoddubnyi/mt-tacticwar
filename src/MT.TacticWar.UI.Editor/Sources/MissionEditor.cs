@@ -13,8 +13,18 @@ namespace MT.TacticWar.UI.Editor
         }
 
         public MissionEditor(Mission mission) :
-            base(mission.Name, mission.Briefing, mission.Players, mission.Zones, mission.Scripts, mission.Map)
+            base(mission.Name, mission.Briefing, mission.Players, mission.Zones, mission.Support, mission.Scripts, mission.Map)
         {
+        }
+
+        public void SetName(string name)
+        {
+            Name = name;
+        }
+
+        public void SetBriefing(string briefing)
+        {
+            Briefing = briefing;
         }
 
         public void SetPlayers(Player[] players)

@@ -3,11 +3,20 @@ using System.Xml.Serialization;
 
 namespace MT.TacticWar.Core.Serialization
 {
-    [Serializable]
     public class SerialMissionTypes
     {
         [XmlArray("units")]
         [XmlArrayItem("unit")]
-        public SerialUnit[] Units { get; set; }
+        public SerialTypeUnit[] Units { get; set; }
+
+        [XmlArray("support")]
+        [XmlArrayItem("division")]
+        public SerialDivision[] Divisions { get; set; }
+
+        public SerialMissionTypes()
+        {
+            Units = new SerialTypeUnit[0];
+            Divisions = new SerialDivision[0];
+        }
     }
 }
