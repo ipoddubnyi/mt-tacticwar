@@ -121,5 +121,11 @@ namespace MT.TacticWar.UI.Editor.Dialogs
                 listScripts.SelectedIndex = index + 1;
             }
         }
+
+        private void ListScripts_DoubleClick(object sender, EventArgs e)
+        {
+            if (null != listScripts.SelectedItem)
+                BtnEdit_Click(sender, e);
+        }
     }
 }

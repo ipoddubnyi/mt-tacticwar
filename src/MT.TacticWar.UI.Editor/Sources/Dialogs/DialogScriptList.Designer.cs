@@ -49,6 +49,7 @@
             this.listScripts.Name = "listScripts";
             this.listScripts.Size = new System.Drawing.Size(375, 308);
             this.listScripts.TabIndex = 0;
+            this.listScripts.DoubleClick += new System.EventHandler(this.ListScripts_DoubleClick);
             // 
             // btnNew
             // 

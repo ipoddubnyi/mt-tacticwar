@@ -9,14 +9,14 @@ namespace MT.TacticWar.Core.Serialization
         [XmlArrayItem("unit")]
         public SerialTypeUnit[] Units { get; set; }
 
-        [XmlArray("support")]
+        [XmlArray("reinforcement")]
         [XmlArrayItem("division")]
-        public SerialDivision[] Divisions { get; set; }
+        public SerialDivision[] Reinforcement { get; set; }
 
         public SerialMissionTypes()
         {
             Units = new SerialTypeUnit[0];
-            Divisions = new SerialDivision[0];
+            Reinforcement = new SerialDivision[0];
         }
     }
 }

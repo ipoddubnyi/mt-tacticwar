@@ -5,7 +5,7 @@ using MT.TacticWar.Core.Utils;
 namespace MT.TacticWar.Core.Base.Scripts
 {
     [Script("Дать подкрепление", Code = "addsupport")]
-    public class AddSupportStatement : IStatement
+    public class AddReinforcementStatement : IStatement
     {
         [ScriptArgument("Игрок")]
         private int PlayerId { get; set; }
@@ -16,7 +16,7 @@ namespace MT.TacticWar.Core.Base.Scripts
         [ScriptArgument("Ворота")]
         private int GateId { get; set; }
 
-        public AddSupportStatement(params string[] args)
+        public AddReinforcementStatement(params string[] args)
         {
             if (3 != args.Length)
                 throw new FormatException("Неверный формат выражения.");
@@ -36,7 +36,7 @@ namespace MT.TacticWar.Core.Base.Scripts
             if (null == gate)
                 return null;
 
-            var division = mission.Support.GetById(SupportId);
+            var division = mission.Reinforcement.GetById(SupportId);
             if (null == division)
                 return null;
 

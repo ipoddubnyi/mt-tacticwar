@@ -13,7 +13,7 @@ namespace MT.TacticWar.UI.Editor
         }
 
         public MissionEditor(Mission mission) :
-            base(mission.Name, mission.Briefing, mission.Players, mission.Zones, mission.Support, mission.Scripts, mission.Map)
+            base(mission.Name, mission.Briefing, mission.Players, mission.Zones, mission.Reinforcement, mission.Scripts, mission.Map)
         {
         }
 

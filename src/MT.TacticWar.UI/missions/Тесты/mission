@@ -288,8 +288,8 @@
                 <stepaqua>false</stepaqua>
             </unit>
         </units>
-        
-        <support>
+
+        <reinforcement>
             <division id="9911" type="infantry" name="Разведгруппа">
                 <units>
                     <unit type="saboteur">
@@ -303,7 +303,7 @@
                     </unit>
                 </units>
             </division>
-        </support>
+        </reinforcement>
     </types>
     
     <scripts>

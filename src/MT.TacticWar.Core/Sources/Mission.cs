@@ -13,7 +13,7 @@ namespace MT.TacticWar.Core
         public Player CurrentPlayer { get; protected set; }
         public int CycleNumber { get; protected set; }
         public Zone[] Zones { get; protected set; }
-        public Division[] Support { get; protected set; }
+        public Division[] Reinforcement { get; protected set; }
         public Script[] Scripts { get; protected set; }
         public Map Map { get; protected set; }
         public List<ISituation> Situations { get; protected set; }
@@ -23,7 +23,8 @@ namespace MT.TacticWar.Core
         {
         }
 
-        public Mission(string name, string briefing, Player[] players, Zone[] zones, Division[] support, Script[] scripts, Map map)
+        public Mission(string name, string briefing, Player[] players,
+            Zone[] zones, Division[] reinforcement, Script[] scripts, Map map)
         {
             if (0 == players.Length)
                 throw new Exception("В миссии должны быть игроки.");
@@ -34,7 +35,7 @@ namespace MT.TacticWar.Core
             CurrentPlayer = Players[0];
             CycleNumber = 1;
             Zones = zones;
-            Support = support;
+            Reinforcement = reinforcement;
             Scripts = scripts;
             Map = map;
             Situations = new List<ISituation>();

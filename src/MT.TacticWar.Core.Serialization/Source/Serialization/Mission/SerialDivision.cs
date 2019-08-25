@@ -46,7 +46,7 @@ namespace MT.TacticWar.Core.Serialization
             return division;
         }
 
-        public Division CreateSupport(SerialMissionTypes types)
+        public Division CreateReinforcement(SerialMissionTypes types)
         {
             var division = ObjectFactory.CreateDivisionSupport(Type, Id, Name);
             var units = SerialUnit.Create(Units, division, types);
@@ -61,11 +61,11 @@ namespace MT.TacticWar.Core.Serialization
                 yield return sdivision.Create(player, types);
         }
 
-        public static IEnumerable<Division> CreateSupport(IEnumerable<SerialDivision> sdivisions,
+        public static IEnumerable<Division> CreateReinforcement(IEnumerable<SerialDivision> sdivisions,
             SerialMissionTypes types)
         {
             foreach (var sdivision in sdivisions)
-                yield return sdivision.CreateSupport(types);
+                yield return sdivision.CreateReinforcement(types);
         }
 
         public static IEnumerable<SerialDivision> CreateFrom(IEnumerable<Division> divisions)

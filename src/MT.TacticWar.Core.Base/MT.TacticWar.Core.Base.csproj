@@ -85,7 +85,7 @@
     <Compile Include="Sources\Scripts\Conditions\UnitExistsCondition.cs" />
     <Compile Include="Sources\Scripts\Conditions\UnitInZoneCondition.cs" />
     <Compile Include="Sources\Scripts\Conditions\UnitCountCondition.cs" />
-    <Compile Include="Sources\Scripts\Statements\AddSupportStatement.cs" />
+    <Compile Include="Sources\Scripts\Statements\AddReinforcementStatement.cs" />
     <Compile Include="Sources\Scripts\Statements\RepairBuildingStatement.cs" />
     <Compile Include="Sources\Scripts\Statements\MoveDivisionStatement.cs" />
     <Compile Include="Sources\Scripts\Statements\RepairDivisionStatement.cs" />

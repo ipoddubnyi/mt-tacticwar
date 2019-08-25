@@ -20,7 +20,7 @@ namespace MT.TacticWar.Core.Base.Scripts
 
         public static readonly List<ScriptStatementCreator> Statements = new List<ScriptStatementCreator>()
         {
-            new ScriptStatementCreator(typeof(AddSupportStatement)),
+            new ScriptStatementCreator(typeof(AddReinforcementStatement)),
             new ScriptStatementCreator(typeof(GameOverStatement)),
             new ScriptStatementCreator(typeof(MessageStatement)),
             new ScriptStatementCreator(typeof(MoveDivisionStatement)),
