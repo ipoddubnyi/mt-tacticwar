@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using MT.TacticWar.Core.Objects;
 
 namespace MT.TacticWar.Core.Serialization
 {
@@ -17,6 +18,15 @@ namespace MT.TacticWar.Core.Serialization
         {
             Units = new SerialTypeUnit[0];
             Reinforcement = new SerialDivision[0];
+        }
+
+        public static IEnumerable<Division> CreateReinforcement(SerialMissionTypes types)
+        {
+            if (null == types)
+                yield break;
+
+            foreach (var sdivision in types.Reinforcement)
+                yield return sdivision.CreateReinforcement(types);
         }
     }
 }

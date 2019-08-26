@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using MT.TacticWar.Core.Objects;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -45,7 +46,7 @@ namespace MT.TacticWar.Core.Serialization
         {
             var players = SerialPlayer.Create(Players, Types).ToArray();
             var zones = SerialZone.Create(Zones).ToArray();
-            var support = SerialDivision.CreateReinforcement(Types.Reinforcement, Types).ToArray();
+            var support = SerialMissionTypes.CreateReinforcement(Types).ToArray();
             var scripts = SerialScript.Create(Scripts).ToArray();
             return new Mission(
                 Info.Name,
