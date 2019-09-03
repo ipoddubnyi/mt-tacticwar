@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MT.TacticWar.Core;
+using MT.TacticWar.Core.Objects;
 using MT.TacticWar.Core.Scripts;
 
 namespace MT.TacticWar.UI.Editor
@@ -13,7 +14,7 @@ namespace MT.TacticWar.UI.Editor
         }
 
         public MissionEditor(Mission mission) :
-            base(mission.Name, mission.Briefing, mission.Players, mission.Zones, mission.Reinforcement, mission.Scripts, mission.Map)
+            base(mission.Name, mission.Briefing, mission.Players, mission.Zones, mission.Reinforcements, mission.Scripts, mission.Map)
         {
         }
 
@@ -30,6 +31,11 @@ namespace MT.TacticWar.UI.Editor
         public void SetPlayers(Player[] players)
         {
             Players = players;
+        }
+
+        public void SetReinforcement(Division[] reinforcement)
+        {
+            Reinforcements = reinforcement;
         }
 
         public void SetScripts(Script[] scripts)

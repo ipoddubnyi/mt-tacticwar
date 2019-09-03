@@ -40,6 +40,11 @@ namespace MT.TacticWar.Core
             return null;
         }
 
+        public static IEnumerable<Division> SortById(this IEnumerable<Division> divisions)
+        {
+            return divisions.OrderBy(d => d.Id);
+        }
+
         public static Building GetById(this IEnumerable<Building> buildings, int id)
         {
             foreach (var bld in buildings)
@@ -60,6 +65,11 @@ namespace MT.TacticWar.Core
             }
 
             return null;
+        }
+
+        public static IEnumerable<Building> SortById(this IEnumerable<Building> buildings)
+        {
+            return buildings.OrderBy(b => b.Id);
         }
 
         public static Unit GetById(this IEnumerable<Unit> units, int id)

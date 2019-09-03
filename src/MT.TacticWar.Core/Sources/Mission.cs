@@ -13,7 +13,7 @@ namespace MT.TacticWar.Core
         public Player CurrentPlayer { get; protected set; }
         public int CycleNumber { get; protected set; }
         public Zone[] Zones { get; protected set; }
-        public Division[] Reinforcement { get; protected set; }
+        public Division[] Reinforcements { get; protected set; }
         public Script[] Scripts { get; protected set; }
         public Map Map { get; protected set; }
         public List<ISituation> Situations { get; protected set; }
@@ -35,7 +35,7 @@ namespace MT.TacticWar.Core
             CurrentPlayer = Players[0];
             CycleNumber = 1;
             Zones = zones;
-            Reinforcement = reinforcement;
+            Reinforcements = reinforcement;
             Scripts = scripts;
             Map = map;
             Situations = new List<ISituation>();

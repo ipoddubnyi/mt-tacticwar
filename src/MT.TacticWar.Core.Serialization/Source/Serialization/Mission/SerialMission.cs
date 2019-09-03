@@ -37,7 +37,12 @@ namespace MT.TacticWar.Core.Serialization
         {
             Info = new SerialMissionInfo(mission, version);
             Players = SerialPlayer.CreateFrom(mission.Players).ToArray();
-            //TODO: Types = 
+            Types = new SerialMissionTypes()
+            {
+                // TODO:
+                Units = new SerialTypeUnit[0],
+                Reinforcement = SerialDivision.CreateFrom(mission.Reinforcements).ToArray()
+            };
             Zones = SerialZone.CreateFrom(mission.Zones.SortById()).ToArray();
             Scripts = SerialScript.CreateFrom(mission.Scripts).ToArray();
         }

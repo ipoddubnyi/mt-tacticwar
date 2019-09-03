@@ -97,6 +97,12 @@
     <Compile Include="Sources\Dialogs\DialogScriptEditor.Designer.cs">
       <DependentUpon>DialogScriptEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sources\Dialogs\DialogReinforcementList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Dialogs\DialogReinforcementList.Designer.cs">
+      <DependentUpon>DialogReinforcementList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sources\Dialogs\DialogScriptList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogScriptEditor.resx">
       <DependentUpon>DialogScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Dialogs\DialogReinforcementList.resx">
+      <DependentUpon>DialogReinforcementList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Dialogs\DialogScriptList.resx">
       <DependentUpon>DialogScriptList.cs</DependentUpon>

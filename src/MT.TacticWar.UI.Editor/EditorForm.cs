@@ -1001,6 +1001,17 @@ namespace MT.TacticWar.UI.Editor
             comboGatePlayer.SelectedIndex = 0;
         }
 
+        private void BtnMissionReinforcement_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new DialogReinforcementList(SelectedMission.Players, SelectedMission.Reinforcements))
+            {
+                if (DialogResult.OK == dialog.ShowDialog())
+                {
+                    SelectedMission.SetReinforcement(dialog.Reinforcements);
+                }
+            }
+        }
+
         private void BtnMissionScripts_Click(object sender, EventArgs e)
         {
             using (var dialog = new DialogScriptList(SelectedMission.Scripts))

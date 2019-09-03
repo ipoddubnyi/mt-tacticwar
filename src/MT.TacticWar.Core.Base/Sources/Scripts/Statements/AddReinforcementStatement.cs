@@ -36,7 +36,7 @@ namespace MT.TacticWar.Core.Base.Scripts
             if (null == gate)
                 return null;
 
-            var division = mission.Reinforcement.GetById(SupportId);
+            var division = mission.Reinforcements.GetById(SupportId);
             if (null == division)
                 return null;
 

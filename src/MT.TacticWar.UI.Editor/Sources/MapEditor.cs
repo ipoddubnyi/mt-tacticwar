@@ -14,7 +14,7 @@ namespace MT.TacticWar.UI.Editor
             Field = new Cell[Width, Height];
             for (int y = 0; y < Height; ++y)
                 for (int x = 0; x < Width; ++x)
-                    Field[x, y] = LandscapeFactory.CreateCell(Schema, '-', x, y);
+                    Field[x, y] = LandscapeFactory.CreateCell(Schema, '.', x, y);
         }
 
         public MapEditor(Map map) :

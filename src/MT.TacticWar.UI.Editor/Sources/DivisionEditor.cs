@@ -45,6 +45,16 @@ namespace MT.TacticWar.UI.Editor
             return newdivision;
         }
 
+        public Division CreateReinforcement()
+        {
+            var code = Division.GetDivisionCode(division);
+            var newdivision = ObjectFactory.CreateDivision(code, Player, Id, Name, -1, -1);
+            var units = new Unit[division.Units.Count];
+            division.Units.CopyTo(units);
+            newdivision.CompleteWithUnits(units);
+            return newdivision;
+        }
+
         public static implicit operator Division(DivisionEditor de)
         {
             return de?.division;

@@ -90,6 +90,7 @@
             this.numGateId = new System.Windows.Forms.NumericUpDown();
             this.btnGateRemove = new System.Windows.Forms.Button();
             this.btnGateAdd = new System.Windows.Forms.Button();
+            this.btnMissionReinforcement = new System.Windows.Forms.Button();
             this.Menu.SuspendLayout();
             this.Status.SuspendLayout();
             this.TabControlLeft.SuspendLayout();
@@ -118,7 +119,7 @@
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.Menu.Size = new System.Drawing.Size(1235, 28);
+            this.Menu.Size = new System.Drawing.Size(1235, 30);
             this.Menu.TabIndex = 0;
             this.Menu.Text = "Меню";
             // 
@@ -130,7 +131,7 @@
             this.MenuMapSave,
             this.MenuMapSaveAs});
             this.MenuMap.Name = "MenuMap";
-            this.MenuMap.Size = new System.Drawing.Size(63, 24);
+            this.MenuMap.Size = new System.Drawing.Size(63, 26);
             this.MenuMap.Text = "&Карта";
             // 
             // MenuMapNew
@@ -171,46 +172,46 @@
             this.MenuMissionSeparator,
             this.MenuMissionCompile});
             this.MenuMission.Name = "MenuMission";
-            this.MenuMission.Size = new System.Drawing.Size(76, 24);
+            this.MenuMission.Size = new System.Drawing.Size(76, 26);
             this.MenuMission.Text = "&Миссия";
             // 
             // MenuMissionNew
             // 
             this.MenuMissionNew.Name = "MenuMissionNew";
-            this.MenuMissionNew.Size = new System.Drawing.Size(224, 26);
+            this.MenuMissionNew.Size = new System.Drawing.Size(192, 26);
             this.MenuMissionNew.Text = "Создать";
             this.MenuMissionNew.Click += new System.EventHandler(this.MenuMissionNew_Click);
             // 
             // MenuMissionOpen
             // 
             this.MenuMissionOpen.Name = "MenuMissionOpen";
-            this.MenuMissionOpen.Size = new System.Drawing.Size(224, 26);
+            this.MenuMissionOpen.Size = new System.Drawing.Size(192, 26);
             this.MenuMissionOpen.Text = "Открыть";
             this.MenuMissionOpen.Click += new System.EventHandler(this.MenuMissionOpen_Click);
             // 
             // MenuMissionSave
             // 
             this.MenuMissionSave.Name = "MenuMissionSave";
-            this.MenuMissionSave.Size = new System.Drawing.Size(224, 26);
+            this.MenuMissionSave.Size = new System.Drawing.Size(192, 26);
             this.MenuMissionSave.Text = "Сохранить";
             this.MenuMissionSave.Click += new System.EventHandler(this.MenuMissionSave_Click);
             // 
             // MenuMissionSaveAs
             // 
             this.MenuMissionSaveAs.Name = "MenuMissionSaveAs";
-            this.MenuMissionSaveAs.Size = new System.Drawing.Size(224, 26);
+            this.MenuMissionSaveAs.Size = new System.Drawing.Size(192, 26);
             this.MenuMissionSaveAs.Text = "Сохранить как";
             this.MenuMissionSaveAs.Click += new System.EventHandler(this.MenuMissionSaveAs_Click);
             // 
             // MenuMissionSeparator
             // 
             this.MenuMissionSeparator.Name = "MenuMissionSeparator";
-            this.MenuMissionSeparator.Size = new System.Drawing.Size(221, 6);
+            this.MenuMissionSeparator.Size = new System.Drawing.Size(189, 6);
             // 
             // MenuMissionCompile
             // 
             this.MenuMissionCompile.Name = "MenuMissionCompile";
-            this.MenuMissionCompile.Size = new System.Drawing.Size(224, 26);
+            this.MenuMissionCompile.Size = new System.Drawing.Size(192, 26);
             this.MenuMissionCompile.Text = "Собрать";
             this.MenuMissionCompile.Click += new System.EventHandler(this.MenuMissionCompile_Click);
             // 
@@ -219,7 +220,7 @@
             this.MenuEditor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuEditorRefresh});
             this.MenuEditor.Name = "MenuEditor";
-            this.MenuEditor.Size = new System.Drawing.Size(86, 24);
+            this.MenuEditor.Size = new System.Drawing.Size(86, 26);
             this.MenuEditor.Text = "&Редактор";
             // 
             // MenuEditorRefresh
@@ -313,7 +314,7 @@
             // 
             this.TreeViewElements.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TreeViewElements.Location = new System.Drawing.Point(0, 0);
-            this.TreeViewElements.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TreeViewElements.Margin = new System.Windows.Forms.Padding(4);
             this.TreeViewElements.Name = "TreeViewElements";
             this.TreeViewElements.Size = new System.Drawing.Size(266, 372);
             this.TreeViewElements.TabIndex = 0;
@@ -325,7 +326,7 @@
             this.PanelElementPreview.BackColor = System.Drawing.SystemColors.Control;
             this.PanelElementPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelElementPreview.Location = new System.Drawing.Point(0, 0);
-            this.PanelElementPreview.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PanelElementPreview.Margin = new System.Windows.Forms.Padding(4);
             this.PanelElementPreview.Name = "PanelElementPreview";
             this.PanelElementPreview.Size = new System.Drawing.Size(266, 119);
             this.PanelElementPreview.TabIndex = 1;
@@ -354,7 +355,7 @@
             this.txtMapVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMapVersion.Location = new System.Drawing.Point(9, 379);
-            this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMapVersion.Margin = new System.Windows.Forms.Padding(4);
             this.txtMapVersion.Name = "txtMapVersion";
             this.txtMapVersion.Size = new System.Drawing.Size(249, 22);
             this.txtMapVersion.TabIndex = 5;
@@ -431,6 +432,7 @@
             // 
             // TabMissionInfo
             // 
+            this.TabMissionInfo.Controls.Add(this.btnMissionReinforcement);
             this.TabMissionInfo.Controls.Add(this.btnMissionScripts);
             this.TabMissionInfo.Controls.Add(this.txtMissionVersion);
             this.TabMissionInfo.Controls.Add(this.lblMissionVersion);
@@ -451,11 +453,11 @@
             // 
             this.btnMissionScripts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMissionScripts.Location = new System.Drawing.Point(9, 407);
+            this.btnMissionScripts.Location = new System.Drawing.Point(9, 438);
             this.btnMissionScripts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnMissionScripts.Name = "btnMissionScripts";
             this.btnMissionScripts.Size = new System.Drawing.Size(247, 28);
-            this.btnMissionScripts.TabIndex = 7;
+            this.btnMissionScripts.TabIndex = 8;
             this.btnMissionScripts.Text = "Скрипты";
             this.btnMissionScripts.UseVisualStyleBackColor = true;
             this.btnMissionScripts.Click += new System.EventHandler(this.BtnMissionScripts_Click);
@@ -465,7 +467,7 @@
             this.txtMissionVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMissionVersion.Location = new System.Drawing.Point(9, 329);
-            this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMissionVersion.Margin = new System.Windows.Forms.Padding(4);
             this.txtMissionVersion.Name = "txtMissionVersion";
             this.txtMissionVersion.Size = new System.Drawing.Size(247, 22);
             this.txtMissionVersion.TabIndex = 5;
@@ -486,7 +488,7 @@
             this.btnMissionPlayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMissionPlayers.Location = new System.Drawing.Point(9, 372);
-            this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMissionPlayers.Margin = new System.Windows.Forms.Padding(4);
             this.btnMissionPlayers.Name = "btnMissionPlayers";
             this.btnMissionPlayers.Size = new System.Drawing.Size(247, 28);
             this.btnMissionPlayers.TabIndex = 6;
@@ -619,7 +621,7 @@
             // 
             this.PanelEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelEditor.Location = new System.Drawing.Point(309, 37);
-            this.PanelEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PanelEditor.Margin = new System.Windows.Forms.Padding(4);
             this.PanelEditor.Name = "PanelEditor";
             this.PanelEditor.Size = new System.Drawing.Size(391, 350);
             this.PanelEditor.TabIndex = 5;
@@ -726,7 +728,7 @@
             this.comboGatePlayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboGatePlayer.FormattingEnabled = true;
             this.comboGatePlayer.Location = new System.Drawing.Point(13, 49);
-            this.comboGatePlayer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboGatePlayer.Margin = new System.Windows.Forms.Padding(4);
             this.comboGatePlayer.Name = "comboGatePlayer";
             this.comboGatePlayer.Size = new System.Drawing.Size(197, 24);
             this.comboGatePlayer.TabIndex = 1;
@@ -786,6 +788,19 @@
             this.btnGateAdd.UseVisualStyleBackColor = true;
             this.btnGateAdd.Click += new System.EventHandler(this.BtnGateAdd_Click);
             // 
+            // btnMissionReinforcement
+            // 
+            this.btnMissionReinforcement.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMissionReinforcement.Location = new System.Drawing.Point(9, 406);
+            this.btnMissionReinforcement.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnMissionReinforcement.Name = "btnMissionReinforcement";
+            this.btnMissionReinforcement.Size = new System.Drawing.Size(247, 28);
+            this.btnMissionReinforcement.TabIndex = 7;
+            this.btnMissionReinforcement.Text = "Подкрепления";
+            this.btnMissionReinforcement.UseVisualStyleBackColor = true;
+            this.btnMissionReinforcement.Click += new System.EventHandler(this.BtnMissionReinforcement_Click);
+            // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -797,7 +812,7 @@
             this.Controls.Add(this.Status);
             this.Controls.Add(this.Menu);
             this.MainMenuStrip = this.Menu;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1061, 595);
             this.Name = "EditorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -896,6 +911,7 @@
         private System.Windows.Forms.Button btnGateAdd;
         private System.Windows.Forms.ComboBox comboGatePlayer;
         private System.Windows.Forms.Label lblGatePlayer;
+        private System.Windows.Forms.Button btnMissionReinforcement;
     }
 }
 
