@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using MT.TacticWar.Core;
 using MT.TacticWar.Core.Landscape;
 using MT.TacticWar.Core.Objects;
@@ -20,7 +17,6 @@ namespace MT.TacticWar.Gameplay.Routers
 
         private Coordinates from;
         private Coordinates to;
-        private int cost;
 
         public Bellman(Map map, Fog fog)
         {
@@ -61,7 +57,6 @@ namespace MT.TacticWar.Gameplay.Routers
 
             from = div.Position.Copy();
             to = flag.Copy();
-            cost = int.MaxValue;
 
             for (int i = 0; i < map.Height; i++)
             {
@@ -74,18 +69,6 @@ namespace MT.TacticWar.Gameplay.Routers
                         cell.Cost = 0;
 
                     cells[i, j] = cell;
-                }
-            }
-        }
-
-        /// <summary>Обнуление направлений</summary>
-        private void NullDirections()
-        {
-            for (int i = 0; i < map.Height; i++)
-            {
-                for (int j = 0; j < map.Width; j++)
-                {
-                    cells[i, j].Directions.NullDirections();
                 }
             }
         }
@@ -135,18 +118,18 @@ namespace MT.TacticWar.Gameplay.Routers
         {
             var cell = cells[x, y];
 
-            //-------------------- лево --------------------
+            //-------------------- влево --------------------
 
-            int dy = y - 1;
+            int dx = x - 1;
 
-            //если слева ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Left && CanStep(x, dy) && !IsTargetHere(x, dy))
+            //если сверху ещё НЕ были И там НЕТ флага, И туда можно идти
+            if (!cell.Directions.Left && CanStep(dx, y) && !IsTargetHere(dx, y))
             {
-                var cellLeft = cells[x, dy];
+                var cellLeft = cells[dx, y];
 
-                //помечаем контакт с левой клеткой
+                //помечаем контакт с верхней клеткой
                 cell.Directions.Left = true;
-                cellLeft.Directions.Right = true;
+                //cellLeft.Directions.Right = true;
 
                 //определяем цену этого контакта
                 //если цена в ячейке больше,
@@ -158,30 +141,33 @@ namespace MT.TacticWar.Gameplay.Routers
                     //заменяем цену
                     cellLeft.Cost = cellLeft.PassCost + cell.Cost;
 
+                    cellLeft.Directions.NullDirections();
+                    cellLeft.Directions.Right = true;
+
                     //если есть смысл шагать дальше
                     if (IsBenefitToStepTo(cellLeft))
                     {
-                        //меняем приоритетное направление левой ячейки на правое
-                        cellLeft.Directions.Priority = 3;
+                        //меняем приоритетное направление верхней ячейки на правое
+                        cellLeft.Directions.Priority = Direction.Right;
 
-                        //переходим к рассмотрению клетки слева
-                        LetsStep(x, dy);
+                        //переходим к рассмотрению клетки сверху
+                        LetsStep(dx, y);
                     }
                 }
             }
 
             //-------------------- верх --------------------
 
-            int dx = x - 1;
+            int dy = y - 1;
 
-            //если сверху ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Top && CanStep(dx, y) && !IsTargetHere(dx, y))
+            //если слева ещё НЕ были И там НЕТ флага, И туда можно идти
+            if (!cell.Directions.Top && CanStep(x, dy) && !IsTargetHere(x, dy))
             {
-                var cellTop = cells[dx, y];
+                var cellTop = cells[x, dy];
 
-                //помечаем контакт с верхней клеткой
+                //помечаем контакт с левой клеткой
                 cell.Directions.Top = true;
-                cellTop.Directions.Bottom = true;
+                //cellTop.Directions.Bottom = true;
 
                 //определяем цену этого контакта
                 //если цена в ячейке больше,
@@ -193,30 +179,33 @@ namespace MT.TacticWar.Gameplay.Routers
                     //заменяем цену
                     cellTop.Cost = cellTop.PassCost + cell.Cost;
 
+                    cellTop.Directions.NullDirections();
+                    cellTop.Directions.Bottom = true;
+
                     //если есть смысл шагать дальше
                     if (IsBenefitToStepTo(cellTop))
                     {
-                        //меняем приоритетное направление верхней ячейки на нижнее
-                        cellTop.Directions.Priority = 4;
+                        //меняем приоритетное направление левой ячейки на нижнее
+                        cellTop.Directions.Priority = Direction.Bottom;
 
-                        //переходим к рассмотрению клетки сверху
-                        LetsStep(dx, y);
+                        //переходим к рассмотрению клетки слева
+                        LetsStep(x, dy);
                     }
                 }
             }
 
-            //-------------------- право --------------------
+            //-------------------- вправо --------------------
 
-            dy = y + 1;
+            dx = x + 1;
 
-            //если справа ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Right && CanStep(x, dy) && !IsTargetHere(x, dy))
+            //если снизу ещё НЕ были И там НЕТ флага, И туда можно идти
+            if (!cell.Directions.Right && CanStep(dx, y) && !IsTargetHere(dx, y))
             {
-                var cellRight = cells[x, dy];
+                var cellRight = cells[dx, y];
 
-                //помечаем контакт с правой клеткой
+                //помечаем контакт с нижней клеткой
                 cell.Directions.Right = true;
-                cellRight.Directions.Left = true;
+                //cellRight.Directions.Left = true;
 
                 //определяем цену этого контакта
                 //если цена в ячейке больше,
@@ -228,30 +217,33 @@ namespace MT.TacticWar.Gameplay.Routers
                     //заменяем цену
                     cellRight.Cost = cellRight.PassCost + cell.Cost;
 
+                    cellRight.Directions.NullDirections();
+                    cellRight.Directions.Left = true;
+
                     //если есть смысл шагать дальше
                     if (IsBenefitToStepTo(cellRight))
                     {
-                        //меняем приоритетное направление правой ячейки на левое
-                        cellRight.Directions.Priority = 1;
+                        //меняем приоритетное направление нижней ячейки на левое
+                        cellRight.Directions.Priority = Direction.Left;
 
-                        //переходим к рассмотрению клетки справа
-                        LetsStep(x, dy);
+                        //переходим к рассмотрению клетки снизу
+                        LetsStep(dx, y);
                     }
                 }
             }
 
-            //-------------------- низ --------------------
+            //-------------------- вниз --------------------
 
-            dx = x + 1;
+            dy = y + 1;
 
-            //если снизу ещё НЕ были И там НЕТ флага, И туда можно идти
-            if (!cell.Directions.Bottom && CanStep(dx, y) && !IsTargetHere(dx, y))
+            //если справа ещё НЕ были И там НЕТ флага, И туда можно идти
+            if (!cell.Directions.Bottom && CanStep(x, dy) && !IsTargetHere(x, dy))
             {
-                var cellBottom = cells[dx, y];
+                var cellBottom = cells[x, dy];
 
-                //помечаем контакт с нижней клеткой
+                //помечаем контакт с правой клеткой
                 cell.Directions.Bottom = true;
-                cellBottom.Directions.Top = true;
+                //cellBottom.Directions.Top = true;
 
                 //определяем цену этого контакта
                 //если цена в ячейке больше,
@@ -263,21 +255,20 @@ namespace MT.TacticWar.Gameplay.Routers
                     //заменяем цену
                     cellBottom.Cost = cellBottom.PassCost + cell.Cost;
 
+                    cellBottom.Directions.NullDirections();
+                    cellBottom.Directions.Top = true;
+
                     //если есть смысл шагать дальше
                     if (IsBenefitToStepTo(cellBottom))
                     {
-                        //меняем приоритетное направление нижней ячейки на верхнее
-                        cellBottom.Directions.Priority = 2;
+                        //меняем приоритетное направление правой ячейки на верхнее
+                        cellBottom.Directions.Priority = Direction.Top;
 
-                        //переходим к рассмотрению клетки снизу
-                        LetsStep(dx, y);
+                        //переходим к рассмотрению клетки справа
+                        LetsStep(x, dy);
                     }
                 }
             }
-
-            //---------------------------------------------
-
-            NullDirections(); //обнуляем направления
         }
 
         /// <summary>Выбор пути, если он есть (сохранение координат в список)</summary>
@@ -294,9 +285,6 @@ namespace MT.TacticWar.Gameplay.Routers
             if (cells[x, y].Cost >= maxCost)
                 return NotFound;
 
-            //запоминаем цену всего пути
-            cost = cells[x, y].Cost;
-
             //счётчик для того, чтобы не было зацикливания
             int counter = 0;
 
@@ -309,17 +297,17 @@ namespace MT.TacticWar.Gameplay.Routers
                 //перебираем приоритетные направления
                 switch (cells[x, y].Directions.Priority)
                 {
-                    case 1: //левое
-                        y -= 1;
-                        break;
-                    case 2: //верхнее
+                    case Direction.Left:
                         x -= 1;
                         break;
-                    case 3: //правое
-                        y += 1;
+                    case Direction.Top:
+                        y -= 1;
                         break;
-                    case 4: //нижнее
+                    case Direction.Right:
                         x += 1;
+                        break;
+                    case Direction.Bottom:
+                        y += 1;
                         break;
                     default: //иначе - путь не найден
                         return NotFound;

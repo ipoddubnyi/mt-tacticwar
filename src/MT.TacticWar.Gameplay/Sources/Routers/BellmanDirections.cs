@@ -1,6 +1,14 @@
 ﻿
 namespace MT.TacticWar.Gameplay.Routers
 {
+    internal enum Direction
+    {
+        Left,
+        Top,
+        Right,
+        Bottom
+    }
+
     // Направления, с которыми клетка уже имела контакт
     internal class BellmanDirections
     {
@@ -10,8 +18,7 @@ namespace MT.TacticWar.Gameplay.Routers
         public bool Bottom { get; set; }
 
         // Приоритет направления (более выгодное).
-        // 1 - лево, 2 - верх, 3 - право, 4 - низ
-        public int Priority { get; set; }
+        public Direction Priority { get; set; }
 
         public BellmanDirections()
         {
